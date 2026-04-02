@@ -17,7 +17,7 @@ create or alter procedure sp_registrar_venta_credito
     @fechaInicioPago date
 as
 begin
-    set nocount on;
+    set nocount on
 
     -- variables de control
     declare @idVenta int
@@ -44,8 +44,8 @@ begin
         )
         begin
             raiserror('el cliente no existe o está inactivo', 16, 1)
-            rollback transaction;
-            return;
+            rollback transaction
+            return
         end
 
         -- validar aval
@@ -56,8 +56,8 @@ begin
         )
         begin
             raiserror('el aval no existe', 16, 1)
-            rollback transaction;
-            return;
+            rollback transaction
+            return
         end
 
         -- validar beneficiario
@@ -179,7 +179,7 @@ begin
             @recargo,
             @totalVenta,
             'activa'
-        );
+        )
 
         set @idVenta = scope_identity()
 
@@ -207,7 +207,7 @@ begin
             @tasaInteresAnual,
             @fechaInicioPago,
             'activo'
-        );
+        )
 
         set @idVentaCredito = scope_identity()
 
@@ -229,7 +229,7 @@ begin
             @totalPlan,
             @cuotaMensualEstimada,
             'activo'
-        );
+        )
 
         commit transaction
 
@@ -243,7 +243,7 @@ begin
             @numeroCuotas as numeroCuotas,
             @cuotaMensualEstimada as cuotaMensualEstimada,
             @totalInteres as totalInteres,
-            @totalPlan as totalPlan;
+            @totalPlan as totalPlan
     end try
     begin catch
         if @@trancount > 0
@@ -251,7 +251,227 @@ begin
 
         declare @mensajeError varchar(4000)
         set @mensajeError = ERROR_MESSAGE()
-        raiserror(@mensajeError, 16, 1);
+        raiserror(@mensajeError, 16, 1)
+    end catch
+end
+go
+
+-- registra un pago y genera su factura
+create or alter procedure sp_registrar_pago
+    @idVenta int,
+    @idCuota int,
+    @formaPago nvarchar(20),
+    @montoTotal decimal(18,2),
+    @idCuentaBancaria int = null,
+    @numeroReferencia nvarchar(100) = null,
+    @observacion nvarchar(255) = null
+as
+begin
+    set nocount on
+
+    -- variables internas
+    declare @idPago int
+    declare @idFactura int
+
+    declare @montoCuota decimal(18,2)
+    declare @estadoCuota nvarchar(30)
+    declare @capitalProgramado decimal(18,2)
+    declare @interesProgramado decimal(18,2)
+
+    declare @totalPagadoAntes decimal(18,2)
+    declare @saldoPendiente decimal(18,2)
+
+    declare @montoCapital decimal(18,2)
+    declare @montoInteres decimal(18,2)
+
+    declare @nombreCliente nvarchar(200)
+    declare @rtnCliente nvarchar(20)
+    declare @numeroFactura nvarchar(50)
+
+    begin try
+        begin transaction
+
+        -- validar que la venta exista
+        if not exists (
+            select 1
+            from Venta
+            where idVenta = @idVenta
+              and estadoVenta = 'activa'
+        )
+        begin
+            raiserror('la venta no existe o no está activa', 16, 1)
+            rollback transaction
+            return
+        end
+
+        -- obtener datos de la cuota
+        select
+            @montoCuota = montoCuota,
+            @estadoCuota = estadoCuota,
+            @capitalProgramado = capitalProgramado,
+            @interesProgramado = interesProgramado
+        from Cuota
+        where idCuota = @idCuota
+
+        -- validar que la cuota exista
+        if @montoCuota is null
+        begin
+            raiserror('la cuota no existe', 16, 1)
+            rollback transaction
+            return
+        end
+
+        -- validar que la cuota no esté pagada
+        if @estadoCuota = 'pagada'
+        begin
+            raiserror('la cuota ya está pagada', 16, 1)
+            rollback transaction
+            return
+        end
+
+        -- obtener cuánto se ha pagado antes en esa cuota
+        select
+            @totalPagadoAntes = isnull(sum(montoAplicado), 0)
+        from DetallePagoCuota
+        where idCuota = @idCuota
+
+        set @saldoPendiente = @montoCuota - @totalPagadoAntes
+
+        -- validar que el pago sea positivo
+        if @montoTotal <= 0
+        begin
+            raiserror('el monto del pago debe ser mayor que cero', 16, 1)
+            rollback transaction
+            return
+        end
+
+        -- no permitir pagar más de lo pendiente en esta versión
+        if @montoTotal > @saldoPendiente
+        begin
+            raiserror('el monto excede el saldo pendiente de la cuota', 16, 1)
+            rollback transaction
+            return
+        end
+
+        -- calcular cuánto del pago va a interés y cuánto a capital
+        -- aquí se toma primero el interés programado y luego capital
+        if @montoTotal <= @interesProgramado
+        begin
+            set @montoInteres = @montoTotal
+            set @montoCapital = 0
+        end
+        else
+        begin
+            set @montoInteres = @interesProgramado
+            set @montoCapital = @montoTotal - @montoInteres
+        end
+
+        -- registrar pago general
+        insert into Pago (
+            idVenta,
+            fechaPago,
+            formaPago,
+            montoTotal,
+            idCuentaBancaria,
+            numeroReferencia,
+            depositadoCaja,
+            observacion
+        )
+        values (
+            @idVenta,
+            getdate(),
+            @formaPago,
+            @montoTotal,
+            @idCuentaBancaria,
+            @numeroReferencia,
+            case when @formaPago = 'efectivo' then 0 else 1 end,
+            @observacion
+        )
+
+        set @idPago = scope_identity()
+
+        -- aplicar pago a la cuota
+        insert into DetallePagoCuota (
+            idPago,
+            idCuota,
+            montoCapital,
+            montoInteres,
+            montoAplicado
+        )
+        values (
+            @idPago,
+            @idCuota,
+            @montoCapital,
+            @montoInteres,
+            @montoTotal
+        )
+
+        -- obtener datos del cliente para la factura
+        select
+            @nombreCliente = c.nombres + ' ' + c.apellidos,
+            @rtnCliente = c.rtn
+        from Venta v
+        inner join Cliente c on v.idCliente = c.idCliente
+        where v.idVenta = @idVenta
+
+        -- generar número simple de factura
+        set @numeroFactura = 'FAC-' + cast(@idPago as nvarchar(20))
+
+        -- insertar factura
+        insert into Factura (
+            idPago,
+            numeroFactura,
+            fechaFactura,
+            nombreCliente,
+            rtnCliente,
+            totalFactura
+        )
+        values (
+            @idPago,
+            @numeroFactura,
+            getdate(),
+            @nombreCliente,
+            @rtnCliente,
+            @montoTotal
+        )
+
+        set @idFactura = scope_identity()
+
+        -- insertar detalle de factura
+        insert into DetalleFactura (
+            idFactura,
+            descripcion,
+            capital,
+            interes,
+            subtotal
+        )
+        values (
+            @idFactura,
+            'pago de cuota',
+            @montoCapital,
+            @montoInteres,
+            @montoTotal
+        )
+
+        commit transaction
+
+        -- devolver resumen
+        select
+            @idPago as idPago,
+            @idFactura as idFactura,
+            @montoTotal as montoPagado,
+            @montoCapital as montoCapital,
+            @montoInteres as montoInteres,
+            @numeroFactura as numeroFactura
+    end try
+    begin catch
+        if @@trancount > 0
+            rollback transaction
+
+        declare @mensajeError nvarchar(4000)
+        set @mensajeError = error_message()
+
+        raiserror(@mensajeError, 16, 1)
     end catch
 end
 go
