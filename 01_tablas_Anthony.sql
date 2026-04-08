@@ -8,13 +8,13 @@ go
 -- proyectos habitacionales principales
 create table Proyecto (
     idProyecto int identity(1,1) primary key,
-    nombreProyecto nvarchar(150) not null,
-    descripcion nvarchar(255) null,
+    nombreProyecto varchar(150) not null,
+    descripcion varchar(255) null,
     fechaInicio date not null,
     fechaFinEstimada date null,
     areaTotalV2 decimal(18,2) not null check (areaTotalV2 > 0),
     maxAniosFinanciamiento int not null check (maxAniosFinanciamiento > 0),
-    estado nvarchar(30) not null default 'activo'
+    estado varchar(30) not null default 'activo'
         check (estado in ('activo','inactivo','finalizado'))
 );
 go
@@ -23,12 +23,12 @@ go
 create table UbicacionProyecto (
     idUbicacion int identity(1,1) primary key,
     idProyecto int not null,
-    departamento nvarchar(100) not null,
-    municipio nvarchar(100) not null,
-    aldeaColonia nvarchar(150) null,
-    direccionDetalle nvarchar(255) null,
-    claveCatastral nvarchar(100) null,
-    observacionLegal nvarchar(255) null,
+    departamento varchar(100) not null,
+    municipio varchar(100) not null,
+    aldeaColonia varchar(150) null,
+    direccionDetalle varchar(255) null,
+    claveCatastral varchar(100) null,
+    observacionLegal varchar(255) null,
     constraint fk_UbicacionProyecto_Proyecto
         foreign key (idProyecto) references Proyecto(idProyecto)
 );
@@ -42,7 +42,7 @@ go
 create table Etapa (
     idEtapa int identity(1,1) primary key,
     idProyecto int not null,
-    nombreEtapa nvarchar(100) not null,
+    nombreEtapa varchar(100) not null,
     fechaInicio date not null,
     fechaFinEstimada date null,
     areaTotalV2 decimal(18,2) not null check (areaTotalV2 > 0),
@@ -51,7 +51,7 @@ create table Etapa (
     porcentajeAreaLotes decimal(5,2) not null check (porcentajeAreaLotes >= 0 and porcentajeAreaLotes <= 100),
     precioVaraCuadrada decimal(18,2) not null check (precioVaraCuadrada > 0),
     tasaInteresAnual decimal(5,2) not null check (tasaInteresAnual >= 0), -- interés para créditos de la etapa
-    estado nvarchar(30) not null default 'activa'
+    estado varchar(30) not null default 'activa'
         check (estado in ('activa','inactiva','finalizada')),
     constraint fk_Etapa_Proyecto
         foreign key (idProyecto) references Proyecto(idProyecto)
@@ -62,8 +62,8 @@ go
 create table Bloque (
     idBloque int identity(1,1) primary key,
     idEtapa int not null,
-    nombreBloque nvarchar(50) not null,
-    descripcion nvarchar(255) null,
+    nombreBloque varchar(50) not null,
+    descripcion varchar(255) null,
     constraint fk_Bloque_Etapa
         foreign key (idEtapa) references Etapa(idEtapa)
 );
@@ -73,7 +73,7 @@ go
 create table Lote (
     idLote int identity(1,1) primary key,
     idBloque int not null,
-    numeroLote nvarchar(20) not null,
+    numeroLote varchar(20) not null,
     areaV2 decimal(18,2) not null check (areaV2 > 0),
     esEsquina bit not null default 0,
     cercaParque bit not null default 0,
@@ -81,7 +81,7 @@ create table Lote (
     precioBase decimal(18,2) not null default 0 check (precioBase >= 0),
     recargoTotal decimal(18,2) not null default 0 check (recargoTotal >= 0),
     precioFinal decimal(18,2) not null default 0 check (precioFinal >= 0),
-    estadoLote nvarchar(30) not null default 'disponible'
+    estadoLote varchar(30) not null default 'disponible'
         check (estadoLote in ('disponible','reservado','vendido','inactivo')),
     constraint uq_Lote_Bloque_Numero unique (idBloque, numeroLote),
     constraint fk_Lote_Bloque
@@ -92,11 +92,11 @@ go
 -- catálogo de características que elevan el valor del lote
 create table CaracteristicaLote (
     idCaracteristica int identity(1,1) primary key,
-    nombreCaracteristica nvarchar(100) not null,
-    tipoRecargo nvarchar(30) not null
+    nombreCaracteristica varchar(100) not null,
+    tipoRecargo varchar(30) not null
         check (tipoRecargo in ('porcentaje','monto')),
     valorRecargo decimal(18,2) not null check (valorRecargo >= 0),
-    estado nvarchar(20) not null default 'activo'
+    estado varchar(20) not null default 'activo'
         check (estado in ('activo','inactivo'))
 );
 go
@@ -120,16 +120,16 @@ go
 -- cliente comprador
 create table Cliente (
     idCliente int identity(1,1) primary key,
-    identidad nvarchar(20) not null,
-    nombres nvarchar(100) not null,
-    apellidos nvarchar(100) not null,
+    identidad varchar(20) not null,
+    nombres varchar(100) not null,
+    apellidos varchar(100) not null,
     fechaNacimiento date null,
-    telefono nvarchar(20) null,
-    correo nvarchar(120) null,
-    direccion nvarchar(255) null,
-    estadoCivil nvarchar(30) null,
-    rtn nvarchar(20) null,
-    estado nvarchar(20) not null default 'activo'
+    telefono varchar(20) null,
+    correo varchar(120) null,
+    direccion varchar(255) null,
+    estadoCivil varchar(30) null,
+    rtn varchar(20) null,
+    estado varchar(20) not null default 'activo'
         check (estado in ('activo','inactivo')),
     constraint uq_Cliente_Identidad unique (identidad),
     constraint uq_Cliente_Rtn unique (rtn)
@@ -140,12 +140,12 @@ go
 create table DatosLaboralesCliente (
     idDatosLaborales int identity(1,1) primary key,
     idCliente int not null,
-    empresa nvarchar(150) not null,
-    cargo nvarchar(100) not null,
+    empresa varchar(150) not null,
+    cargo varchar(100) not null,
     ingresoMensual decimal(18,2) not null check (ingresoMensual >= 0),
     antiguedadLaboral int null check (antiguedadLaboral >= 0),
-    telefonoTrabajo nvarchar(20) null,
-    direccionTrabajo nvarchar(255) null,
+    telefonoTrabajo varchar(20) null,
+    direccionTrabajo varchar(255) null,
     constraint uq_DatosLaborales_Cliente unique (idCliente),
     constraint fk_DatosLaborales_Cliente
         foreign key (idCliente) references Cliente(idCliente)
@@ -155,14 +155,14 @@ go
 -- aval para compras a crédito
 create table Aval (
     idAval int identity(1,1) primary key,
-    identidad nvarchar(20) not null,
-    nombres nvarchar(100) not null,
-    apellidos nvarchar(100) not null,
-    telefono nvarchar(20) null,
-    direccion nvarchar(255) null,
-    lugarTrabajo nvarchar(150) null,
+    identidad varchar(20) not null,
+    nombres varchar(100) not null,
+    apellidos varchar(100) not null,
+    telefono varchar(20) null,
+    direccion varchar(255) null,
+    lugarTrabajo varchar(150) null,
     ingresoMensual decimal(18,2) null check (ingresoMensual >= 0),
-    parentescoCliente nvarchar(50) null,
+    parentescoCliente varchar(50) null,
     constraint uq_Aval_Identidad unique (identidad)
 );
 go
@@ -170,12 +170,12 @@ go
 -- beneficiario en caso de fallecimiento
 create table Beneficiario (
     idBeneficiario int identity(1,1) primary key,
-    identidad nvarchar(20) not null,
-    nombres nvarchar(100) not null,
-    apellidos nvarchar(100) not null,
-    telefono nvarchar(20) null,
-    parentesco nvarchar(50) null,
-    direccion nvarchar(255) null,
+    identidad varchar(20) not null,
+    nombres varchar(100) not null,
+    apellidos varchar(100) not null,
+    telefono varchar(20) null,
+    parentesco varchar(50) null,
+    direccion varchar(255) null,
     constraint uq_Beneficiario_Identidad unique (identidad)
 );
 go
@@ -190,13 +190,13 @@ create table Venta (
     idLote int not null,
     idCliente int not null,
     fechaVenta date not null,
-    tipoVenta nvarchar(20) not null
+    tipoVenta varchar(20) not null
         check (tipoVenta in ('contado','credito')),
     precioLote decimal(18,2) not null check (precioLote >= 0),
     descuento decimal(18,2) not null default 0 check (descuento >= 0),
     recargo decimal(18,2) not null default 0 check (recargo >= 0),
     totalVenta decimal(18,2) not null check (totalVenta >= 0),
-    estadoVenta nvarchar(30) not null default 'activa'
+    estadoVenta varchar(30) not null default 'activa'
         check (estadoVenta in ('activa','anulada','finalizada')),
     constraint fk_Venta_Lote
         foreign key (idLote) references Lote(idLote),
@@ -211,7 +211,7 @@ create table VentaContado (
     idVenta int not null unique,
     fechaPago date not null,
     montoPagado decimal(18,2) not null check (montoPagado >= 0),
-    observacion nvarchar(255) null,
+    observacion varchar(255) null,
     constraint fk_VentaContado_Venta
         foreign key (idVenta) references Venta(idVenta)
 );
@@ -229,7 +229,7 @@ create table VentaCredito (
     plazoAnios int not null check (plazoAnios > 0),
     tasaInteresAnual decimal(5,2) not null check (tasaInteresAnual >= 0),
     fechaInicioPago date not null,
-    estadoCredito nvarchar(30) not null default 'activo'
+    estadoCredito varchar(30) not null default 'activo'
         check (estadoCredito in ('activo','cancelado','moroso','finalizado')),
     constraint fk_VentaCredito_Venta
         foreign key (idVenta) references Venta(idVenta),
@@ -253,7 +253,7 @@ create table PlanPago (
     totalInteres decimal(18,2) not null check (totalInteres >= 0),
     totalPlan decimal(18,2) not null check (totalPlan >= 0),
     cuotaMensualEstimada decimal(18,2) not null check (cuotaMensualEstimada >= 0),
-    estado nvarchar(30) not null default 'activo'
+    estado varchar(30) not null default 'activo'
         check (estado in ('activo','cancelado','finalizado')),
     constraint fk_PlanPago_VentaCredito
         foreign key (idVentaCredito) references VentaCredito(idVentaCredito)
@@ -271,7 +271,7 @@ create table Cuota (
     interesProgramado decimal(18,2) not null check (interesProgramado >= 0),
     montoCuota decimal(18,2) not null check (montoCuota >= 0),
     saldoFinal decimal(18,2) not null check (saldoFinal >= 0),
-    estadoCuota nvarchar(30) not null default 'pendiente'
+    estadoCuota varchar(30) not null default 'pendiente'
         check (estadoCuota in ('pendiente','parcial','pagada','vencida')),
     constraint uq_Cuota_Plan_Numero unique (idPlanPago, numeroCuota),
     constraint fk_Cuota_PlanPago
@@ -286,8 +286,8 @@ go
 -- catálogo de bancos
 create table Banco (
     idBanco int identity(1,1) primary key,
-    nombreBanco nvarchar(100) not null,
-    estado nvarchar(20) not null default 'activo'
+    nombreBanco varchar(100) not null,
+    estado varchar(20) not null default 'activo'
         check (estado in ('activo','inactivo')),
     constraint uq_Banco_Nombre unique (nombreBanco)
 );
@@ -298,10 +298,10 @@ create table CuentaBancaria (
     idCuentaBancaria int identity(1,1) primary key,
     idBanco int not null,
     idEtapa int not null,
-    numeroCuenta nvarchar(50) not null,
-    tipoCuenta nvarchar(30) not null,
+    numeroCuenta varchar(50) not null,
+    tipoCuenta varchar(30) not null,
     saldoActual decimal(18,2) not null default 0 check (saldoActual >= 0),
-    estado nvarchar(20) not null default 'activa'
+    estado varchar(20) not null default 'activa'
         check (estado in ('activa','inactiva')),
     constraint uq_CuentaBancaria_Numero unique (numeroCuenta),
     constraint fk_CuentaBancaria_Banco
@@ -320,13 +320,13 @@ create table Pago (
     idPago int identity(1,1) primary key,
     idVenta int not null,
     fechaPago datetime not null default getdate(),
-    formaPago nvarchar(20) not null
+    formaPago varchar(20) not null
         check (formaPago in ('efectivo','deposito')),
     montoTotal decimal(18,2) not null check (montoTotal > 0),
     idCuentaBancaria int null, -- se usa cuando fue depósito
-    numeroReferencia nvarchar(100) null,
+    numeroReferencia varchar(100) null,
     depositadoCaja bit not null default 0, -- solo aplica a pagos en efectivo
-    observacion nvarchar(255) null,
+    observacion varchar(255) null,
     constraint fk_Pago_Venta
         foreign key (idVenta) references Venta(idVenta),
     constraint fk_Pago_CuentaBancaria
@@ -353,10 +353,10 @@ go
 create table Factura (
     idFactura int identity(1,1) primary key,
     idPago int not null unique,
-    numeroFactura nvarchar(50) not null,
+    numeroFactura varchar(50) not null,
     fechaFactura datetime not null default getdate(),
-    nombreCliente nvarchar(200) not null,
-    rtnCliente nvarchar(20) null,
+    nombreCliente varchar(200) not null,
+    rtnCliente varchar(20) null,
     totalFactura decimal(18,2) not null check (totalFactura >= 0),
     constraint uq_Factura_Numero unique (numeroFactura),
     constraint fk_Factura_Pago
@@ -368,7 +368,7 @@ go
 create table DetalleFactura (
     idDetalleFactura int identity(1,1) primary key,
     idFactura int not null,
-    descripcion nvarchar(255) not null,
+    descripcion varchar(255) not null,
     capital decimal(18,2) not null default 0 check (capital >= 0),
     interes decimal(18,2) not null default 0 check (interes >= 0),
     subtotal decimal(18,2) not null check (subtotal >= 0),
@@ -387,7 +387,7 @@ create table DepositoCajaBanco (
     fechaDeposito datetime not null default getdate(),
     idCuentaBancaria int not null,
     totalDepositado decimal(18,2) not null check (totalDepositado > 0),
-    observacion nvarchar(255) null,
+    observacion varchar(255) null,
     constraint fk_DepositoCajaBanco_CuentaBancaria
         foreign key (idCuentaBancaria) references CuentaBancaria(idCuentaBancaria)
 );
@@ -413,8 +413,8 @@ go
 -- tipos de gasto del proyecto
 create table TipoGasto (
     idTipoGasto int identity(1,1) primary key,
-    nombreTipoGasto nvarchar(100) not null,
-    estado nvarchar(20) not null default 'activo'
+    nombreTipoGasto varchar(100) not null,
+    estado varchar(20) not null default 'activo'
         check (estado in ('activo','inactivo')),
     constraint uq_TipoGasto_Nombre unique (nombreTipoGasto)
 );
@@ -428,9 +428,9 @@ create table GastoProyecto (
     idTipoGasto int not null,
     idCuentaBancaria int not null,
     fechaGasto datetime not null default getdate(),
-    descripcion nvarchar(255) not null,
+    descripcion varchar(255) not null,
     monto decimal(18,2) not null check (monto > 0),
-    estado nvarchar(20) not null default 'activo'
+    estado varchar(20) not null default 'activo'
         check (estado in ('activo','anulado')),
     constraint fk_GastoProyecto_Proyecto
         foreign key (idProyecto) references Proyecto(idProyecto),
