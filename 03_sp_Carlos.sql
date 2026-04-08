@@ -260,11 +260,11 @@ go
 create or alter procedure sp_registrar_pago
     @idVenta int,
     @idCuota int,
-    @formaPago nvarchar(20),
+    @formaPago varchar(20),
     @montoTotal decimal(18,2),
     @idCuentaBancaria int = null,
-    @numeroReferencia nvarchar(100) = null,
-    @observacion nvarchar(255) = null
+    @numeroReferencia varchar(100) = null,
+    @observacion varchar(255) = null
 as
 begin
     set nocount on
@@ -274,7 +274,7 @@ begin
     declare @idFactura int
 
     declare @montoCuota decimal(18,2)
-    declare @estadoCuota nvarchar(30)
+    declare @estadoCuota varchar(30)
     declare @capitalProgramado decimal(18,2)
     declare @interesProgramado decimal(18,2)
 
@@ -284,9 +284,9 @@ begin
     declare @montoCapital decimal(18,2)
     declare @montoInteres decimal(18,2)
 
-    declare @nombreCliente nvarchar(200)
-    declare @rtnCliente nvarchar(20)
-    declare @numeroFactura nvarchar(50)
+    declare @nombreCliente varchar(200)
+    declare @rtnCliente varchar(20)
+    declare @numeroFactura varchar(50)
 
     begin try
         begin transaction
@@ -415,7 +415,7 @@ begin
         where v.idVenta = @idVenta
 
         -- generar número simple de factura
-        set @numeroFactura = 'FAC-' + cast(@idPago as nvarchar(20))
+        set @numeroFactura = 'FAC-' + cast(@idPago as varchar(20))
 
         -- insertar factura
         insert into Factura (
@@ -468,7 +468,7 @@ begin
         if @@trancount > 0
             rollback transaction
 
-        declare @mensajeError nvarchar(4000)
+        declare @mensajeError varchar(4000)
         set @mensajeError = error_message()
 
         raiserror(@mensajeError, 16, 1)
