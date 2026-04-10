@@ -873,3 +873,17 @@ RETURN
     CROSS JOIN LotesDisponibles ld
 );
 GO
+-- ==================================================================
+-- 7. SP para obtener datos laborales por id del cliente
+-- ==================================================================
+
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_obtener_por_cliente
+    @idCliente INT
+AS
+BEGIN
+    SELECT TOP 1 *
+    FROM DatosLaboralesCliente
+    WHERE idCliente = @idCliente;
+END;
+GO
