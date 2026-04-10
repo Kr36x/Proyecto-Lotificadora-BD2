@@ -170,6 +170,11 @@ begin
     declare @totalPlan decimal(18,2)
     declare @tasaMensual decimal(18,8)
 
+    -- nuevas variables para validación por ingreso
+    declare @ingresoMensual decimal(18,2)
+    declare @porcentajeMaxIngreso decimal(5,2)
+    declare @capacidadMaxima decimal(18,2)
+
     begin try
         begin transaction
 
@@ -295,6 +300,29 @@ begin
         set @totalPlan = round(@cuotaMensualEstimada * @numeroCuotas, 2)
         set @totalInteres = round(@totalPlan - @montoFinanciado, 2)
 
+        -- nueva validación: capacidad de pago del cliente
+        select
+            @ingresoMensual = dl.ingresoMensual
+        from DatosLaboralesCliente dl
+        where dl.idCliente = @idCliente
+
+        if @ingresoMensual is null
+        begin
+            raiserror('el cliente no tiene datos laborales registrados', 16, 1)
+            rollback transaction
+            return
+        end
+
+        set @porcentajeMaxIngreso = 30
+        set @capacidadMaxima = @ingresoMensual * (@porcentajeMaxIngreso / 100.0)
+
+        if @cuotaMensualEstimada > @capacidadMaxima
+        begin
+            raiserror('la cuota estimada supera el 30%% del ingreso mensual del cliente', 16, 1)
+            rollback transaction
+            return
+        end
+
         -- insertar venta general
         insert into Venta (
             idLote,
@@ -381,7 +409,9 @@ begin
             @numeroCuotas as numeroCuotas,
             @cuotaMensualEstimada as cuotaMensualEstimada,
             @totalInteres as totalInteres,
-            @totalPlan as totalPlan
+            @totalPlan as totalPlan,
+            @ingresoMensual as ingresoMensual,
+            @capacidadMaxima as capacidadMaxima
     end try
     begin catch
         if @@trancount > 0
@@ -616,4 +646,230 @@ begin
     end catch
 end
 go
+-- ==================================================================
+-- 7. funcion para validar los lotes disponibles por cliente
+-- ==================================================================
 
+CREATE OR ALTER FUNCTION dbo.fn_tvf_lotes_aptos_por_cliente
+(
+    @idCliente INT,
+    @prima DECIMAL(18,2),
+    @plazoAnios INT,
+    @porcentajeMaxIngreso DECIMAL(5,2)
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    WITH ClienteIngresos AS
+    (
+        SELECT
+            c.idCliente,
+            c.nombres + ' ' + c.apellidos AS cliente,
+            dl.ingresoMensual
+        FROM Cliente c
+        INNER JOIN DatosLaboralesCliente dl
+            ON dl.idCliente = c.idCliente
+        WHERE c.idCliente = @idCliente
+          AND c.estado = 'activo'
+    ),
+    LotesDisponibles AS
+    (
+        SELECT
+            v.idProyecto,
+            v.nombreProyecto,
+            v.idEtapa,
+            v.nombreEtapa,
+            v.idBloque,
+            v.nombreBloque,
+            v.idLote,
+            v.numeroLote,
+            v.areaV2,
+            v.precioFinalCalculado,
+            e.tasaInteresAnual
+        FROM dbo.vw_lotes_disponibles v
+        INNER JOIN Lote l
+            ON l.idLote = v.idLote
+        INNER JOIN Bloque b
+            ON b.idBloque = l.idBloque
+        INNER JOIN Etapa e
+            ON e.idEtapa = b.idEtapa
+    )
+    SELECT
+        ci.idCliente,
+        ci.cliente,
+        ci.ingresoMensual,
+        ld.idProyecto,
+        ld.nombreProyecto,
+        ld.idEtapa,
+        ld.nombreEtapa,
+        ld.idBloque,
+        ld.nombreBloque,
+        ld.idLote,
+        ld.numeroLote,
+        ld.areaV2,
+        ld.precioFinalCalculado AS precioFinalLote,
+
+        CASE
+            WHEN @prima < 0 THEN ld.precioFinalCalculado
+            WHEN @prima >= ld.precioFinalCalculado THEN 0
+            ELSE ld.precioFinalCalculado - @prima
+        END AS montoFinanciado,
+
+        ld.tasaInteresAnual,
+
+        CAST(
+            CASE
+                WHEN @plazoAnios <= 0 THEN 0
+                WHEN
+                    CASE
+                        WHEN @prima < 0 THEN ld.precioFinalCalculado
+                        WHEN @prima >= ld.precioFinalCalculado THEN 0
+                        ELSE ld.precioFinalCalculado - @prima
+                    END <= 0
+                THEN 0
+                ELSE
+                    CASE
+                        WHEN (ld.tasaInteresAnual / 12.0 / 100.0) = 0
+                        THEN
+                            (
+                                CASE
+                                    WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                    WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                    ELSE ld.precioFinalCalculado - @prima
+                                END
+                            ) / (@plazoAnios * 12.0)
+                        ELSE
+                            (
+                                (
+                                    CASE
+                                        WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                        WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                        ELSE ld.precioFinalCalculado - @prima
+                                    END
+                                )
+                                *
+                                (
+                                    (ld.tasaInteresAnual / 12.0 / 100.0)
+                                    *
+                                    POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12)
+                                )
+                                /
+                                (
+                                    POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12) - 1
+                                )
+                            )
+                    END
+            END
+        AS DECIMAL(18,2)) AS cuotaEstimada,
+
+        CAST(ci.ingresoMensual * (@porcentajeMaxIngreso / 100.0) AS DECIMAL(18,2)) AS capacidadMaxima,
+
+        CAST(
+            CASE
+                WHEN ci.ingresoMensual <= 0 THEN 0
+                ELSE
+                    (
+                        CAST(
+                            CASE
+                                WHEN @plazoAnios <= 0 THEN 0
+                                WHEN
+                                    CASE
+                                        WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                        WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                        ELSE ld.precioFinalCalculado - @prima
+                                    END <= 0
+                                THEN 0
+                                ELSE
+                                    CASE
+                                        WHEN (ld.tasaInteresAnual / 12.0 / 100.0) = 0
+                                        THEN
+                                            (
+                                                CASE
+                                                    WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                                    WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                                    ELSE ld.precioFinalCalculado - @prima
+                                                END
+                                            ) / (@plazoAnios * 12.0)
+                                        ELSE
+                                            (
+                                                (
+                                                    CASE
+                                                        WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                                        WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                                        ELSE ld.precioFinalCalculado - @prima
+                                                    END
+                                                )
+                                                *
+                                                (
+                                                    (ld.tasaInteresAnual / 12.0 / 100.0)
+                                                    *
+                                                    POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12)
+                                                )
+                                                /
+                                                (
+                                                    POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12) - 1
+                                                )
+                                            )
+                                    END
+                            END
+                        AS DECIMAL(18,2)) / ci.ingresoMensual
+                    ) * 100
+            END
+        AS DECIMAL(18,2)) AS porcentajeIngresoComprometido,
+
+        CASE
+            WHEN ci.ingresoMensual <= 0 THEN 'NO APTO'
+            WHEN
+                CAST(
+                    CASE
+                        WHEN @plazoAnios <= 0 THEN 0
+                        WHEN
+                            CASE
+                                WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                ELSE ld.precioFinalCalculado - @prima
+                            END <= 0
+                        THEN 0
+                        ELSE
+                            CASE
+                                WHEN (ld.tasaInteresAnual / 12.0 / 100.0) = 0
+                                THEN
+                                    (
+                                        CASE
+                                            WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                            WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                            ELSE ld.precioFinalCalculado - @prima
+                                        END
+                                    ) / (@plazoAnios * 12.0)
+                                ELSE
+                                    (
+                                        (
+                                            CASE
+                                                WHEN @prima < 0 THEN ld.precioFinalCalculado
+                                                WHEN @prima >= ld.precioFinalCalculado THEN 0
+                                                ELSE ld.precioFinalCalculado - @prima
+                                            END
+                                        )
+                                        *
+                                        (
+                                            (ld.tasaInteresAnual / 12.0 / 100.0)
+                                            *
+                                            POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12)
+                                        )
+                                        /
+                                        (
+                                            POWER(1 + (ld.tasaInteresAnual / 12.0 / 100.0), @plazoAnios * 12) - 1
+                                        )
+                                    )
+                            END
+                    END
+                AS DECIMAL(18,2))
+                <= CAST(ci.ingresoMensual * (@porcentajeMaxIngreso / 100.0) AS DECIMAL(18,2))
+            THEN 'APTO'
+            ELSE 'NO APTO'
+        END AS resultado
+    FROM ClienteIngresos ci
+    CROSS JOIN LotesDisponibles ld
+);
+GO
