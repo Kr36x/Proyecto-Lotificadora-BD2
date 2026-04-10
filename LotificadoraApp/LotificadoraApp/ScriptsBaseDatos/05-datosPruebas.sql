@@ -324,3 +324,22 @@ SELECT * FROM vw_creditos_activos_cliente;
               AND (idEtapa = 1)
             ORDER BY idProyecto, idEtapa, idBloque, numeroLote
 
+insert into Estado (id, nombre) values
+(1, 'activo'),
+(2, 'inactivo'),
+(3, 'finalizado'),
+(4, 'activa'),
+(5, 'inactiva'),
+(6, 'finalizada'),
+(7, 'disponible'),
+(8, 'reservado'),
+(9, 'vendido'),
+(10, 'anulada'),
+(11, 'cancelado'),
+(12, 'moroso'),
+(13, 'pendiente'),
+(14, 'parcial'),
+(15, 'pagada'),
+(16, 'vencida'),
+(17, 'anulado');
+go
