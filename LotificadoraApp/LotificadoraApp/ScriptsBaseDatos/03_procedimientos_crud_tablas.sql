@@ -242,8 +242,8 @@ CREATE PROCEDURE sp_bloque_insertar
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Bloque (idEtapa, nombreBloque, descripcion)
-        VALUES (@idEtapa, @nombreBloque, @descripcion);
+        INSERT INTO Bloque (idEtapa, nombreBloque, estado, descripcion)
+        VALUES (@idEtapa, @nombreBloque, 4, @descripcion);
         
         -- Devuelve el ID generado automáticamente
         SELECT SCOPE_IDENTITY() AS idBloqueGenerado;
@@ -418,14 +418,14 @@ CREATE PROCEDURE sp_cliente_insertar
     @telefono VARCHAR(20) = NULL,
     @correo VARCHAR(120) = NULL,
     @direccion VARCHAR(255) = NULL,
-    @estadoCivil VARCHAR(30) = NULL,
+    @estadoCivilId INT = NULL,
     @rtn VARCHAR(20) = NULL,
     @estado VARCHAR(20) = 'activo'
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivil, rtn, estado)
-        VALUES (@identidad, @nombres, @apellidos, @fechaNacimiento, @telefono, @correo, @direccion, @estadoCivil, @rtn, @estado);
+        INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estado)
+        VALUES (@identidad, @nombres, @apellidos, @fechaNacimiento, @telefono, @correo, @direccion, @estadoCivilId, @rtn, @estado);
         SELECT SCOPE_IDENTITY() AS idClienteGenerado;
     END TRY
     BEGIN CATCH
@@ -443,7 +443,7 @@ CREATE PROCEDURE sp_cliente_actualizar
     @telefono VARCHAR(20) = NULL,
     @correo VARCHAR(120) = NULL,
     @direccion VARCHAR(255) = NULL,
-    @estadoCivil VARCHAR(30) = NULL,
+    @estadoCivilId INT = NULL,
     @rtn VARCHAR(20) = NULL,
     @estado VARCHAR(20)
 AS
@@ -451,7 +451,7 @@ BEGIN
     BEGIN TRY
         UPDATE Cliente
         SET identidad = @identidad, nombres = @nombres, apellidos = @apellidos, fechaNacimiento = @fechaNacimiento, 
-            telefono = @telefono, correo = @correo, direccion = @direccion, estadoCivil = @estadoCivil, rtn = @rtn, estado = @estado
+            telefono = @telefono, correo = @correo, direccion = @direccion, estadoCivilId = @estadoCivilId, rtn = @rtn, estado = @estado
         WHERE idCliente = @idCliente;
     END TRY
     BEGIN CATCH
@@ -499,12 +499,12 @@ CREATE PROCEDURE sp_aval_insertar
     @direccion VARCHAR(255) = NULL,
     @lugarTrabajo VARCHAR(150) = NULL,
     @ingresoMensual DECIMAL(18,2) = NULL,
-    @parentescoCliente VARCHAR(50) = NULL
+    @parentescoId INT = NULL
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoCliente)
-        VALUES (@identidad, @nombres, @apellidos, @telefono, @direccion, @lugarTrabajo, @ingresoMensual, @parentescoCliente);
+        INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoId)
+        VALUES (@identidad, @nombres, @apellidos, @telefono, @direccion, @lugarTrabajo, @ingresoMensual, @parentescoId);
         SELECT SCOPE_IDENTITY() AS idAvalGenerado;
     END TRY
     BEGIN CATCH
@@ -522,13 +522,13 @@ CREATE PROCEDURE sp_aval_actualizar
     @direccion VARCHAR(255) = NULL,
     @lugarTrabajo VARCHAR(150) = NULL,
     @ingresoMensual DECIMAL(18,2) = NULL,
-    @parentescoCliente VARCHAR(50) = NULL
+    @parentescoId INT = NULL
 AS
 BEGIN
     BEGIN TRY
         UPDATE Aval
         SET identidad = @identidad, nombres = @nombres, apellidos = @apellidos, telefono = @telefono, 
-            direccion = @direccion, lugarTrabajo = @lugarTrabajo, ingresoMensual = @ingresoMensual, parentescoCliente = @parentescoCliente
+            direccion = @direccion, lugarTrabajo = @lugarTrabajo, ingresoMensual = @ingresoMensual, parentescoId = @parentescoId
         WHERE idAval = @idAval;
     END TRY
     BEGIN CATCH
@@ -573,13 +573,13 @@ CREATE PROCEDURE sp_beneficiario_insertar
     @nombres VARCHAR(100),
     @apellidos VARCHAR(100),
     @telefono VARCHAR(20) = NULL,
-    @parentesco VARCHAR(50) = NULL,
+    @parentescoId INT = NULL,
     @direccion VARCHAR(255) = NULL
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Beneficiario (identidad, nombres, apellidos, telefono, parentesco, direccion)
-        VALUES (@identidad, @nombres, @apellidos, @telefono, @parentesco, @direccion);
+        INSERT INTO Beneficiario (identidad, nombres, apellidos, telefono, parentescoId, direccion)
+        VALUES (@identidad, @nombres, @apellidos, @telefono, @parentescoId, @direccion);
         SELECT SCOPE_IDENTITY() AS idBeneficiarioGenerado;
     END TRY
     BEGIN CATCH
@@ -594,14 +594,14 @@ CREATE PROCEDURE sp_beneficiario_actualizar
     @nombres VARCHAR(100),
     @apellidos VARCHAR(100),
     @telefono VARCHAR(20) = NULL,
-    @parentesco VARCHAR(50) = NULL,
+    @parentescoId INT = NULL,
     @direccion VARCHAR(255) = NULL
 AS
 BEGIN
     BEGIN TRY
         UPDATE Beneficiario
         SET identidad = @identidad, nombres = @nombres, apellidos = @apellidos, 
-            telefono = @telefono, parentesco = @parentesco, direccion = @direccion
+            telefono = @telefono, parentescoId = @parentescoId, direccion = @direccion
         WHERE idBeneficiario = @idBeneficiario;
     END TRY
     BEGIN CATCH
