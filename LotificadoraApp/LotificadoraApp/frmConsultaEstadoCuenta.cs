@@ -19,7 +19,7 @@ namespace LotificadoraApp
                     "El campo id del cliente es requerido",
                     "Advertencia",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Warning);
 
                     return;
                 }
