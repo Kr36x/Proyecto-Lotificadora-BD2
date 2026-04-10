@@ -275,8 +275,8 @@ GO
 
 CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_insertar
     @idProyecto INT,
-    @departamento VARCHAR(100),
-    @municipio VARCHAR(100),
+    @departamentoId INT,
+    @municipioId INT,
     @aldeaColonia VARCHAR(150) = NULL,
     @direccionDetalle VARCHAR(255) = NULL,
     @claveCatastral VARCHAR(100) = NULL,
@@ -286,8 +286,8 @@ BEGIN
     INSERT INTO UbicacionProyecto
     (
         idProyecto,
-        departamento,
-        municipio,
+        departamentoId,
+        municipioId,
         aldeaColonia,
         direccionDetalle,
         claveCatastral,
@@ -296,8 +296,8 @@ BEGIN
     VALUES
     (
         @idProyecto,
-        @departamento,
-        @municipio,
+        @departamentoId,
+        @municipioId,
         @aldeaColonia,
         @direccionDetalle,
         @claveCatastral,
@@ -311,8 +311,8 @@ GO
 CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_actualizar
     @idUbicacion INT,
     @idProyecto INT,
-    @departamento VARCHAR(100),
-    @municipio VARCHAR(100),
+    @departamentoId INT,
+    @municipioId INT,
     @aldeaColonia VARCHAR(150) = NULL,
     @direccionDetalle VARCHAR(255) = NULL,
     @claveCatastral VARCHAR(100) = NULL,
@@ -322,8 +322,8 @@ BEGIN
     UPDATE UbicacionProyecto
     SET
         idProyecto = @idProyecto,
-        departamento = @departamento,
-        municipio = @municipio,
+        departamentoId = @departamentoId,
+        municipioId = @municipioId,
         aldeaColonia = @aldeaColonia,
         direccionDetalle = @direccionDetalle,
         claveCatastral = @claveCatastral,

@@ -33,10 +33,19 @@ SELECT @idProyecto1 = MIN(idProyecto), @idProyecto2 = MAX(idProyecto)
 FROM Proyecto
 WHERE nombreProyecto IN ('Residencial Valle Verde', 'Residencial Senderos del Norte');
 
-INSERT INTO UbicacionProyecto (idProyecto, departamento, municipio, aldeaColonia, direccionDetalle, claveCatastral, observacionLegal)
+INSERT INTO Departamento (id, codigo, nombre)
 VALUES
-(@idProyecto1, 'Cortes', 'San Pedro Sula', 'Colonia Universidad', 'Boulevard principal, salida vieja a La Lima', 'VV-001', 'Proyecto piloto para pruebas DB2'),
-(@idProyecto2, 'Cortes', 'La Lima', 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
+(1, '05', 'Cortes');
+
+INSERT INTO Municipio (id, codigo, departamentoId, nombre)
+VALUES
+(1, '01', 1, 'San Pedro Sula'),
+(2, '12', 1, 'La Lima');
+
+INSERT INTO UbicacionProyecto (idProyecto, departamentoId, municipioId, aldeaColonia, direccionDetalle, claveCatastral, observacionLegal)
+VALUES
+(@idProyecto1, 1, 1, 'Colonia Universidad', 'Boulevard principal, salida vieja a La Lima', 'VV-001', 'Proyecto piloto para pruebas DB2'),
+(@idProyecto2, 1, 2, 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
 
 INSERT INTO Etapa
 (idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado)
