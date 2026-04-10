@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\db.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\consultavistalotesform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\consultavistalotesform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,15 +86,42 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ConsultaVistaLotesForm.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\ConsultaVistaLotesForm.cs",
+              "RelativeDocumentMoniker": "LotificadoraApp\\ConsultaVistaLotesForm.cs",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\ConsultaVistaLotesForm.cs",
+              "RelativeToolTip": "LotificadoraApp\\ConsultaVistaLotesForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T05:27:41.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Form1.cs [Design]",
+              "Title": "Db.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Db.cs",
+              "RelativeDocumentMoniker": "LotificadoraApp\\Db.cs",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Db.cs",
+              "RelativeToolTip": "LotificadoraApp\\Db.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAB+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T05:27:14.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Form1.cs",
               "RelativeDocumentMoniker": "LotificadoraApp\\Form1.cs",
-              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Form1.cs [Design]",
-              "RelativeToolTip": "LotificadoraApp\\Form1.cs [Design]",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Form1.cs",
+              "RelativeToolTip": "LotificadoraApp\\Form1.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAxwEUAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-10T04:20:02.368Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2026-04-10T05:24:13.39Z",
+              "EditorCaption": ""
             }
           ]
         },
