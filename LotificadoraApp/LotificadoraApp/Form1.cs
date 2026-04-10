@@ -51,7 +51,7 @@ namespace LotificadoraApp
                 FlowDirection = FlowDirection.TopDown,
                 WrapContents = false
             };
-            pnlVistas.Controls.Add(CreateOpenButton("Vista - Lotes Disponibles", () => new ConsultaVistaLotesForm()));
+            pnlVistas.Controls.Add(CreateOpenButton("Vista - Lotes Disponibles", () => new frmConsultarPlanPago()));
             pnlVistas.Controls.Add(CreateOpenButton("Vista - Creditos Activos", () => new ConsultaVistaCreditosForm()));
             gbVistas.Controls.Add(pnlVistas);
 

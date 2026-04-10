@@ -6,8 +6,9 @@ namespace LotificadoraApp;
 internal static class Db
 {
     // Ajusta este valor a tu instancia de SQL Server si es necesario.
-    public static string ConnectionString { get; set; } =
-        "Data Source=LAPTOP-MKNJTV9V\\SQLEXPRESS;Initial Catalog=Grupo8;Integrated Security=True;Trust Server Certificate=True";
+
+    public static string ConnectionString { get; set; } = "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
+
 
     public static SqlParameter P(string name, object? value)
     {

@@ -1,0 +1,326 @@
+use DB20222030195
+GO
+/*
+    DATOS DE PRUEBA MINIMOS PARA LOTIFICADORA
+    Recomendacion: ejecutar este script sobre una base vacia o recien recreada.
+*/
+
+SET NOCOUNT ON;
+
+DECLARE 
+    @idProyecto1 INT, @idProyecto2 INT,
+    @idEtapa1 INT, @idEtapa2 INT, @idEtapa3 INT,
+    @idBloqueA1 INT, @idBloqueA2 INT, @idBloqueB1 INT, @idBloqueC1 INT,
+    @idLote1 INT, @idLote2 INT, @idLote3 INT, @idLote4 INT, @idLote5 INT, @idLote6 INT,
+    @idLote7 INT, @idLote8 INT, @idLote9 INT, @idLote10 INT,
+    @idCaracteristica1 INT, @idCaracteristica2 INT, @idCaracteristica3 INT,
+    @idCliente1 INT, @idCliente2 INT, @idCliente3 INT,
+    @idAval1 INT, @idAval2 INT,
+    @idBeneficiario1 INT, @idBeneficiario2 INT,
+    @idBanco1 INT, @idBanco2 INT,
+    @idCuenta1 INT, @idCuenta2 INT, @idCuenta3 INT,
+    @idTipoGasto1 INT, @idTipoGasto2 INT, @idTipoGasto3 INT,
+    @idVentaCredito1 INT, @idVentaCredito2 INT,
+    @idVenta1 INT, @idVenta2 INT,
+    @idCuota1Venta1 INT, @idCuota2Venta1 INT, @idCuota1Venta2 INT;
+
+INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estado)
+VALUES 
+('Residencial Valle Verde', 'Proyecto principal de prueba para ventas y creditos', '2026-01-10', '2028-12-31', 50000, 15, 'activo'),
+('Residencial Senderos del Norte', 'Proyecto secundario de prueba', '2026-02-01', '2029-06-30', 32000, 12, 'activo');
+
+SELECT @idProyecto1 = MIN(idProyecto), @idProyecto2 = MAX(idProyecto)
+FROM Proyecto
+WHERE nombreProyecto IN ('Residencial Valle Verde', 'Residencial Senderos del Norte');
+
+INSERT INTO UbicacionProyecto (idProyecto, departamento, municipio, aldeaColonia, direccionDetalle, claveCatastral, observacionLegal)
+VALUES
+(@idProyecto1, 'Cortes', 'San Pedro Sula', 'Colonia Universidad', 'Boulevard principal, salida vieja a La Lima', 'VV-001', 'Proyecto piloto para pruebas DB2'),
+(@idProyecto2, 'Cortes', 'La Lima', 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
+
+INSERT INTO Etapa
+(idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado)
+VALUES
+(@idProyecto1, 'Etapa 1', '2026-01-15', '2026-12-31', 18000, 10, 15, 75, 1200, 14.50, 'activa'),
+(@idProyecto1, 'Etapa 2', '2026-02-10', '2027-03-31', 16000, 12, 13, 75, 1350, 15.00, 'activa'),
+(@idProyecto2, 'Etapa 1', '2026-02-15', '2027-05-31', 14000, 8, 17, 75, 950, 13.25, 'activa');
+
+SELECT @idEtapa1 = MIN(idEtapa), @idEtapa3 = MAX(idEtapa)
+FROM Etapa
+WHERE nombreEtapa = 'Etapa 1';
+
+SELECT @idEtapa2 = idEtapa
+FROM Etapa
+WHERE idProyecto = @idProyecto1 AND nombreEtapa = 'Etapa 2';
+
+INSERT INTO Bloque (idEtapa, nombreBloque, descripcion)
+VALUES
+(@idEtapa1, 'Bloque A', 'Bloque principal de la etapa 1'),
+(@idEtapa1, 'Bloque B', 'Bloque secundario de la etapa 1'),
+(@idEtapa2, 'Bloque C', 'Bloque de la etapa 2'),
+(@idEtapa3, 'Bloque D', 'Bloque del proyecto 2');
+
+SELECT @idBloqueA1 = MIN(idBloque), @idBloqueC1 = MAX(idBloque)
+FROM Bloque;
+
+SELECT @idBloqueA2 = idBloque FROM Bloque WHERE idEtapa = @idEtapa1 AND nombreBloque = 'Bloque B';
+SELECT @idBloqueB1 = idBloque FROM Bloque WHERE idEtapa = @idEtapa2 AND nombreBloque = 'Bloque C';
+
+INSERT INTO Lote (idBloque, numeroLote, areaV2, esEsquina, cercaParque, calleCerrada, precioBase, recargoTotal, precioFinal, estadoLote)
+VALUES
+(@idBloqueA1, 'A-01', 250, 1, 0, 0, 0, 0, 0, 'disponible'),
+(@idBloqueA1, 'A-02', 260, 0, 1, 0, 0, 0, 0, 'disponible'),
+(@idBloqueA1, 'A-03', 245, 0, 0, 1, 0, 0, 0, 'disponible'),
+(@idBloqueA2, 'B-01', 280, 1, 1, 0, 0, 0, 0, 'disponible'),
+(@idBloqueA2, 'B-02', 300, 0, 0, 0, 0, 0, 0, 'disponible'),
+(@idBloqueB1, 'C-01', 310, 1, 0, 1, 0, 0, 0, 'disponible'),
+(@idBloqueB1, 'C-02', 295, 0, 1, 0, 0, 0, 0, 'disponible'),
+(@idBloqueB1, 'C-03', 320, 0, 0, 0, 0, 0, 0, 'disponible'),
+(@idBloqueC1, 'D-01', 230, 0, 0, 0, 0, 0, 0, 'disponible'),
+(@idBloqueC1, 'D-02', 240, 1, 0, 0, 0, 0, 0, 'disponible');
+
+SELECT @idLote1 = idLote FROM Lote WHERE numeroLote = 'A-01' AND idBloque = @idBloqueA1;
+SELECT @idLote6 = idLote FROM Lote WHERE numeroLote = 'C-01' AND idBloque = @idBloqueB1;
+SELECT @idLote9 = idLote FROM Lote WHERE numeroLote = 'D-01' AND idBloque = @idBloqueC1;
+SELECT @idLote10 = idLote FROM Lote WHERE numeroLote = 'D-02' AND idBloque = @idBloqueC1;
+SELECT @idLote2 = idLote FROM Lote WHERE numeroLote = 'A-02' AND idBloque = @idBloqueA1;
+SELECT @idLote4 = idLote FROM Lote WHERE numeroLote = 'B-01' AND idBloque = @idBloqueA2;
+
+INSERT INTO CaracteristicaLote (nombreCaracteristica, tipoRecargo, valorRecargo, estado)
+VALUES
+('Boulevard principal', 'porcentaje', 6, 'activo'),
+('Cerca de area social', 'porcentaje', 3.5, 'activo'),
+('Vista panoramica', 'monto', 15000, 'activo');
+
+SELECT @idCaracteristica1 = MIN(idCaracteristica), @idCaracteristica3 = MAX(idCaracteristica)
+FROM CaracteristicaLote;
+SELECT @idCaracteristica2 = idCaracteristica FROM CaracteristicaLote WHERE nombreCaracteristica = 'Cerca de area social';
+
+INSERT INTO LoteCaracteristica (idLote, idCaracteristica)
+VALUES
+(@idLote1, @idCaracteristica1),
+(@idLote2, @idCaracteristica2),
+(@idLote4, @idCaracteristica1),
+(@idLote4, @idCaracteristica3),
+(@idLote6, @idCaracteristica2),
+(@idLote10, @idCaracteristica3);
+
+EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa1;
+EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa2;
+EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa3;
+
+INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivil, rtn, estado)
+VALUES
+('0801-1998-00001', 'Carlos', 'Mejia', '1998-04-11', '9876-1001', 'carlos.mejia@correo.com', 'Col. Trejo, SPS', 'Soltero', '0801199800001', 'activo'),
+('0801-1995-00002', 'Daniela', 'Santos', '1995-07-25', '9876-1002', 'daniela.santos@correo.com', 'Col. Satelite, SPS', 'Casada', '0801199500002', 'activo'),
+('0501-1992-00003', 'Marvin', 'Lopez', '1992-10-08', '9876-1003', 'marvin.lopez@correo.com', 'La Lima, Cortes', 'Casado', '0501199200003', 'activo');
+
+SELECT @idCliente1 = idCliente FROM Cliente WHERE identidad = '0801-1998-00001';
+SELECT @idCliente2 = idCliente FROM Cliente WHERE identidad = '0801-1995-00002';
+SELECT @idCliente3 = idCliente FROM Cliente WHERE identidad = '0501-1992-00003';
+
+INSERT INTO DatosLaboralesCliente (idCliente, empresa, cargo, ingresoMensual, antiguedadLaboral, telefonoTrabajo, direccionTrabajo)
+VALUES
+(@idCliente1, 'Grupo Delta', 'Analista', 28500, 3, '2233-1001', 'Parque industrial, SPS'),
+(@idCliente2, 'Inversiones Nova', 'Administradora', 42000, 5, '2233-1002', 'Circunvalacion, SPS'),
+(@idCliente3, 'Maquila Centro', 'Supervisor', 36000, 4, '2233-1003', 'La Lima, zona industrial');
+
+INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoCliente)
+VALUES
+('0801-1975-00011', 'Jose', 'Maldonado', '9988-2001', 'Barrio Cabañas, SPS', 'Empresa Uno', 55000, 'Tio'),
+('0501-1980-00012', 'Ana', 'Castillo', '9988-2002', 'La Lima, Cortes', 'Banco Regional', 62000, 'Hermana');
+
+SELECT @idAval1 = idAval FROM Aval WHERE identidad = '0801-1975-00011';
+SELECT @idAval2 = idAval FROM Aval WHERE identidad = '0501-1980-00012';
+
+INSERT INTO Beneficiario (identidad, nombres, apellidos, telefono, parentesco, direccion)
+VALUES
+('0801-2001-00021', 'Laura', 'Mejia', '9911-3001', 'Hermana', 'Col. Trejo, SPS'),
+('0501-2003-00022', 'Kevin', 'Lopez', '9911-3002', 'Hijo', 'La Lima, Cortes');
+
+SELECT @idBeneficiario1 = idBeneficiario FROM Beneficiario WHERE identidad = '0801-2001-00021';
+SELECT @idBeneficiario2 = idBeneficiario FROM Beneficiario WHERE identidad = '0501-2003-00022';
+
+INSERT INTO Banco (nombreBanco, estado)
+VALUES ('Banco Atlantida', 'activo'), ('BAC Credomatic', 'activo');
+
+SELECT @idBanco1 = idBanco FROM Banco WHERE nombreBanco = 'Banco Atlantida';
+SELECT @idBanco2 = idBanco FROM Banco WHERE nombreBanco = 'BAC Credomatic';
+
+INSERT INTO CuentaBancaria (idBanco, idEtapa, numeroCuenta, tipoCuenta, saldoActual, estado)
+VALUES
+(@idBanco1, @idEtapa1, 'AT-0001-ET1', 'ahorro', 150000, 'activa'),
+(@idBanco2, @idEtapa2, 'BAC-0002-ET2', 'monetaria', 90000, 'activa'),
+(@idBanco1, @idEtapa3, 'AT-0003-ET3', 'ahorro', 80000, 'activa');
+
+SELECT @idCuenta1 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'AT-0001-ET1';
+SELECT @idCuenta2 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'BAC-0002-ET2';
+SELECT @idCuenta3 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'AT-0003-ET3';
+
+INSERT INTO TipoGasto (nombreTipoGasto, estado)
+VALUES
+('Seguridad', 'activo'),
+('Mantenimiento', 'activo'),
+('Servicios publicos', 'activo');
+
+SELECT @idTipoGasto1 = idTipoGasto FROM TipoGasto WHERE nombreTipoGasto = 'Seguridad';
+SELECT @idTipoGasto2 = idTipoGasto FROM TipoGasto WHERE nombreTipoGasto = 'Mantenimiento';
+
+EXEC dbo.sp_registrar_venta_contado_transaccional
+    @idLote = @idLote9,
+    @idCliente = @idCliente3,
+    @fechaVenta = '2026-03-15',
+    @precioLote = 218500,
+    @descuento = 8500,
+    @recargo = 0,
+    @fechaPago = '2026-03-15',
+    @observacion = 'Venta al contado de prueba';
+
+EXEC dbo.sp_registrar_venta_credito
+    @idLote = @idLote1,
+    @idCliente = @idCliente1,
+    @idAval = @idAval1,
+    @idBeneficiario = @idBeneficiario1,
+    @fechaVenta = '2026-03-20',
+    @precioLote = 320000,
+    @descuento = 10000,
+    @recargo = 15000,
+    @prima = 50000,
+    @financiaTotal = 0,
+    @plazoAnios = 10,
+    @fechaInicioPago = '2026-04-30';
+
+SELECT TOP 1 
+    @idVentaCredito1 = vc.idVentaCredito,
+    @idVenta1 = v.idVenta
+FROM VentaCredito vc
+INNER JOIN Venta v ON v.idVenta = vc.idVenta
+WHERE v.idCliente = @idCliente1 AND v.idLote = @idLote1
+ORDER BY vc.idVentaCredito DESC;
+
+EXEC dbo.sp_registrar_venta_credito
+    @idLote = @idLote6,
+    @idCliente = @idCliente2,
+    @idAval = @idAval2,
+    @idBeneficiario = @idBeneficiario2,
+    @fechaVenta = '2026-03-22',
+    @precioLote = 405000,
+    @descuento = 5000,
+    @recargo = 12000,
+    @prima = 0,
+    @financiaTotal = 1,
+    @plazoAnios = 8,
+    @fechaInicioPago = '2026-04-30';
+
+SELECT TOP 1 
+    @idVentaCredito2 = vc.idVentaCredito,
+    @idVenta2 = v.idVenta
+FROM VentaCredito vc
+INNER JOIN Venta v ON v.idVenta = vc.idVenta
+WHERE v.idCliente = @idCliente2 AND v.idLote = @idLote6
+ORDER BY vc.idVentaCredito DESC;
+
+EXEC dbo.sp_generar_cuotas_plan_cursor @idVentaCredito = @idVentaCredito1, @fechaPrimerVencimiento = '2026-04-30';
+EXEC dbo.sp_generar_cuotas_plan_cursor @idVentaCredito = @idVentaCredito2, @fechaPrimerVencimiento = '2026-04-30';
+
+SELECT TOP 1 @idCuota1Venta1 = c.idCuota
+FROM Cuota c
+INNER JOIN PlanPago pp ON pp.idPlanPago = c.idPlanPago
+WHERE pp.idVentaCredito = @idVentaCredito1
+ORDER BY c.numeroCuota;
+
+SELECT TOP 1 @idCuota2Venta1 = c.idCuota
+FROM Cuota c
+INNER JOIN PlanPago pp ON pp.idPlanPago = c.idPlanPago
+WHERE pp.idVentaCredito = @idVentaCredito1 AND c.numeroCuota = 2;
+
+SELECT TOP 1 @idCuota1Venta2 = c.idCuota
+FROM Cuota c
+INNER JOIN PlanPago pp ON pp.idPlanPago = c.idPlanPago
+WHERE pp.idVentaCredito = @idVentaCredito2
+ORDER BY c.numeroCuota;
+
+EXEC dbo.sp_registrar_pago
+    @idVenta = @idVenta1,
+    @idCuota = @idCuota1Venta1,
+    @formaPago = 'deposito',
+    @montoTotal = 4800,
+    @idCuentaBancaria = @idCuenta1,
+    @numeroReferencia = 'DEP-0001-ET1',
+    @observacion = 'Primer pago por deposito';
+
+EXEC dbo.sp_registrar_pago
+    @idVenta = @idVenta2,
+    @idCuota = @idCuota1Venta2,
+    @formaPago = 'efectivo',
+    @idCuentaBancaria = NULL,
+    @montoTotal = 5200,
+    @numeroReferencia = NULL,
+    @observacion = 'Pago recibido en caja';
+
+EXEC dbo.sp_registrar_pago
+    @idVenta = @idVenta1,
+    @idCuota = @idCuota2Venta1,
+    @formaPago = 'deposito',
+    @montoTotal = 2500,
+    @idCuentaBancaria = @idCuenta1,
+    @numeroReferencia = 'DEP-0002-ET1',
+    @observacion = 'Pago parcial de segunda cuota';
+
+DECLARE @fechaHoy DATE = CAST(GETDATE() AS DATE);
+
+EXEC dbo.sp_procesar_deposito_caja_transaccional
+    @idCuentaBancaria = @idCuenta2,
+    @fechaOperacion = @fechaHoy,
+    @observacion = 'Deposito de caja de prueba';
+
+EXEC dbo.sp_registrar_gasto_proyecto_transaccional
+    @idProyecto = @idProyecto1,
+    @idEtapa = @idEtapa1,
+    @idTipoGasto = @idTipoGasto1,
+    @idCuentaBancaria = @idCuenta1,
+    @descripcion = 'Pago de vigilancia privada del proyecto',
+    @monto = 12000;
+
+EXEC dbo.sp_registrar_gasto_proyecto_transaccional
+    @idProyecto = @idProyecto1,
+    @idEtapa = @idEtapa2,
+    @idTipoGasto = @idTipoGasto2,
+    @idCuentaBancaria = @idCuenta2,
+    @descripcion = 'Mantenimiento de calles internas y areas comunes',
+    @monto = 8500;
+
+PRINT 'Seed completado. Validaciones rapidas:';
+
+SELECT 'Proyectos' AS modulo, COUNT(*) AS total FROM Proyecto
+UNION ALL SELECT 'Etapas', COUNT(*) FROM Etapa
+UNION ALL SELECT 'Bloques', COUNT(*) FROM Bloque
+UNION ALL SELECT 'Lotes', COUNT(*) FROM Lote
+UNION ALL SELECT 'Clientes', COUNT(*) FROM Cliente
+UNION ALL SELECT 'Ventas', COUNT(*) FROM Venta
+UNION ALL SELECT 'VentasCredito', COUNT(*) FROM VentaCredito
+UNION ALL SELECT 'Cuotas', COUNT(*) FROM Cuota
+UNION ALL SELECT 'Pagos', COUNT(*) FROM Pago
+UNION ALL SELECT 'Facturas', COUNT(*) FROM Factura
+UNION ALL SELECT 'DepositosCaja', COUNT(*) FROM DepositoCajaBanco
+UNION ALL SELECT 'GastosProyecto', COUNT(*) FROM GastoProyecto;
+
+SELECT TOP 10 * FROM dbo.vw_lotes_disponibles ORDER BY idProyecto, idEtapa, idBloque, numeroLote;
+SELECT TOP 10 * FROM dbo.vw_creditos_activos_cliente ORDER BY idCliente, idVentaCredito;
+SELECT TOP 20 * FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente1) ORDER BY numeroCuota;
+SELECT TOP 20 * FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente2) ORDER BY numeroCuota;
+
+SELECT * FROM Proyecto;
+SELECT * FROM Cliente;
+SELECT * FROM Venta;
+SELECT * FROM Pago;
+SELECT * FROM Factura;
+SELECT * FROM vw_lotes_disponibles;
+SELECT * FROM vw_creditos_activos_cliente;
+
+ SELECT *
+            FROM dbo.vw_lotes_disponibles
+            WHERE (idProyecto = 1)
+              AND (idEtapa = 1)
+            ORDER BY idProyecto, idEtapa, idBloque, numeroLote
+
