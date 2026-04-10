@@ -1,5 +1,5 @@
-use DB20222030195
-GO
+use Grupo8
+go
 /*
     DATOS DE PRUEBA MINIMOS PARA LOTIFICADORA
     Recomendacion: ejecutar este script sobre una base vacia o recien recreada.

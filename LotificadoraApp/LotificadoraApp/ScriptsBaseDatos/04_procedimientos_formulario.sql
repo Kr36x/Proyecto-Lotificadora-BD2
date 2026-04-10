@@ -1,7 +1,145 @@
 use Grupo8
 go
 
--- registra una venta al crédito
+-- =========================================
+-- 1. Ventas a crédito activas para combo
+-- =========================================
+CREATE OR ALTER PROCEDURE dbo.sp_listar_ventas_credito_activas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.idVenta,
+        vc.idVentaCredito,
+        c.idCliente,
+        CONCAT(
+            'Venta ', v.idVenta,
+            ' | Cliente ', c.nombres, ' ', c.apellidos,
+            ' | Lote ', l.numeroLote
+        ) AS descripcion
+    FROM Venta v
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN Cliente c ON c.idCliente = v.idCliente
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    WHERE v.estadoVenta = 'activa'
+      AND vc.estadoCredito IN ('activo', 'moroso')
+    ORDER BY v.idVenta DESC;
+END;
+GO
+
+-- =========================================
+-- 2. Detalle de una venta crédito
+-- =========================================
+CREATE OR ALTER PROCEDURE dbo.sp_obtener_detalle_venta_credito
+    @idVenta INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.idVenta,
+        vc.idVentaCredito,
+        c.nombres + ' ' + c.apellidos AS cliente,
+        l.numeroLote AS lote,
+        e.idEtapa,
+        e.nombreEtapa
+    FROM Venta v
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN Cliente c ON c.idCliente = v.idCliente
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    WHERE v.idVenta = @idVenta;
+END;
+GO
+
+-- =========================================
+-- 3. Cuotas pendientes por venta
+-- =========================================
+CREATE OR ALTER PROCEDURE dbo.sp_listar_cuotas_pendientes_por_venta
+    @idVenta INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        c.idCuota,
+        c.numeroCuota,
+        c.fechaVencimiento,
+        c.montoCuota,
+        ISNULL(SUM(dpc.montoAplicado), 0) AS totalPagado,
+        c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) AS saldoPendiente,
+        c.estadoCuota,
+        CONCAT(
+            'Cuota ', c.numeroCuota,
+            ' | Vence ', CONVERT(varchar(10), c.fechaVencimiento, 103),
+            ' | Saldo ', CONVERT(varchar(30), CAST(c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) AS decimal(18,2)))
+        ) AS descripcion
+    FROM Venta v
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Cuota c ON c.idPlanPago = pp.idPlanPago
+    LEFT JOIN DetallePagoCuota dpc ON dpc.idCuota = c.idCuota
+    WHERE v.idVenta = @idVenta
+    GROUP BY
+        c.idCuota,
+        c.numeroCuota,
+        c.fechaVencimiento,
+        c.montoCuota,
+        c.estadoCuota
+    HAVING c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) > 0
+    ORDER BY c.numeroCuota;
+END;
+GO
+
+-- =========================================
+-- 4. Cuentas bancarias activas por etapa
+-- =========================================
+CREATE OR ALTER PROCEDURE dbo.sp_listar_cuentas_bancarias_por_etapa
+    @idEtapa INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idCuentaBancaria,
+        CONCAT(numeroCuenta, ' | ', tipoCuenta) AS descripcion
+    FROM CuentaBancaria
+    WHERE idEtapa = @idEtapa
+      AND estado = 'activa'
+    ORDER BY numeroCuenta;
+END;
+GO
+
+
+-- ==================================================================
+-- 5. OBTENER RESUMEN CREDITO PARA CONSULTA PLAN PAGO
+-- ==================================================================
+CREATE OR ALTER PROCEDURE dbo.sp_obtener_resumen_credito
+    @idVentaCredito INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        vc.idVentaCredito,
+        c.nombres + ' ' + c.apellidos AS cliente,
+        pp.idPlanPago,
+        pp.totalPlan,
+        dbo.fn_credito_saldo_pendiente(vc.idVentaCredito) AS saldoPendiente,
+        vc.estadoCredito
+    FROM VentaCredito vc
+    INNER JOIN Venta v ON v.idVenta = vc.idVenta
+    INNER JOIN Cliente c ON c.idCliente = v.idCliente
+    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    WHERE vc.idVentaCredito = @idVentaCredito;
+END;
+GO
+
+-- ==================================================================
+-- 6. registra una venta al crédito
+-- ==================================================================
 create or alter procedure sp_registrar_venta_credito
     @idLote int,
     @idCliente int,
@@ -256,7 +394,10 @@ begin
 end
 go
 
--- registra un pago y genera su factura
+-- ==================================================================
+-- 7. registra un pago y genera su factura
+-- ==================================================================
+
 create or alter procedure sp_registrar_pago
     @idVenta int,
     @idCuota int,
@@ -475,3 +616,4 @@ begin
     end catch
 end
 go
+
