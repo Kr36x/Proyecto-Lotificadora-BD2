@@ -2,11 +2,11 @@ using System.Data;
 
 namespace LotificadoraApp;
 
-public class ConsultaFnEstadoCuentaForm : ConsultaBaseForm
+public class frmConsultaVistaCreditos : ConsultaBaseForm
 {
     private readonly TextBox _txtIdCliente;
 
-    public ConsultaFnEstadoCuentaForm() : base("Consulta por Funcion Tabla - Estado Cuenta Cliente")
+    public frmConsultaVistaCreditos() : base("Consulta por Vista - Creditos Activos")
     {
         _txtIdCliente = CreateTextBox();
 
@@ -18,14 +18,15 @@ public class ConsultaFnEstadoCuentaForm : ConsultaBaseForm
     {
         const string sql = @"
             SELECT *
-            FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente)
-            ORDER BY numeroCuota;";
+            FROM dbo.vw_creditos_activos_cliente
+            WHERE (@idCliente IS NULL OR idCliente = @idCliente)
+            ORDER BY idCliente, idVentaCredito;";
 
-        var idCliente = ParseRequiredInt(_txtIdCliente, "Id Cliente");
+        var idCliente = ParseNullableInt(_txtIdCliente);
 
         return Db.ExecuteQuery(
             sql,
-            Db.P("@idCliente", idCliente)
+            Db.Parameter("@idCliente", idCliente)
         );
     }
 

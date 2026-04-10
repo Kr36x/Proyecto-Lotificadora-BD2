@@ -1,0 +1,1600 @@
+use Grupo8;
+go
+
+-- =======================================================
+-- COMPLEMENTO DE REQUISITOS (TRIGGERS, FUNCIONES, VISTAS)
+-- =======================================================
+
+-- -------------------------
+-- 5 FUNCIONES ESCALARES
+-- -------------------------
+
+CREATE OR ALTER FUNCTION dbo.fn_lote_precio_base
+(
+    @idLote INT
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    DECLARE @precio DECIMAL(18,2) = 0;
+
+    SELECT
+        @precio = ROUND(l.areaV2 * e.precioVaraCuadrada, 2)
+    FROM Lote l
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    WHERE l.idLote = @idLote;
+
+    RETURN ISNULL(@precio, 0);
+END;
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_lote_recargo_total
+(
+    @idLote INT
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    DECLARE @base DECIMAL(18,2) = dbo.fn_lote_precio_base(@idLote);
+    DECLARE @recargoBanderas DECIMAL(18,2) = 0;
+    DECLARE @recargoCatalogo DECIMAL(18,2) = 0;
+
+    SELECT
+        @recargoBanderas =
+            (CASE WHEN l.esEsquina = 1 THEN @base * 0.05 ELSE 0 END) +
+            (CASE WHEN l.cercaParque = 1 THEN @base * 0.04 ELSE 0 END) +
+            (CASE WHEN l.calleCerrada = 1 THEN @base * 0.03 ELSE 0 END)
+    FROM Lote l
+    WHERE l.idLote = @idLote;
+
+    SELECT
+        @recargoCatalogo = ISNULL(SUM(
+            CASE
+                WHEN cl.tipoRecargo = 'porcentaje' THEN @base * (cl.valorRecargo / 100.0)
+                ELSE cl.valorRecargo
+            END
+        ), 0)
+    FROM LoteCaracteristica lc
+    INNER JOIN CaracteristicaLote cl ON cl.idCaracteristica = lc.idCaracteristica
+    WHERE lc.idLote = @idLote
+      AND cl.estado = 'activo';
+
+    RETURN ROUND(ISNULL(@recargoBanderas, 0) + ISNULL(@recargoCatalogo, 0), 2);
+END;
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_lote_precio_final
+(
+    @idLote INT
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    RETURN ROUND(
+        dbo.fn_lote_precio_base(@idLote) + dbo.fn_lote_recargo_total(@idLote),
+        2
+    );
+END;
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_cuota_saldo_pendiente
+(
+    @idCuota INT
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    DECLARE @montoCuota DECIMAL(18,2) = 0;
+    DECLARE @pagado DECIMAL(18,2) = 0;
+    DECLARE @saldo DECIMAL(18,2) = 0;
+
+    SELECT @montoCuota = montoCuota
+    FROM Cuota
+    WHERE idCuota = @idCuota;
+
+    SELECT @pagado = ISNULL(SUM(montoAplicado), 0)
+    FROM DetallePagoCuota
+    WHERE idCuota = @idCuota;
+
+    SET @saldo = ISNULL(@montoCuota, 0) - ISNULL(@pagado, 0);
+    IF @saldo < 0 SET @saldo = 0;
+
+    RETURN @saldo;
+END;
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_credito_saldo_pendiente
+(
+    @idVentaCredito INT
+)
+RETURNS DECIMAL(18,2)
+AS
+BEGIN
+    DECLARE @totalPlan DECIMAL(18,2) = 0;
+    DECLARE @pagado DECIMAL(18,2) = 0;
+    DECLARE @saldo DECIMAL(18,2) = 0;
+
+    SELECT @totalPlan = ISNULL(pp.totalPlan, 0)
+    FROM PlanPago pp
+    WHERE pp.idVentaCredito = @idVentaCredito;
+
+    SELECT @pagado = ISNULL(SUM(dpc.montoAplicado), 0)
+    FROM PlanPago pp
+    INNER JOIN Cuota c ON c.idPlanPago = pp.idPlanPago
+    INNER JOIN DetallePagoCuota dpc ON dpc.idCuota = c.idCuota
+    WHERE pp.idVentaCredito = @idVentaCredito;
+
+    SET @saldo = @totalPlan - @pagado;
+    IF @saldo < 0 SET @saldo = 0;
+
+    RETURN @saldo;
+END;
+GO
+
+-- -------------------------
+-- 5 FUNCIONES TIPO TABLA
+-- -------------------------
+
+CREATE OR ALTER FUNCTION dbo.fn_tvf_lotes_disponibles
+(
+    @idEtapa INT = NULL
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        p.idProyecto,
+        p.nombreProyecto,
+        e.idEtapa,
+        e.nombreEtapa,
+        b.idBloque,
+        b.nombreBloque,
+        l.idLote,
+        l.numeroLote,
+        l.areaV2,
+        dbo.fn_lote_precio_base(l.idLote) AS precioBaseCalculado,
+        dbo.fn_lote_recargo_total(l.idLote) AS recargoCalculado,
+        dbo.fn_lote_precio_final(l.idLote) AS precioFinalCalculado
+    FROM Lote l
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    INNER JOIN Proyecto p ON p.idProyecto = e.idProyecto
+    WHERE l.estadoLote = 'disponible'
+      AND (@idEtapa IS NULL OR e.idEtapa = @idEtapa)
+);
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_tvf_estado_cuenta_cliente
+(
+    @idCliente INT
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        c.idCliente,
+        c.nombres + ' ' + c.apellidos AS cliente,
+        v.idVenta,
+        vc.idVentaCredito,
+        pp.idPlanPago,
+        cu.idCuota,
+        cu.numeroCuota,
+        cu.fechaVencimiento,
+        cu.montoCuota,
+        ISNULL(pg.totalPagado, 0) AS totalPagado,
+        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
+        cu.estadoCuota
+    FROM Cliente c
+    INNER JOIN Venta v ON v.idCliente = c.idCliente AND v.tipoVenta = 'credito'
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
+    OUTER APPLY
+    (
+        SELECT SUM(dpc.montoAplicado) AS totalPagado
+        FROM DetallePagoCuota dpc
+        WHERE dpc.idCuota = cu.idCuota
+    ) pg
+    WHERE c.idCliente = @idCliente
+);
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_tvf_plan_pago_por_credito
+(
+    @idVentaCredito INT
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        pp.idPlanPago,
+        cu.idCuota,
+        cu.numeroCuota,
+        cu.fechaVencimiento,
+        cu.saldoInicial,
+        cu.capitalProgramado,
+        cu.interesProgramado,
+        cu.montoCuota,
+        cu.saldoFinal,
+        ISNULL(pg.totalPagado, 0) AS totalPagado,
+        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
+        cu.estadoCuota
+    FROM PlanPago pp
+    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
+    OUTER APPLY
+    (
+        SELECT SUM(dpc.montoAplicado) AS totalPagado
+        FROM DetallePagoCuota dpc
+        WHERE dpc.idCuota = cu.idCuota
+    ) pg
+    WHERE pp.idVentaCredito = @idVentaCredito
+);
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_tvf_pagos_por_rango
+(
+    @fechaInicio DATE,
+    @fechaFin DATE,
+    @idEtapa INT = NULL
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        pa.idPago,
+        CAST(pa.fechaPago AS DATE) AS fechaPago,
+        pa.formaPago,
+        pa.montoTotal,
+        pa.numeroReferencia,
+        v.idVenta,
+        e.idEtapa,
+        e.nombreEtapa,
+        p.nombreProyecto,
+        cb.numeroCuenta
+    FROM Pago pa
+    INNER JOIN Venta v ON v.idVenta = pa.idVenta
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    INNER JOIN Proyecto p ON p.idProyecto = e.idProyecto
+    LEFT JOIN CuentaBancaria cb ON cb.idCuentaBancaria = pa.idCuentaBancaria
+    WHERE CAST(pa.fechaPago AS DATE) BETWEEN @fechaInicio AND @fechaFin
+      AND (@idEtapa IS NULL OR e.idEtapa = @idEtapa)
+);
+GO
+
+CREATE OR ALTER FUNCTION dbo.fn_tvf_gastos_proyecto
+(
+    @idProyecto INT,
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        g.idGasto,
+        g.idProyecto,
+        p.nombreProyecto,
+        g.idEtapa,
+        e.nombreEtapa,
+        tg.nombreTipoGasto,
+        g.fechaGasto,
+        g.descripcion,
+        g.monto,
+        g.estado,
+        cb.numeroCuenta
+    FROM GastoProyecto g
+    INNER JOIN Proyecto p ON p.idProyecto = g.idProyecto
+    INNER JOIN Etapa e ON e.idEtapa = g.idEtapa
+    INNER JOIN TipoGasto tg ON tg.idTipoGasto = g.idTipoGasto
+    INNER JOIN CuentaBancaria cb ON cb.idCuentaBancaria = g.idCuentaBancaria
+    WHERE g.idProyecto = @idProyecto
+      AND (@fechaInicio IS NULL OR CAST(g.fechaGasto AS DATE) >= @fechaInicio)
+      AND (@fechaFin IS NULL OR CAST(g.fechaGasto AS DATE) <= @fechaFin)
+);
+GO
+
+-- -------------------------
+-- VISTAS DE CONSULTA
+-- -------------------------
+
+CREATE OR ALTER VIEW dbo.vw_lotes_disponibles
+AS
+SELECT
+    p.idProyecto,
+    p.nombreProyecto,
+    e.idEtapa,
+    e.nombreEtapa,
+    b.idBloque,
+    b.nombreBloque,
+    l.idLote,
+    l.numeroLote,
+    l.areaV2,
+    dbo.fn_lote_precio_base(l.idLote) AS precioBaseCalculado,
+    dbo.fn_lote_recargo_total(l.idLote) AS recargoCalculado,
+    dbo.fn_lote_precio_final(l.idLote) AS precioFinalCalculado
+FROM Lote l
+INNER JOIN Bloque b ON b.idBloque = l.idBloque
+INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+INNER JOIN Proyecto p ON p.idProyecto = e.idProyecto
+WHERE l.estadoLote = 'disponible';
+GO
+
+CREATE OR ALTER VIEW dbo.vw_creditos_activos_cliente
+AS
+SELECT
+    c.idCliente,
+    c.nombres + ' ' + c.apellidos AS cliente,
+    v.idVenta,
+    vc.idVentaCredito,
+    vc.plazoAnios,
+    vc.tasaInteresAnual,
+    vc.estadoCredito,
+    pp.idPlanPago,
+    pp.totalPlan,
+    dbo.fn_credito_saldo_pendiente(vc.idVentaCredito) AS saldoPendiente
+FROM VentaCredito vc
+INNER JOIN Venta v ON v.idVenta = vc.idVenta
+INNER JOIN Cliente c ON c.idCliente = v.idCliente
+INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+WHERE vc.estadoCredito IN ('activo', 'moroso');
+GO
+
+-- -------------------------
+-- TRIGGERS ADICIONALES (10+ EN TOTAL)
+-- -------------------------
+
+CREATE OR ALTER TRIGGER dbo.tr_etapa_validar_porcentaje_area
+ON Etapa
+FOR INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        WHERE ABS((i.porcentajeAreaVerde + i.porcentajeAreaComun + i.porcentajeAreaLotes) - 100) > 0.01
+    )
+    BEGIN
+        RAISERROR('La suma de porcentajeAreaVerde + porcentajeAreaComun + porcentajeAreaLotes debe ser 100.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_lote_autocalcular_precios
+ON Lote
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF TRIGGER_NESTLEVEL() > 1
+        RETURN;
+
+    UPDATE l
+    SET
+        l.precioBase = dbo.fn_lote_precio_base(l.idLote),
+        l.recargoTotal = dbo.fn_lote_recargo_total(l.idLote),
+        l.precioFinal = dbo.fn_lote_precio_final(l.idLote)
+    FROM Lote l
+    INNER JOIN (SELECT DISTINCT idLote FROM inserted) i
+        ON i.idLote = l.idLote;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_lote_caracteristica_recalcular
+ON LoteCaracteristica
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF TRIGGER_NESTLEVEL() > 1
+        RETURN;
+
+    ;WITH lotesAfectados AS
+    (
+        SELECT idLote FROM inserted
+        UNION
+        SELECT idLote FROM deleted
+    )
+    UPDATE l
+    SET
+        l.recargoTotal = dbo.fn_lote_recargo_total(l.idLote),
+        l.precioFinal = dbo.fn_lote_precio_final(l.idLote)
+    FROM Lote l
+    INNER JOIN lotesAfectados la ON la.idLote = l.idLote;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_detalle_pago_cuota_validar_monto
+ON DetallePagoCuota
+FOR INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        WHERE ABS((ISNULL(i.montoCapital,0) + ISNULL(i.montoInteres,0)) - ISNULL(i.montoAplicado,0)) > 0.01
+    )
+    BEGIN
+        RAISERROR('montoAplicado debe ser igual a montoCapital + montoInteres.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM Cuota c
+        INNER JOIN (SELECT DISTINCT idCuota FROM inserted) i ON i.idCuota = c.idCuota
+        OUTER APPLY
+        (
+            SELECT ISNULL(SUM(d.montoAplicado), 0) AS totalAplicado
+            FROM DetallePagoCuota d
+            WHERE d.idCuota = c.idCuota
+        ) x
+        WHERE x.totalAplicado > c.montoCuota + 0.01
+    )
+    BEGIN
+        RAISERROR('El pago aplicado excede el monto de la cuota.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_pago_deposito_incrementar_saldo
+ON Pago
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE cb
+    SET cb.saldoActual = cb.saldoActual + x.totalMonto
+    FROM CuentaBancaria cb
+    INNER JOIN
+    (
+        SELECT idCuentaBancaria, SUM(montoTotal) AS totalMonto
+        FROM inserted
+        WHERE formaPago = 'deposito'
+          AND idCuentaBancaria IS NOT NULL
+        GROUP BY idCuentaBancaria
+    ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_detalle_deposito_caja_validar
+ON DetalleDepositoCaja
+FOR INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Pago p ON p.idPago = i.idPago
+        WHERE p.formaPago <> 'efectivo'
+           OR p.depositadoCaja = 1
+           OR ABS(i.monto - p.montoTotal) > 0.01
+    )
+    BEGIN
+        RAISERROR('Solo se pueden depositar pagos en efectivo no depositados y por el monto exacto.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN DetalleDepositoCaja d ON d.idPago = i.idPago
+        GROUP BY i.idPago
+        HAVING COUNT(*) > 1
+    )
+    BEGIN
+        RAISERROR('Un pago en efectivo no puede incluirse en mas de un detalle de deposito.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_detalle_deposito_caja_aplicar
+ON DetalleDepositoCaja
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE p
+    SET
+        p.depositadoCaja = 1,
+        p.idCuentaBancaria = dcb.idCuentaBancaria
+    FROM Pago p
+    INNER JOIN inserted i ON i.idPago = p.idPago
+    INNER JOIN DepositoCajaBanco dcb ON dcb.idDepositoCaja = i.idDepositoCaja;
+
+    UPDATE cb
+    SET cb.saldoActual = cb.saldoActual + x.totalMonto
+    FROM CuentaBancaria cb
+    INNER JOIN
+    (
+        SELECT
+            dcb.idCuentaBancaria,
+            SUM(i.monto) AS totalMonto
+        FROM inserted i
+        INNER JOIN DepositoCajaBanco dcb ON dcb.idDepositoCaja = i.idDepositoCaja
+        GROUP BY dcb.idCuentaBancaria
+    ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_gasto_proyecto_validar
+ON GastoProyecto
+FOR INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN CuentaBancaria cb ON cb.idCuentaBancaria = i.idCuentaBancaria
+        WHERE cb.idEtapa <> i.idEtapa
+    )
+    BEGIN
+        RAISERROR('La cuenta bancaria del gasto no pertenece a la etapa indicada.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_gasto_proyecto_aplicar_insert
+ON GastoProyecto
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN CuentaBancaria cb ON cb.idCuentaBancaria = i.idCuentaBancaria
+        WHERE i.estado = 'activo'
+          AND cb.saldoActual < i.monto
+    )
+    BEGIN
+        RAISERROR('Saldo insuficiente para registrar el gasto.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    UPDATE cb
+    SET cb.saldoActual = cb.saldoActual - x.totalGasto
+    FROM CuentaBancaria cb
+    INNER JOIN
+    (
+        SELECT idCuentaBancaria, SUM(monto) AS totalGasto
+        FROM inserted
+        WHERE estado = 'activo'
+        GROUP BY idCuentaBancaria
+    ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_gasto_proyecto_revertir_delete
+ON GastoProyecto
+AFTER DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE cb
+    SET cb.saldoActual = cb.saldoActual + x.totalReintegro
+    FROM CuentaBancaria cb
+    INNER JOIN
+    (
+        SELECT idCuentaBancaria, SUM(monto) AS totalReintegro
+        FROM deleted
+        WHERE estado = 'activo'
+        GROUP BY idCuentaBancaria
+    ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.tr_gasto_proyecto_ajustar_update
+ON GastoProyecto
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @mov TABLE
+    (
+        idCuentaBancaria INT PRIMARY KEY,
+        ajuste DECIMAL(18,2)
+    );
+
+    INSERT INTO @mov(idCuentaBancaria, ajuste)
+    SELECT idCuentaBancaria, SUM(ajuste) AS ajuste
+    FROM
+    (
+        SELECT d.idCuentaBancaria, SUM(d.monto) AS ajuste
+        FROM deleted d
+        WHERE d.estado = 'activo'
+        GROUP BY d.idCuentaBancaria
+        UNION ALL
+        SELECT i.idCuentaBancaria, -SUM(i.monto) AS ajuste
+        FROM inserted i
+        WHERE i.estado = 'activo'
+        GROUP BY i.idCuentaBancaria
+    ) t
+    GROUP BY idCuentaBancaria;
+
+    IF EXISTS
+    (
+        SELECT 1
+        FROM @mov m
+        INNER JOIN CuentaBancaria cb ON cb.idCuentaBancaria = m.idCuentaBancaria
+        WHERE m.ajuste < 0
+          AND (cb.saldoActual + m.ajuste) < 0
+    )
+    BEGIN
+        RAISERROR('La actualizacion del gasto deja saldo bancario negativo.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END
+
+    UPDATE cb
+    SET cb.saldoActual = cb.saldoActual + m.ajuste
+    FROM CuentaBancaria cb
+    INNER JOIN @mov m ON m.idCuentaBancaria = cb.idCuentaBancaria;
+END;
+GO
+
+-- -------------------------
+-- PROCEDIMIENTOS CON CURSOR (3)
+-- -------------------------
+
+CREATE OR ALTER PROCEDURE dbo.sp_generar_cuotas_plan_cursor
+    @idVentaCredito INT,
+    @fechaPrimerVencimiento DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idPlanPago INT;
+    DECLARE @montoFinanciado DECIMAL(18,2);
+    DECLARE @plazoAnios INT;
+    DECLARE @tasaInteresAnual DECIMAL(5,2);
+    DECLARE @tasaMensual DECIMAL(18,8);
+    DECLARE @cuotaEstimada DECIMAL(18,2);
+    DECLARE @totalCuotas INT;
+
+    DECLARE @numeroCuota INT;
+    DECLARE @saldoActual DECIMAL(18,2);
+    DECLARE @interes DECIMAL(18,2);
+    DECLARE @capital DECIMAL(18,2);
+    DECLARE @montoCuota DECIMAL(18,2);
+    DECLARE @saldoFinal DECIMAL(18,2);
+    DECLARE @fechaVencimiento DATE;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        SELECT
+            @idPlanPago = pp.idPlanPago,
+            @montoFinanciado = vc.montoFinanciado,
+            @plazoAnios = vc.plazoAnios,
+            @tasaInteresAnual = vc.tasaInteresAnual,
+            @cuotaEstimada = pp.cuotaMensualEstimada
+        FROM VentaCredito vc
+        INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+        WHERE vc.idVentaCredito = @idVentaCredito;
+
+        IF @idPlanPago IS NULL
+        BEGIN
+            RAISERROR('No existe plan de pago para el credito indicado.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM Cuota WHERE idPlanPago = @idPlanPago)
+        BEGIN
+            RAISERROR('El plan de pago ya tiene cuotas generadas.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        SET @totalCuotas = ISNULL(@plazoAnios, 0) * 12;
+        IF @totalCuotas <= 0
+        BEGIN
+            RAISERROR('El plazo del credito no es valido.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @fechaPrimerVencimiento IS NULL
+            SET @fechaPrimerVencimiento = EOMONTH(GETDATE());
+
+        SET @tasaMensual = ISNULL(@tasaInteresAnual, 0) / 12.0 / 100.0;
+
+        IF ISNULL(@cuotaEstimada, 0) <= 0
+        BEGIN
+            IF @tasaMensual = 0
+                SET @cuotaEstimada = ROUND(@montoFinanciado / @totalCuotas, 2);
+            ELSE
+                SET @cuotaEstimada = ROUND(
+                    @montoFinanciado *
+                    (
+                        @tasaMensual * POWER(1 + @tasaMensual, @totalCuotas)
+                    ) /
+                    (
+                        POWER(1 + @tasaMensual, @totalCuotas) - 1
+                    ),
+                    2
+                );
+        END
+
+        DECLARE @numeros TABLE (n INT PRIMARY KEY);
+        INSERT INTO @numeros(n)
+        SELECT TOP (@totalCuotas) ROW_NUMBER() OVER (ORDER BY (SELECT NULL))
+        FROM sys.all_objects;
+
+        SET @saldoActual = @montoFinanciado;
+
+        DECLARE cur_cuotas CURSOR LOCAL FAST_FORWARD FOR
+            SELECT n FROM @numeros ORDER BY n;
+
+        OPEN cur_cuotas;
+        FETCH NEXT FROM cur_cuotas INTO @numeroCuota;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @fechaVencimiento = EOMONTH(DATEADD(MONTH, @numeroCuota - 1, @fechaPrimerVencimiento));
+            SET @interes = ROUND(CASE WHEN @tasaMensual = 0 THEN 0 ELSE (@saldoActual * @tasaMensual) END, 2);
+            SET @capital = ROUND(@cuotaEstimada - @interes, 2);
+            SET @montoCuota = @cuotaEstimada;
+            SET @saldoFinal = ROUND(@saldoActual - @capital, 2);
+
+            IF @numeroCuota = @totalCuotas
+            BEGIN
+                SET @capital = @saldoActual;
+                SET @montoCuota = ROUND(@capital + @interes, 2);
+                SET @saldoFinal = 0;
+            END
+
+            IF @capital < 0 SET @capital = 0;
+            IF @saldoFinal < 0 SET @saldoFinal = 0;
+
+            INSERT INTO Cuota
+            (
+                idPlanPago,
+                numeroCuota,
+                fechaVencimiento,
+                saldoInicial,
+                capitalProgramado,
+                interesProgramado,
+                montoCuota,
+                saldoFinal,
+                estadoCuota
+            )
+            VALUES
+            (
+                @idPlanPago,
+                @numeroCuota,
+                @fechaVencimiento,
+                @saldoActual,
+                @capital,
+                @interes,
+                @montoCuota,
+                @saldoFinal,
+                'pendiente'
+            );
+
+            SET @saldoActual = @saldoFinal;
+
+            FETCH NEXT FROM cur_cuotas INTO @numeroCuota;
+        END
+
+        CLOSE cur_cuotas;
+        DEALLOCATE cur_cuotas;
+
+        UPDATE pp
+        SET
+            pp.totalCapital = ISNULL(t.totalCapital, 0),
+            pp.totalInteres = ISNULL(t.totalInteres, 0),
+            pp.totalPlan = ISNULL(t.totalPlan, 0),
+            pp.cuotaMensualEstimada = ISNULL(t.cuotaPromedio, pp.cuotaMensualEstimada)
+        FROM PlanPago pp
+        INNER JOIN
+        (
+            SELECT
+                idPlanPago,
+                SUM(capitalProgramado) AS totalCapital,
+                SUM(interesProgramado) AS totalInteres,
+                SUM(montoCuota) AS totalPlan,
+                AVG(montoCuota) AS cuotaPromedio
+            FROM Cuota
+            WHERE idPlanPago = @idPlanPago
+            GROUP BY idPlanPago
+        ) t ON t.idPlanPago = pp.idPlanPago
+        WHERE pp.idPlanPago = @idPlanPago;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF CURSOR_STATUS('local', 'cur_cuotas') >= -1
+        BEGIN
+            CLOSE cur_cuotas;
+            DEALLOCATE cur_cuotas;
+        END
+
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_recalcular_precios_lotes_etapa_cursor
+    @idEtapa INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idLote INT;
+    DECLARE @precioBase DECIMAL(18,2);
+    DECLARE @recargo DECIMAL(18,2);
+    DECLARE @precioFinal DECIMAL(18,2);
+
+    DECLARE cur_lotes CURSOR LOCAL FAST_FORWARD FOR
+        SELECT l.idLote
+        FROM Lote l
+        INNER JOIN Bloque b ON b.idBloque = l.idBloque
+        WHERE b.idEtapa = @idEtapa;
+
+    OPEN cur_lotes;
+    FETCH NEXT FROM cur_lotes INTO @idLote;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        SET @precioBase = dbo.fn_lote_precio_base(@idLote);
+        SET @recargo = dbo.fn_lote_recargo_total(@idLote);
+        SET @precioFinal = @precioBase + @recargo;
+
+        UPDATE Lote
+        SET
+            precioBase = @precioBase,
+            recargoTotal = @recargo,
+            precioFinal = @precioFinal
+        WHERE idLote = @idLote;
+
+        FETCH NEXT FROM cur_lotes INTO @idLote;
+    END
+
+    CLOSE cur_lotes;
+    DEALLOCATE cur_lotes;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_actualizar_cuotas_vencidas_cursor
+    @fechaCorte DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @fechaCorte IS NULL
+        SET @fechaCorte = CAST(GETDATE() AS DATE);
+
+    DECLARE @idCuota INT;
+    DECLARE @saldoPendiente DECIMAL(18,2);
+
+    DECLARE cur_cuotas_vencidas CURSOR LOCAL FAST_FORWARD FOR
+        SELECT idCuota
+        FROM Cuota
+        WHERE fechaVencimiento <= @fechaCorte
+          AND estadoCuota IN ('pendiente', 'parcial', 'vencida');
+
+    OPEN cur_cuotas_vencidas;
+    FETCH NEXT FROM cur_cuotas_vencidas INTO @idCuota;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        SET @saldoPendiente = dbo.fn_cuota_saldo_pendiente(@idCuota);
+
+        IF @saldoPendiente <= 0
+        BEGIN
+            UPDATE Cuota
+            SET estadoCuota = 'pagada'
+            WHERE idCuota = @idCuota;
+        END
+        ELSE
+        BEGIN
+            UPDATE Cuota
+            SET estadoCuota = 'vencida'
+            WHERE idCuota = @idCuota;
+        END
+
+        FETCH NEXT FROM cur_cuotas_vencidas INTO @idCuota;
+    END
+
+    CLOSE cur_cuotas_vencidas;
+    DEALLOCATE cur_cuotas_vencidas;
+END;
+GO
+
+-- -------------------------
+-- PROCEDIMIENTOS TRANSACCIONALES ADICIONALES
+-- -------------------------
+
+CREATE OR ALTER PROCEDURE dbo.sp_registrar_venta_contado_transaccional
+    @idLote INT,
+    @idCliente INT,
+    @fechaVenta DATE,
+    @precioLote DECIMAL(18,2),
+    @descuento DECIMAL(18,2) = 0,
+    @recargo DECIMAL(18,2) = 0,
+    @fechaPago DATE = NULL,
+    @observacion VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idVenta INT;
+    DECLARE @totalVenta DECIMAL(18,2);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @fechaPago IS NULL
+            SET @fechaPago = @fechaVenta;
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Cliente
+            WHERE idCliente = @idCliente
+              AND estado = 'activo'
+        )
+        BEGIN
+            RAISERROR('El cliente no existe o esta inactivo.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        SET @totalVenta = @precioLote - @descuento + @recargo;
+        IF @totalVenta <= 0
+        BEGIN
+            RAISERROR('El total de la venta debe ser mayor que cero.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO Venta
+        (
+            idLote,
+            idCliente,
+            fechaVenta,
+            tipoVenta,
+            precioLote,
+            descuento,
+            recargo,
+            totalVenta,
+            estadoVenta
+        )
+        VALUES
+        (
+            @idLote,
+            @idCliente,
+            @fechaVenta,
+            'contado',
+            @precioLote,
+            @descuento,
+            @recargo,
+            @totalVenta,
+            'activa'
+        );
+
+        SET @idVenta = SCOPE_IDENTITY();
+
+        INSERT INTO VentaContado
+        (
+            idVenta,
+            fechaPago,
+            montoPagado,
+            observacion
+        )
+        VALUES
+        (
+            @idVenta,
+            @fechaPago,
+            @totalVenta,
+            @observacion
+        );
+
+        COMMIT TRANSACTION;
+
+        SELECT
+            @idVenta AS idVenta,
+            @totalVenta AS totalVenta;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_procesar_deposito_caja_transaccional
+    @idCuentaBancaria INT,
+    @fechaOperacion DATE = NULL,
+    @observacion VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idDepositoCaja INT;
+    DECLARE @totalDepositado DECIMAL(18,2);
+    DECLARE @cantidadPagos INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @fechaOperacion IS NULL
+            SET @fechaOperacion = CAST(GETDATE() AS DATE);
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM CuentaBancaria
+            WHERE idCuentaBancaria = @idCuentaBancaria
+              AND estado = 'activa'
+        )
+        BEGIN
+            RAISERROR('La cuenta bancaria no existe o esta inactiva.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        SELECT
+            @cantidadPagos = COUNT(1),
+            @totalDepositado = ISNULL(SUM(p.montoTotal), 0)
+        FROM Pago p
+        WHERE p.formaPago = 'efectivo'
+          AND p.depositadoCaja = 0
+          AND CAST(p.fechaPago AS DATE) = @fechaOperacion;
+
+        IF ISNULL(@cantidadPagos, 0) = 0
+        BEGIN
+            RAISERROR('No hay pagos en efectivo pendientes para depositar en la fecha indicada.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO DepositoCajaBanco
+        (
+            fechaDeposito,
+            idCuentaBancaria,
+            totalDepositado,
+            observacion
+        )
+        VALUES
+        (
+            GETDATE(),
+            @idCuentaBancaria,
+            @totalDepositado,
+            @observacion
+        );
+
+        SET @idDepositoCaja = SCOPE_IDENTITY();
+
+        INSERT INTO DetalleDepositoCaja
+        (
+            idDepositoCaja,
+            idPago,
+            monto
+        )
+        SELECT
+            @idDepositoCaja,
+            p.idPago,
+            p.montoTotal
+        FROM Pago p
+        WHERE p.formaPago = 'efectivo'
+          AND p.depositadoCaja = 0
+          AND CAST(p.fechaPago AS DATE) = @fechaOperacion;
+
+        COMMIT TRANSACTION;
+
+        SELECT
+            @idDepositoCaja AS idDepositoCaja,
+            @cantidadPagos AS cantidadPagos,
+            @totalDepositado AS totalDepositado;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_registrar_gasto_proyecto_transaccional
+    @idProyecto INT,
+    @idEtapa INT,
+    @idTipoGasto INT,
+    @idCuentaBancaria INT,
+    @descripcion VARCHAR(255),
+    @monto DECIMAL(18,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idGasto INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Etapa
+            WHERE idEtapa = @idEtapa
+              AND idProyecto = @idProyecto
+        )
+        BEGIN
+            RAISERROR('La etapa no pertenece al proyecto indicado.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO GastoProyecto
+        (
+            idProyecto,
+            idEtapa,
+            idTipoGasto,
+            idCuentaBancaria,
+            fechaGasto,
+            descripcion,
+            monto,
+            estado
+        )
+        VALUES
+        (
+            @idProyecto,
+            @idEtapa,
+            @idTipoGasto,
+            @idCuentaBancaria,
+            GETDATE(),
+            @descripcion,
+            @monto,
+            'activo'
+        );
+
+        SET @idGasto = SCOPE_IDENTITY();
+
+        COMMIT TRANSACTION;
+
+        SELECT @idGasto AS idGasto;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+-- -------------------------
+-- CRUD ADICIONAL FALTANTE
+-- -------------------------
+
+CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_insertar
+    @idProyecto INT,
+    @departamento VARCHAR(100),
+    @municipio VARCHAR(100),
+    @aldeaColonia VARCHAR(150) = NULL,
+    @direccionDetalle VARCHAR(255) = NULL,
+    @claveCatastral VARCHAR(100) = NULL,
+    @observacionLegal VARCHAR(255) = NULL
+AS
+BEGIN
+    INSERT INTO UbicacionProyecto
+    (
+        idProyecto,
+        departamento,
+        municipio,
+        aldeaColonia,
+        direccionDetalle,
+        claveCatastral,
+        observacionLegal
+    )
+    VALUES
+    (
+        @idProyecto,
+        @departamento,
+        @municipio,
+        @aldeaColonia,
+        @direccionDetalle,
+        @claveCatastral,
+        @observacionLegal
+    );
+
+    SELECT SCOPE_IDENTITY() AS idUbicacionGenerada;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_actualizar
+    @idUbicacion INT,
+    @idProyecto INT,
+    @departamento VARCHAR(100),
+    @municipio VARCHAR(100),
+    @aldeaColonia VARCHAR(150) = NULL,
+    @direccionDetalle VARCHAR(255) = NULL,
+    @claveCatastral VARCHAR(100) = NULL,
+    @observacionLegal VARCHAR(255) = NULL
+AS
+BEGIN
+    UPDATE UbicacionProyecto
+    SET
+        idProyecto = @idProyecto,
+        departamento = @departamento,
+        municipio = @municipio,
+        aldeaColonia = @aldeaColonia,
+        direccionDetalle = @direccionDetalle,
+        claveCatastral = @claveCatastral,
+        observacionLegal = @observacionLegal
+    WHERE idUbicacion = @idUbicacion;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_eliminar
+    @idUbicacion INT
+AS
+BEGIN
+    DELETE FROM UbicacionProyecto
+    WHERE idUbicacion = @idUbicacion;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_obtener
+    @idUbicacion INT
+AS
+BEGIN
+    SELECT *
+    FROM UbicacionProyecto
+    WHERE idUbicacion = @idUbicacion;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_ubicacion_proyecto_listar
+AS
+BEGIN
+    SELECT *
+    FROM UbicacionProyecto
+    ORDER BY idUbicacion DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_caracteristica_lote_insertar
+    @nombreCaracteristica VARCHAR(100),
+    @tipoRecargo VARCHAR(30),
+    @valorRecargo DECIMAL(18,2),
+    @estado VARCHAR(20) = 'activo'
+AS
+BEGIN
+    INSERT INTO CaracteristicaLote
+    (
+        nombreCaracteristica,
+        tipoRecargo,
+        valorRecargo,
+        estado
+    )
+    VALUES
+    (
+        @nombreCaracteristica,
+        @tipoRecargo,
+        @valorRecargo,
+        @estado
+    );
+
+    SELECT SCOPE_IDENTITY() AS idCaracteristicaGenerada;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_caracteristica_lote_actualizar
+    @idCaracteristica INT,
+    @nombreCaracteristica VARCHAR(100),
+    @tipoRecargo VARCHAR(30),
+    @valorRecargo DECIMAL(18,2),
+    @estado VARCHAR(20)
+AS
+BEGIN
+    UPDATE CaracteristicaLote
+    SET
+        nombreCaracteristica = @nombreCaracteristica,
+        tipoRecargo = @tipoRecargo,
+        valorRecargo = @valorRecargo,
+        estado = @estado
+    WHERE idCaracteristica = @idCaracteristica;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_caracteristica_lote_eliminar
+    @idCaracteristica INT
+AS
+BEGIN
+    DELETE FROM CaracteristicaLote
+    WHERE idCaracteristica = @idCaracteristica;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_caracteristica_lote_obtener
+    @idCaracteristica INT
+AS
+BEGIN
+    SELECT *
+    FROM CaracteristicaLote
+    WHERE idCaracteristica = @idCaracteristica;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_caracteristica_lote_listar
+AS
+BEGIN
+    SELECT *
+    FROM CaracteristicaLote
+    ORDER BY idCaracteristica DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_insertar
+    @idCliente INT,
+    @empresa VARCHAR(150),
+    @cargo VARCHAR(100),
+    @ingresoMensual DECIMAL(18,2),
+    @antiguedadLaboral INT = NULL,
+    @telefonoTrabajo VARCHAR(20) = NULL,
+    @direccionTrabajo VARCHAR(255) = NULL
+AS
+BEGIN
+    INSERT INTO DatosLaboralesCliente
+    (
+        idCliente,
+        empresa,
+        cargo,
+        ingresoMensual,
+        antiguedadLaboral,
+        telefonoTrabajo,
+        direccionTrabajo
+    )
+    VALUES
+    (
+        @idCliente,
+        @empresa,
+        @cargo,
+        @ingresoMensual,
+        @antiguedadLaboral,
+        @telefonoTrabajo,
+        @direccionTrabajo
+    );
+
+    SELECT SCOPE_IDENTITY() AS idDatosLaboralesGenerado;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_actualizar
+    @idDatosLaborales INT,
+    @idCliente INT,
+    @empresa VARCHAR(150),
+    @cargo VARCHAR(100),
+    @ingresoMensual DECIMAL(18,2),
+    @antiguedadLaboral INT = NULL,
+    @telefonoTrabajo VARCHAR(20) = NULL,
+    @direccionTrabajo VARCHAR(255) = NULL
+AS
+BEGIN
+    UPDATE DatosLaboralesCliente
+    SET
+        idCliente = @idCliente,
+        empresa = @empresa,
+        cargo = @cargo,
+        ingresoMensual = @ingresoMensual,
+        antiguedadLaboral = @antiguedadLaboral,
+        telefonoTrabajo = @telefonoTrabajo,
+        direccionTrabajo = @direccionTrabajo
+    WHERE idDatosLaborales = @idDatosLaborales;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_eliminar
+    @idDatosLaborales INT
+AS
+BEGIN
+    DELETE FROM DatosLaboralesCliente
+    WHERE idDatosLaborales = @idDatosLaborales;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_obtener
+    @idDatosLaborales INT
+AS
+BEGIN
+    SELECT *
+    FROM DatosLaboralesCliente
+    WHERE idDatosLaborales = @idDatosLaborales;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_listar
+AS
+BEGIN
+    SELECT *
+    FROM DatosLaboralesCliente
+    ORDER BY idDatosLaborales DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_lote_caracteristica_insertar
+    @idLote INT,
+    @idCaracteristica INT
+AS
+BEGIN
+    INSERT INTO LoteCaracteristica (idLote, idCaracteristica)
+    VALUES (@idLote, @idCaracteristica);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_lote_caracteristica_eliminar
+    @idLote INT,
+    @idCaracteristica INT
+AS
+BEGIN
+    DELETE FROM LoteCaracteristica
+    WHERE idLote = @idLote
+      AND idCaracteristica = @idCaracteristica;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_lote_caracteristica_listar_por_lote
+    @idLote INT
+AS
+BEGIN
+    SELECT
+        lc.idLote,
+        lc.idCaracteristica,
+        cl.nombreCaracteristica,
+        cl.tipoRecargo,
+        cl.valorRecargo
+    FROM LoteCaracteristica lc
+    INNER JOIN CaracteristicaLote cl ON cl.idCaracteristica = lc.idCaracteristica
+    WHERE lc.idLote = @idLote
+    ORDER BY lc.idCaracteristica;
+END;
+GO
+
+-- -------------------------
+-- CONSULTAS PARA FORMULARIOS
+-- -------------------------
+
+-- 2 formularios usando vistas
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_vista_lotes_disponibles
+    @idProyecto INT = NULL,
+    @idEtapa INT = NULL
+AS
+BEGIN
+    SELECT *
+    FROM dbo.vw_lotes_disponibles
+    WHERE (@idProyecto IS NULL OR idProyecto = @idProyecto)
+      AND (@idEtapa IS NULL OR idEtapa = @idEtapa)
+    ORDER BY idProyecto, idEtapa, idBloque, numeroLote;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_vista_creditos_activos
+    @idCliente INT = NULL
+AS
+BEGIN
+    SELECT *
+    FROM dbo.vw_creditos_activos_cliente
+    WHERE (@idCliente IS NULL OR idCliente = @idCliente)
+    ORDER BY idCliente, idVentaCredito;
+END;
+GO
+
+-- 2 formularios usando procedimientos almacenados
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_estado_cuenta_cliente
+    @idCliente INT
+AS
+BEGIN
+    SELECT
+        c.idCliente,
+        c.nombres + ' ' + c.apellidos AS cliente,
+        cu.idCuota,
+        cu.numeroCuota,
+        cu.fechaVencimiento,
+        cu.montoCuota,
+        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
+        cu.estadoCuota
+    FROM Cliente c
+    INNER JOIN Venta v ON v.idCliente = c.idCliente AND v.tipoVenta = 'credito'
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
+    WHERE c.idCliente = @idCliente
+    ORDER BY cu.numeroCuota;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_recaudacion_etapa
+    @idEtapa INT,
+    @fechaInicio DATE,
+    @fechaFin DATE
+AS
+BEGIN
+    SELECT
+        e.idEtapa,
+        e.nombreEtapa,
+        COUNT(pa.idPago) AS totalPagos,
+        SUM(pa.montoTotal) AS montoRecaudado
+    FROM Pago pa
+    INNER JOIN Venta v ON v.idVenta = pa.idVenta
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    WHERE e.idEtapa = @idEtapa
+      AND CAST(pa.fechaPago AS DATE) BETWEEN @fechaInicio AND @fechaFin
+    GROUP BY e.idEtapa, e.nombreEtapa;
+END;
+GO
+
+-- 2 formularios usando funciones tipo tabla
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_fn_lotes_disponibles
+    @idEtapa INT = NULL
+AS
+BEGIN
+    SELECT *
+    FROM dbo.fn_tvf_lotes_disponibles(@idEtapa)
+    ORDER BY idProyecto, idEtapa, idBloque, numeroLote;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_fn_estado_cuenta_cliente
+    @idCliente INT
+AS
+BEGIN
+    SELECT *
+    FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente)
+    ORDER BY numeroCuota;
+END;
+GO

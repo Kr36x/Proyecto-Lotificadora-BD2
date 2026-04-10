@@ -81,19 +81,19 @@ namespace LotificadoraApp
             btnCreditosActivos.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnCreditosActivos);
-                AbrirEnContenedor(new ConsultaVistaCreditosForm());
+                AbrirEnContenedor(new frmConsultaVistaCreditos());
             };
 
             btnEstadoDeCuenta.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnEstadoDeCuenta);
-                AbrirEnContenedor(new ConsultaSpEstadoCuentaForm());
+                AbrirEnContenedor(new frmConsultaEstadoCuenta());
             };
 
             btnRecaudacionEtapa.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnRecaudacionEtapa);
-                AbrirEnContenedor(new ConsultaSpRecaudacionForm());
+                AbrirEnContenedor(new frmConsultaRecaudacion());
             };
 
             btnConsultarPlanPago.Click += (_, _) =>

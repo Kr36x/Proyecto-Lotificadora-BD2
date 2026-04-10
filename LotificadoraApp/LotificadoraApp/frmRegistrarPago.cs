@@ -8,9 +8,6 @@ namespace LotificadoraApp
 {
     public partial class frmRegistrarPago : Form
     {
-        private readonly string connectionString =
-            "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
-
         private int? _idEtapaActual = null;
 
         public frmRegistrarPago()
@@ -80,7 +77,7 @@ namespace LotificadoraApp
 
         private void CargarVentasCredito()
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_listar_ventas_credito_activas", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -122,7 +119,7 @@ namespace LotificadoraApp
 
         private void CargarDetalleVenta(int idVenta)
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_obtener_detalle_venta_credito", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@idVenta", idVenta);
@@ -143,7 +140,7 @@ namespace LotificadoraApp
 
         private void CargarCuotasPendientes(int idVenta)
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_listar_cuotas_pendientes_por_venta", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@idVenta", idVenta);
@@ -185,7 +182,7 @@ namespace LotificadoraApp
 
         private void CargarCuentasBancariasPorEtapa(int idEtapa)
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_listar_cuentas_bancarias_por_etapa", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@idEtapa", idEtapa);
@@ -245,7 +242,7 @@ namespace LotificadoraApp
                     ? DBNull.Value
                     : textBox1.Text.Trim();
 
-                using SqlConnection cn = new SqlConnection(connectionString);
+                using SqlConnection cn = new SqlConnection(Db.ConnectionString);
                 using SqlCommand cmd = new SqlCommand("dbo.sp_registrar_pago", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 

@@ -8,9 +8,6 @@ namespace LotificadoraApp
 {
     public partial class frmRegistrarVentaCredito : Form
     {
-        private readonly string connectionString =
-            "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
-
         private decimal _tasaInteresActual = 0m;
 
         public frmRegistrarVentaCredito()
@@ -100,7 +97,7 @@ namespace LotificadoraApp
                 FROM dbo.vw_lotes_disponibles
                 ORDER BY idProyecto, idEtapa, idBloque, numeroLote;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
 
@@ -123,7 +120,7 @@ namespace LotificadoraApp
                 WHERE estado = 'activo'
                 ORDER BY nombres, apellidos;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
 
@@ -145,7 +142,7 @@ namespace LotificadoraApp
                 FROM Aval
                 ORDER BY nombres, apellidos;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
 
@@ -167,7 +164,7 @@ namespace LotificadoraApp
                 FROM Beneficiario
                 ORDER BY nombres, apellidos;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
 
@@ -220,7 +217,7 @@ namespace LotificadoraApp
                 INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
                 WHERE v.idLote = @idLote;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             cmd.Parameters.AddWithValue("@idLote", idLote);
 
@@ -346,7 +343,7 @@ namespace LotificadoraApp
                 int financiaTotal = cbFinanciarTotal.Checked ? 1 : 0;
                 int plazoAnios = int.Parse(txtPlazoAños.Text.Trim());
 
-                using SqlConnection cn = new SqlConnection(connectionString);
+                using SqlConnection cn = new SqlConnection(Db.ConnectionString);
                 using SqlCommand cmd = new SqlCommand("dbo.sp_registrar_venta_credito", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -429,7 +426,7 @@ namespace LotificadoraApp
         }
         private void GenerarCuotas(int idVentaCredito, DateTime fechaPrimerVencimiento)
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_generar_cuotas_plan_cursor", cn);
 
             cmd.CommandType = CommandType.StoredProcedure;

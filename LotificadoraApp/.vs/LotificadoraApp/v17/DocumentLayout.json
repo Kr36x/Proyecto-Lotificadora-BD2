@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\frmconsultarecaudacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\frmconsultarecaudacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\frmconsultarecaudacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\frmconsultarecaudacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|c:\\users\\pc\\desktop\\github\\proyecto-lotificadora-bd2\\lotificadoraapp\\lotificadoraapp\\frmconsultaestadocuenta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1299A2A6-E71F-4ADF-B725-CC772B52CCAF}|LotificadoraApp\\LotificadoraApp.csproj|solutionrelative:lotificadoraapp\\frmconsultaestadocuenta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +22,48 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "frmConsultaEstadoCuenta.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaEstadoCuenta.cs",
+              "RelativeDocumentMoniker": "LotificadoraApp\\frmConsultaEstadoCuenta.cs",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaEstadoCuenta.cs",
+              "RelativeToolTip": "LotificadoraApp\\frmConsultaEstadoCuenta.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwBcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T19:14:13.604Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "frmConsultaRecaudacion.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "RelativeDocumentMoniker": "LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "RelativeToolTip": "LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwCcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T19:47:45.353Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "frmConsultaRecaudacion.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "RelativeDocumentMoniker": "LotificadoraApp\\frmConsultaRecaudacion.cs",
+              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\frmConsultaRecaudacion.cs [Design]",
+              "RelativeToolTip": "LotificadoraApp\\frmConsultaRecaudacion.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-10T19:46:58.376Z",
+              "EditorCaption": " [Design]"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:19:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
@@ -75,18 +123,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:26:0:{2456bd12-ecf7-4988-a4a6-67d49173f565}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Form1.cs",
-              "RelativeDocumentMoniker": "LotificadoraApp\\Form1.cs",
-              "ToolTip": "C:\\Users\\PC\\Desktop\\Github\\Proyecto-Lotificadora-BD2\\LotificadoraApp\\LotificadoraApp\\Form1.cs [Design]",
-              "RelativeToolTip": "LotificadoraApp\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-10T04:20:02.368Z",
-              "EditorCaption": " [Design]"
             }
           ]
         },

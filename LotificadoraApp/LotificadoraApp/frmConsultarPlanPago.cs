@@ -7,9 +7,6 @@ namespace LotificadoraApp
 {
     public partial class frmConsultarPlanPago : Form
     {
-        private readonly string connectionString =
-            "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
-
         public frmConsultarPlanPago()
         {
             InitializeComponent();
@@ -86,7 +83,7 @@ namespace LotificadoraApp
 
         private void CargarResumenCredito(int idVentaCredito)
         {
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand("dbo.sp_obtener_resumen_credito", cn);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@idVentaCredito", idVentaCredito);
@@ -128,7 +125,7 @@ namespace LotificadoraApp
                 FROM dbo.fn_tvf_plan_pago_por_credito(@idVentaCredito)
                 ORDER BY numeroCuota;";
 
-            using SqlConnection cn = new SqlConnection(connectionString);
+            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
             cmd.Parameters.AddWithValue("@idVentaCredito", idVentaCredito);
             using SqlDataAdapter da = new SqlDataAdapter(cmd);

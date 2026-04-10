@@ -7,9 +7,6 @@ namespace LotificadoraApp
 {
     public partial class frmConsultaVistaLotes : Form
     {
-        private readonly string connectionString =
-            "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
-
         public frmConsultaVistaLotes()
         {
             InitializeComponent();
@@ -49,7 +46,7 @@ namespace LotificadoraApp
                       AND (@idEtapa IS NULL OR idEtapa = @idEtapa)
                     ORDER BY idProyecto, idEtapa, idBloque, numeroLote;";
 
-                using SqlConnection connection = new SqlConnection(connectionString);
+                using SqlConnection connection = new SqlConnection(Db.ConnectionString);
                 using SqlCommand command = new SqlCommand(sql, connection);
 
                 command.Parameters.AddWithValue("@idProyecto", (object?)idProyecto ?? DBNull.Value);

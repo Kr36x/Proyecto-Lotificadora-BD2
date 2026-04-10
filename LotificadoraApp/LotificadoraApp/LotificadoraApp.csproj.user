@@ -4,25 +4,13 @@
     <Compile Update="ConsultaBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ConsultaFnEstadoCuentaForm.cs">
+    <Compile Update="frmConsultaEstadoCuenta.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ConsultaFnLotesForm.cs">
+    <Compile Update="frmConsultaRecaudacion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="ConsultaSpEstadoCuentaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ConsultaSpRecaudacionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ConsultaVistaCreditosForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ConsultaVistaLotesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Form1.cs">
+    <Compile Update="frmConsultaVistaCreditos.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="frmConsultarPlanPago.cs">
