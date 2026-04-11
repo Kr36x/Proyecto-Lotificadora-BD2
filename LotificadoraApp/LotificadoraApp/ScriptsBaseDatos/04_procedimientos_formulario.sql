@@ -920,3 +920,94 @@ BEGIN
     ORDER BY cu.numeroCuota;
 END;
 GO
+
+
+-- ==================================================================
+-- 11. SP para consultar recaudación
+-- ==================================================================
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_recaudacion_etapa
+    @idEtapa INT,
+    @fechaInicio DATE,
+    @fechaFin DATE
+AS
+BEGIN
+    SELECT
+        e.idEtapa,
+        e.nombreEtapa,
+        COUNT(pa.idPago) AS totalPagos,
+        SUM(pa.montoTotal) AS montoRecaudado
+    FROM Pago pa
+    INNER JOIN Venta v ON v.idVenta = pa.idVenta
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    WHERE e.idEtapa = @idEtapa
+      AND CAST(pa.fechaPago AS DATE) BETWEEN @fechaInicio AND @fechaFin
+    GROUP BY e.idEtapa, e.nombreEtapa;
+END;
+GO
+
+-- ==================================================================
+-- 12. SP para insertar datos laborales
+-- ==================================================================
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_insertar
+    @idCliente INT,
+    @empresa VARCHAR(150),
+    @cargo VARCHAR(100),
+    @ingresoMensual DECIMAL(18,2),
+    @antiguedadLaboral INT = NULL,
+    @telefonoTrabajo VARCHAR(20) = NULL,
+    @direccionTrabajo VARCHAR(255) = NULL
+AS
+BEGIN
+    INSERT INTO DatosLaboralesCliente
+    (
+        idCliente,
+        empresa,
+        cargo,
+        ingresoMensual,
+        antiguedadLaboral,
+        telefonoTrabajo,
+        direccionTrabajo
+    )
+    VALUES
+    (
+        @idCliente,
+        @empresa,
+        @cargo,
+        @ingresoMensual,
+        @antiguedadLaboral,
+        @telefonoTrabajo,
+        @direccionTrabajo
+    );
+
+    SELECT SCOPE_IDENTITY() AS idDatosLaboralesGenerado;
+END;
+GO
+
+-- ==================================================================
+-- 13. SP para actualizar datos laborales
+-- ==================================================================
+CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_actualizar
+    @idDatosLaborales INT,
+    @idCliente INT,
+    @empresa VARCHAR(150),
+    @cargo VARCHAR(100),
+    @ingresoMensual DECIMAL(18,2),
+    @antiguedadLaboral INT = NULL,
+    @telefonoTrabajo VARCHAR(20) = NULL,
+    @direccionTrabajo VARCHAR(255) = NULL
+AS
+BEGIN
+    UPDATE DatosLaboralesCliente
+    SET
+        idCliente = @idCliente,
+        empresa = @empresa,
+        cargo = @cargo,
+        ingresoMensual = @ingresoMensual,
+        antiguedadLaboral = @antiguedadLaboral,
+        telefonoTrabajo = @telefonoTrabajo,
+        direccionTrabajo = @direccionTrabajo
+    WHERE idDatosLaborales = @idDatosLaborales;
+END;
+GO
