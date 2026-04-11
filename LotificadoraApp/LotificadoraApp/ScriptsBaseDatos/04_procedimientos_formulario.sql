@@ -1165,7 +1165,7 @@ begin
         p.idPago,
         v.idVenta,
         c.nombres + ' ' + c.apellidos as cliente,
-        pp.numeroCuota,
+        cu.numeroCuota,
         p.fechaPago,
         p.montoTotal as montoPagado,
         p.formaPago,
@@ -1177,17 +1177,18 @@ begin
         on p.idVenta = v.idVenta
     inner join Cliente c
         on v.idCliente = c.idCliente
-    left join PlanPago pp
-        on p.idCuota = pp.idCuota
+    left join DetallePagoCuota dpc
+        on dpc.idPago = p.idPago
+    left join Cuota cu
+        on cu.idCuota = dpc.idCuota
     left join Factura f
-        on p.idFactura = f.idFactura
+        on f.idPago = p.idPago
     where v.idCliente = @idCliente
       and (@idVenta is null or v.idVenta = @idVenta)
       and cast(p.fechaPago as date) between @fechaInicio and @fechaFin
     order by p.fechaPago desc, p.idPago desc;
 end
 go
-
 
 
 
