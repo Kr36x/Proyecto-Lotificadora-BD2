@@ -1129,6 +1129,29 @@ END;
 GO
 --exec dbo.sp_obtener_detalle_lote_disponible @idLote = 4;
 
+create or alter procedure dbo.sp_listar_ventas_por_cliente
+    @idCliente int
+as
+begin
+    set nocount on;
+
+    select
+        vc.idVenta,
+        concat(
+            'Venta #', vc.idVenta,
+            ' - Lote ', l.numeroLote,
+            ' - Fecha ', convert(varchar(10), v.fechaVenta, 120)
+        ) as descripcion
+    from VentaCredito vc
+    inner join Venta v
+        on vc.idVenta = v.idVenta
+    inner join Lote l
+        on v.idLote = l.idLote
+    where v.idCliente = @idCliente
+    order by vc.idVenta desc;
+end
+go
+
 
 
 
