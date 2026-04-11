@@ -118,10 +118,13 @@ EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa1;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa2;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa3;
 
-INSERT INTO EstadoCivil (id, descripcion)
-VALUES
-(1, 'Soltero'),
-(2, 'Casado');
+insert into EstadoCivil values 
+    (1,'Soltero'),
+    (2,'Casado'),
+    (3,'Union Libre'),
+    (4,'Divorciado'),
+    (5,'Viudo'),
+    (6,'Casada');
 
 INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estado)
 VALUES
@@ -139,11 +142,18 @@ VALUES
 (@idCliente2, 'Inversiones Nova', 'Administradora', 42000, 5, '2233-1002', 'Circunvalacion, SPS'),
 (@idCliente3, 'Maquila Centro', 'Supervisor', 36000, 4, '2233-1003', 'La Lima, zona industrial');
 
-INSERT INTO Parentesco (id, descripcion)
-VALUES
-(1, 'Tio'),
-(2, 'Hermana'),
-(3, 'Hijo');
+INSERT INTO Parentesco (id, descripcion) VALUES
+(1, 'Madre'),
+(2, 'Padre'),
+(3, 'Hija'),
+(4, 'Hijo'),
+(5, 'Esposa'),
+(6, 'Esposo'),
+(7, 'Hermana'),
+(8, 'Hermano'),
+(9, 'Tia'),
+(10, 'Tio');
+
 
 INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoId)
 VALUES
