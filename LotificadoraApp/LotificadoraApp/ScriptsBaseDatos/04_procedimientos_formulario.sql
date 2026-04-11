@@ -662,7 +662,7 @@ RETURNS TABLE
 AS
 RETURN
 (
-    WITH ClienteIngresos AS
+        WITH ClienteIngresos AS
     (
         SELECT
             c.idCliente,
@@ -687,7 +687,8 @@ RETURN
             v.numeroLote,
             v.areaV2,
             v.precioFinalCalculado,
-            e.tasaInteresAnual
+            e.tasaInteresAnual,
+            p.maxAniosFinanciamiento
         FROM dbo.vw_lotes_disponibles v
         INNER JOIN Lote l
             ON l.idLote = v.idLote
@@ -695,6 +696,9 @@ RETURN
             ON b.idBloque = l.idBloque
         INNER JOIN Etapa e
             ON e.idEtapa = b.idEtapa
+        INNER JOIN Proyecto p
+            ON p.idProyecto = e.idProyecto
+        WHERE @plazoAnios <= p.maxAniosFinanciamiento
     )
     SELECT
         ci.idCliente,
