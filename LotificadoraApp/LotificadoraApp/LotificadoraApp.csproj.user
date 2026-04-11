@@ -28,6 +28,12 @@
     <Compile Update="frmMenuPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="frmRegistrarAval.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmRegistrarBeneficiario.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="frmRegistrarCliente.cs">
       <SubType>Form</SubType>
     </Compile>

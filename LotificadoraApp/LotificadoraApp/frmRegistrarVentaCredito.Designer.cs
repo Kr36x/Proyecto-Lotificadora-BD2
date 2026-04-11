@@ -79,6 +79,8 @@
             label18 = new Label();
             label19 = new Label();
             label20 = new Label();
+            btnNuevoAval = new Button();
+            btnNuevoBeneficiario = new Button();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -231,6 +233,8 @@
             // panel2
             // 
             panel2.BackColor = Color.White;
+            panel2.Controls.Add(btnNuevoBeneficiario);
+            panel2.Controls.Add(btnNuevoAval);
             panel2.Controls.Add(cbBeneficiario);
             panel2.Controls.Add(label10);
             panel2.Controls.Add(cbAval);
@@ -248,7 +252,7 @@
             cbBeneficiario.FormattingEnabled = true;
             cbBeneficiario.Location = new Point(93, 90);
             cbBeneficiario.Name = "cbBeneficiario";
-            cbBeneficiario.Size = new Size(338, 23);
+            cbBeneficiario.Size = new Size(304, 23);
             cbBeneficiario.TabIndex = 5;
             // 
             // label10
@@ -265,7 +269,7 @@
             cbAval.FormattingEnabled = true;
             cbAval.Location = new Point(93, 51);
             cbAval.Name = "cbAval";
-            cbAval.Size = new Size(338, 23);
+            cbAval.Size = new Size(304, 23);
             cbAval.TabIndex = 3;
             // 
             // label9
@@ -282,7 +286,7 @@
             cbClientes.FormattingEnabled = true;
             cbClientes.Location = new Point(93, 10);
             cbClientes.Name = "cbClientes";
-            cbClientes.Size = new Size(338, 23);
+            cbClientes.Size = new Size(304, 23);
             cbClientes.TabIndex = 1;
             // 
             // label15
@@ -551,6 +555,26 @@
             label20.TabIndex = 16;
             label20.Text = "CONDICIONES DE VENTA";
             // 
+            // btnNuevoAval
+            // 
+            btnNuevoAval.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnNuevoAval.Location = new Point(405, 50);
+            btnNuevoAval.Name = "btnNuevoAval";
+            btnNuevoAval.Size = new Size(30, 23);
+            btnNuevoAval.TabIndex = 6;
+            btnNuevoAval.Text = "+ ";
+            btnNuevoAval.UseVisualStyleBackColor = true;
+            // 
+            // btnNuevoBeneficiario
+            // 
+            btnNuevoBeneficiario.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnNuevoBeneficiario.Location = new Point(405, 89);
+            btnNuevoBeneficiario.Name = "btnNuevoBeneficiario";
+            btnNuevoBeneficiario.Size = new Size(30, 23);
+            btnNuevoBeneficiario.TabIndex = 7;
+            btnNuevoBeneficiario.Text = "+ ";
+            btnNuevoBeneficiario.UseVisualStyleBackColor = true;
+            // 
             // frmRegistrarVentaCredito
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -627,5 +651,7 @@
         private Label label22;
         private Label label23;
         private CheckBox cbFinanciarTotal;
+        private Button btnNuevoBeneficiario;
+        private Button btnNuevoAval;
     }
 }

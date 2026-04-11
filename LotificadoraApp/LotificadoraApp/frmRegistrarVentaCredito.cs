@@ -56,6 +56,9 @@ namespace LotificadoraApp
             btnRegistrarVenta.Click += btnRegistrarVenta_Click;
             btnLimpiar.Click += btnLimpiar_Click;
             btnCerrar.Click += btnCerrar_Click;
+
+            btnNuevoBeneficiario.Click += btnNuevoBeneficiario_Click;
+            btnNuevoAval.Click += btnNuevoAval_Click;
         }
 
         private void frmRegistrarVentaCredito_Load(object? sender, EventArgs e)
@@ -318,7 +321,30 @@ namespace LotificadoraApp
             txtMontoFinanciado.Text = montoFinanciado.ToString("N2");
             txtCuotaEstimada.Text = cuotaEstimada.ToString("N2");
         }
+        private void btnNuevoAval_Click(object? sender, EventArgs e)
+        {
+            using frmRegistrarAval frm = new frmRegistrarAval();
 
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                CargarAvales();
+
+                if (frm.IdAvalGenerado.HasValue)
+                    cbAval.SelectedValue = frm.IdAvalGenerado.Value;
+            }
+        }
+        private void btnNuevoBeneficiario_Click(object? sender, EventArgs e)
+        {
+            using frmRegistrarBeneficiario frm = new frmRegistrarBeneficiario();
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                CargarBeneficiarios();
+
+                if (frm.IdBeneficiarioGenerado.HasValue)
+                    cbBeneficiario.SelectedValue = frm.IdBeneficiarioGenerado.Value;
+            }
+        }
         private void btnRegistrarVenta_Click(object? sender, EventArgs e)
         {
             try
