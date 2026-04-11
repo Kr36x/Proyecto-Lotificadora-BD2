@@ -33,10 +33,19 @@ SELECT @idProyecto1 = MIN(idProyecto), @idProyecto2 = MAX(idProyecto)
 FROM Proyecto
 WHERE nombreProyecto IN ('Residencial Valle Verde', 'Residencial Senderos del Norte');
 
-INSERT INTO UbicacionProyecto (idProyecto, departamento, municipio, aldeaColonia, direccionDetalle, claveCatastral, observacionLegal)
+INSERT INTO Departamento (id, codigo, nombre)
 VALUES
-(@idProyecto1, 'Cortes', 'San Pedro Sula', 'Colonia Universidad', 'Boulevard principal, salida vieja a La Lima', 'VV-001', 'Proyecto piloto para pruebas DB2'),
-(@idProyecto2, 'Cortes', 'La Lima', 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
+(1, '05', 'Cortes');
+
+INSERT INTO Municipio (id, codigo, departamentoId, nombre)
+VALUES
+(1, '01', 1, 'San Pedro Sula'),
+(2, '12', 1, 'La Lima');
+
+INSERT INTO UbicacionProyecto (idProyecto, departamentoId, municipioId, aldeaColonia, direccionDetalle, claveCatastral, observacionLegal)
+VALUES
+(@idProyecto1, 1, 1, 'Colonia Universidad', 'Boulevard principal, salida vieja a La Lima', 'VV-001', 'Proyecto piloto para pruebas DB2'),
+(@idProyecto2, 1, 2, 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
 
 INSERT INTO Etapa
 (idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado)
@@ -53,12 +62,12 @@ SELECT @idEtapa2 = idEtapa
 FROM Etapa
 WHERE idProyecto = @idProyecto1 AND nombreEtapa = 'Etapa 2';
 
-INSERT INTO Bloque (idEtapa, nombreBloque, descripcion)
+INSERT INTO Bloque (idEtapa, nombreBloque, estado, descripcion)
 VALUES
-(@idEtapa1, 'Bloque A', 'Bloque principal de la etapa 1'),
-(@idEtapa1, 'Bloque B', 'Bloque secundario de la etapa 1'),
-(@idEtapa2, 'Bloque C', 'Bloque de la etapa 2'),
-(@idEtapa3, 'Bloque D', 'Bloque del proyecto 2');
+(@idEtapa1, 'Bloque A', 4, 'Bloque principal de la etapa 1'),
+(@idEtapa1, 'Bloque B', 4, 'Bloque secundario de la etapa 1'),
+(@idEtapa2, 'Bloque C', 4, 'Bloque de la etapa 2'),
+(@idEtapa3, 'Bloque D', 4, 'Bloque del proyecto 2');
 
 SELECT @idBloqueA1 = MIN(idBloque), @idBloqueC1 = MAX(idBloque)
 FROM Bloque;
@@ -109,11 +118,16 @@ EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa1;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa2;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa3;
 
-INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivil, rtn, estado)
+INSERT INTO EstadoCivil (id, descripcion)
 VALUES
-('0801-1998-00001', 'Carlos', 'Mejia', '1998-04-11', '9876-1001', 'carlos.mejia@correo.com', 'Col. Trejo, SPS', 'Soltero', '0801199800001', 'activo'),
-('0801-1995-00002', 'Daniela', 'Santos', '1995-07-25', '9876-1002', 'daniela.santos@correo.com', 'Col. Satelite, SPS', 'Casada', '0801199500002', 'activo'),
-('0501-1992-00003', 'Marvin', 'Lopez', '1992-10-08', '9876-1003', 'marvin.lopez@correo.com', 'La Lima, Cortes', 'Casado', '0501199200003', 'activo');
+(1, 'Soltero'),
+(2, 'Casado');
+
+INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estado)
+VALUES
+('0801-1998-00001', 'Carlos', 'Mejia', '1998-04-11', '9876-1001', 'carlos.mejia@correo.com', 'Col. Trejo, SPS', 1, '0801199800001', 'activo'),
+('0801-1995-00002', 'Daniela', 'Santos', '1995-07-25', '9876-1002', 'daniela.santos@correo.com', 'Col. Satelite, SPS', 2, '0801199500002', 'activo'),
+('0501-1992-00003', 'Marvin', 'Lopez', '1992-10-08', '9876-1003', 'marvin.lopez@correo.com', 'La Lima, Cortes', 2, '0501199200003', 'activo');
 
 SELECT @idCliente1 = idCliente FROM Cliente WHERE identidad = '0801-1998-00001';
 SELECT @idCliente2 = idCliente FROM Cliente WHERE identidad = '0801-1995-00002';
@@ -125,18 +139,24 @@ VALUES
 (@idCliente2, 'Inversiones Nova', 'Administradora', 42000, 5, '2233-1002', 'Circunvalacion, SPS'),
 (@idCliente3, 'Maquila Centro', 'Supervisor', 36000, 4, '2233-1003', 'La Lima, zona industrial');
 
-INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoCliente)
+INSERT INTO Parentesco (id, descripcion)
 VALUES
-('0801-1975-00011', 'Jose', 'Maldonado', '9988-2001', 'Barrio Cabañas, SPS', 'Empresa Uno', 55000, 'Tio'),
-('0501-1980-00012', 'Ana', 'Castillo', '9988-2002', 'La Lima, Cortes', 'Banco Regional', 62000, 'Hermana');
+(1, 'Tio'),
+(2, 'Hermana'),
+(3, 'Hijo');
+
+INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoId)
+VALUES
+('0801-1975-00011', 'Jose', 'Maldonado', '9988-2001', 'Barrio Cabañas, SPS', 'Empresa Uno', 55000, 1),
+('0501-1980-00012', 'Ana', 'Castillo', '9988-2002', 'La Lima, Cortes', 'Banco Regional', 62000, 2);
 
 SELECT @idAval1 = idAval FROM Aval WHERE identidad = '0801-1975-00011';
 SELECT @idAval2 = idAval FROM Aval WHERE identidad = '0501-1980-00012';
 
-INSERT INTO Beneficiario (identidad, nombres, apellidos, telefono, parentesco, direccion)
+INSERT INTO Beneficiario (identidad, nombres, apellidos, telefono, parentescoId, direccion)
 VALUES
-('0801-2001-00021', 'Laura', 'Mejia', '9911-3001', 'Hermana', 'Col. Trejo, SPS'),
-('0501-2003-00022', 'Kevin', 'Lopez', '9911-3002', 'Hijo', 'La Lima, Cortes');
+('0801-2001-00021', 'Laura', 'Mejia', '9911-3001', 2, 'Col. Trejo, SPS'),
+('0501-2003-00022', 'Kevin', 'Lopez', '9911-3002', 3, 'La Lima, Cortes');
 
 SELECT @idBeneficiario1 = idBeneficiario FROM Beneficiario WHERE identidad = '0801-2001-00021';
 SELECT @idBeneficiario2 = idBeneficiario FROM Beneficiario WHERE identidad = '0501-2003-00022';
@@ -324,3 +344,22 @@ SELECT * FROM vw_creditos_activos_cliente;
               AND (idEtapa = 1)
             ORDER BY idProyecto, idEtapa, idBloque, numeroLote
 
+insert into Estado (id, nombre) values
+(1, 'activo'),
+(2, 'inactivo'),
+(3, 'finalizado'),
+(4, 'activa'),
+(5, 'inactiva'),
+(6, 'finalizada'),
+(7, 'disponible'),
+(8, 'reservado'),
+(9, 'vendido'),
+(10, 'anulada'),
+(11, 'cancelado'),
+(12, 'moroso'),
+(13, 'pendiente'),
+(14, 'parcial'),
+(15, 'pagada'),
+(16, 'vencida'),
+(17, 'anulado');
+go

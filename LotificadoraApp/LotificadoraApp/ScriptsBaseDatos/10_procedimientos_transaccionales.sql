@@ -1,0 +1,277 @@
+use Grupo8;
+go
+
+-- -------------------------
+-- 1
+-- -------------------------
+
+CREATE OR ALTER PROCEDURE dbo.sp_registrar_venta_contado_transaccional
+    @idLote INT,
+    @idCliente INT,
+    @fechaVenta DATE,
+    @precioLote DECIMAL(18,2),
+    @descuento DECIMAL(18,2) = 0,
+    @recargo DECIMAL(18,2) = 0,
+    @fechaPago DATE = NULL,
+    @observacion VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idVenta INT;
+    DECLARE @totalVenta DECIMAL(18,2);
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @fechaPago IS NULL
+            SET @fechaPago = @fechaVenta;
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Cliente
+            WHERE idCliente = @idCliente
+              AND estado = 'activo'
+        )
+        BEGIN
+            RAISERROR('El cliente no existe o esta inactivo.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        SET @totalVenta = @precioLote - @descuento + @recargo;
+        IF @totalVenta <= 0
+        BEGIN
+            RAISERROR('El total de la venta debe ser mayor que cero.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO Venta
+        (
+            idLote,
+            idCliente,
+            fechaVenta,
+            tipoVenta,
+            precioLote,
+            descuento,
+            recargo,
+            totalVenta,
+            estadoVenta
+        )
+        VALUES
+        (
+            @idLote,
+            @idCliente,
+            @fechaVenta,
+            'contado',
+            @precioLote,
+            @descuento,
+            @recargo,
+            @totalVenta,
+            'activa'
+        );
+
+        SET @idVenta = SCOPE_IDENTITY();
+
+        INSERT INTO VentaContado
+        (
+            idVenta,
+            fechaPago,
+            montoPagado,
+            observacion
+        )
+        VALUES
+        (
+            @idVenta,
+            @fechaPago,
+            @totalVenta,
+            @observacion
+        );
+
+        COMMIT TRANSACTION;
+
+        SELECT
+            @idVenta AS idVenta,
+            @totalVenta AS totalVenta;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+-- -------------------------
+-- 2
+-- -------------------------
+CREATE OR ALTER PROCEDURE dbo.sp_procesar_deposito_caja_transaccional
+    @idCuentaBancaria INT,
+    @fechaOperacion DATE = NULL,
+    @observacion VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idDepositoCaja INT;
+    DECLARE @totalDepositado DECIMAL(18,2);
+    DECLARE @cantidadPagos INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF @fechaOperacion IS NULL
+            SET @fechaOperacion = CAST(GETDATE() AS DATE);
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM CuentaBancaria
+            WHERE idCuentaBancaria = @idCuentaBancaria
+              AND estado = 'activa'
+        )
+        BEGIN
+            RAISERROR('La cuenta bancaria no existe o esta inactiva.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        SELECT
+            @cantidadPagos = COUNT(1),
+            @totalDepositado = ISNULL(SUM(p.montoTotal), 0)
+        FROM Pago p
+        WHERE p.formaPago = 'efectivo'
+          AND p.depositadoCaja = 0
+          AND CAST(p.fechaPago AS DATE) = @fechaOperacion;
+
+        IF ISNULL(@cantidadPagos, 0) = 0
+        BEGIN
+            RAISERROR('No hay pagos en efectivo pendientes para depositar en la fecha indicada.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO DepositoCajaBanco
+        (
+            fechaDeposito,
+            idCuentaBancaria,
+            totalDepositado,
+            observacion
+        )
+        VALUES
+        (
+            GETDATE(),
+            @idCuentaBancaria,
+            @totalDepositado,
+            @observacion
+        );
+
+        SET @idDepositoCaja = SCOPE_IDENTITY();
+
+        INSERT INTO DetalleDepositoCaja
+        (
+            idDepositoCaja,
+            idPago,
+            monto
+        )
+        SELECT
+            @idDepositoCaja,
+            p.idPago,
+            p.montoTotal
+        FROM Pago p
+        WHERE p.formaPago = 'efectivo'
+          AND p.depositadoCaja = 0
+          AND CAST(p.fechaPago AS DATE) = @fechaOperacion;
+
+        COMMIT TRANSACTION;
+
+        SELECT
+            @idDepositoCaja AS idDepositoCaja,
+            @cantidadPagos AS cantidadPagos,
+            @totalDepositado AS totalDepositado;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+
+-- -------------------------
+-- 3
+-- -------------------------
+CREATE OR ALTER PROCEDURE dbo.sp_registrar_gasto_proyecto_transaccional
+    @idProyecto INT,
+    @idEtapa INT,
+    @idTipoGasto INT,
+    @idCuentaBancaria INT,
+    @descripcion VARCHAR(255),
+    @monto DECIMAL(18,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idGasto INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Etapa
+            WHERE idEtapa = @idEtapa
+              AND idProyecto = @idProyecto
+        )
+        BEGIN
+            RAISERROR('La etapa no pertenece al proyecto indicado.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        INSERT INTO GastoProyecto
+        (
+            idProyecto,
+            idEtapa,
+            idTipoGasto,
+            idCuentaBancaria,
+            fechaGasto,
+            descripcion,
+            monto,
+            estado
+        )
+        VALUES
+        (
+            @idProyecto,
+            @idEtapa,
+            @idTipoGasto,
+            @idCuentaBancaria,
+            GETDATE(),
+            @descripcion,
+            @monto,
+            'activo'
+        );
+
+        SET @idGasto = SCOPE_IDENTITY();
+
+        COMMIT TRANSACTION;
+
+        SELECT @idGasto AS idGasto;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
+        DECLARE @msg VARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@msg, 16, 1);
+    END CATCH
+END;
+GO
+

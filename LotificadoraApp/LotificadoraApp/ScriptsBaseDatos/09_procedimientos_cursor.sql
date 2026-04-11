@@ -1,4 +1,6 @@
-
+-- -------------------------
+-- 1
+-- -------------------------
 CREATE OR ALTER PROCEDURE dbo.sp_generar_cuotas_plan_cursor
     @idVentaCredito INT,
     @fechaPrimerVencimiento DATE = NULL
@@ -182,6 +184,9 @@ BEGIN
 END;
 GO
 
+-- -------------------------
+-- 2
+-- -------------------------
 CREATE OR ALTER PROCEDURE dbo.sp_recalcular_precios_lotes_etapa_cursor
     @idEtapa INT
 AS
@@ -223,6 +228,10 @@ BEGIN
 END;
 GO
 
+
+-- -------------------------
+-- 3
+-- -------------------------
 CREATE OR ALTER PROCEDURE dbo.sp_actualizar_cuotas_vencidas_cursor
     @fechaCorte DATE = NULL
 AS
