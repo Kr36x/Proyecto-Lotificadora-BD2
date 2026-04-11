@@ -137,6 +137,12 @@ namespace LotificadoraApp
                 MarcarBotonActivo(btnRegistrarLote);
                 AbrirEnContenedor(new frmRegistrarLote());
             };
+
+            btnConsultarPagos.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnConsultarPagos);
+                AbrirEnContenedor(new frmConsultaPagos());
+            };
         }
 
         private void AbrirEnContenedor(Form formularioHijo)

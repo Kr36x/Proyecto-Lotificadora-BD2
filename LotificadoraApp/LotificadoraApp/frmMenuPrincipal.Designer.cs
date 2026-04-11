@@ -48,6 +48,7 @@
             btnRegistrarCliente = new Button();
             btnRegistrarPago = new Button();
             btnRegistrarVentaCredito = new Button();
+            btnConsultarPagos = new Button();
             pnlEsqueleto.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -119,6 +120,7 @@
             // panel2
             // 
             panel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel2.Controls.Add(btnConsultarPagos);
             panel2.Controls.Add(btnConsultaLotesAptosCliente);
             panel2.Controls.Add(btnConsultarPlanPago);
             panel2.Controls.Add(btnRecaudacionEtapa);
@@ -127,7 +129,7 @@
             panel2.Controls.Add(btnLotesDisponibles);
             panel2.Location = new Point(3, 86);
             panel2.Name = "panel2";
-            panel2.Size = new Size(193, 235);
+            panel2.Size = new Size(193, 272);
             panel2.TabIndex = 3;
             // 
             // btnConsultaLotesAptosCliente
@@ -200,7 +202,7 @@
             // 
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.WhiteSmoke;
-            label2.Location = new Point(3, 324);
+            label2.Location = new Point(3, 361);
             label2.Name = "label2";
             label2.Size = new Size(193, 15);
             label2.TabIndex = 5;
@@ -214,7 +216,7 @@
             panel3.Controls.Add(btnRegistrarCliente);
             panel3.Controls.Add(btnRegistrarPago);
             panel3.Controls.Add(btnRegistrarVentaCredito);
-            panel3.Location = new Point(3, 342);
+            panel3.Location = new Point(3, 379);
             panel3.Name = "panel3";
             panel3.Size = new Size(193, 187);
             panel3.TabIndex = 6;
@@ -273,6 +275,17 @@
             btnRegistrarVentaCredito.Text = "Registrar Venta Crédito";
             btnRegistrarVentaCredito.UseVisualStyleBackColor = false;
             // 
+            // btnConsultarPagos
+            // 
+            btnConsultarPagos.BackColor = Color.Transparent;
+            btnConsultarPagos.Dock = DockStyle.Top;
+            btnConsultarPagos.Location = new Point(0, 222);
+            btnConsultarPagos.Name = "btnConsultarPagos";
+            btnConsultarPagos.Size = new Size(193, 37);
+            btnConsultarPagos.TabIndex = 6;
+            btnConsultarPagos.Text = "Consultar pagos";
+            btnConsultarPagos.UseVisualStyleBackColor = false;
+            // 
             // frmMenuPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -311,5 +324,6 @@
         private Button btnConsultaLotesAptosCliente;
         private Button btnGestionClientes;
         private Button btnRegistrarLote;
+        private Button btnConsultarPagos;
     }
 }
