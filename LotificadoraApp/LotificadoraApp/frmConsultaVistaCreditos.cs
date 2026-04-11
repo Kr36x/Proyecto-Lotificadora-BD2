@@ -17,7 +17,15 @@ public class frmConsultaVistaCreditos : ConsultaBaseForm
     protected override DataTable Consultar()
     {
         const string sql = @"
-            SELECT *
+            SELECT idCliente,	
+                cliente,
+                idVenta,
+                idVentaCredito,	
+                plazoAnios,	
+                tasaInteresAnual,	
+                estadoId,	
+                idPlanPago,	
+                totalPlan
             FROM dbo.vw_creditos_activos_cliente
             WHERE (@idCliente IS NULL OR idCliente = @idCliente)
             ORDER BY idCliente, idVentaCredito;";
