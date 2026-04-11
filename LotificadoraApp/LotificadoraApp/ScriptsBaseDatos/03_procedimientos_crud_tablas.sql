@@ -473,18 +473,51 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_cliente_obtener
+CREATE OR ALTER PROCEDURE sp_cliente_obtener
     @idCliente INT
 AS
 BEGIN
-    SELECT * FROM Cliente WHERE idCliente = @idCliente;
+    SELECT
+        c.idCliente,
+        c.identidad,
+        c.nombres,
+        c.apellidos,
+        c.fechaNacimiento,
+        c.telefono,
+        c.correo,
+        c.direccion,
+        c.estadoCivilId,
+        ec.descripcion AS estadoCivil,
+        c.rtn,
+        c.estado
+    FROM Cliente c
+    LEFT JOIN EstadoCivil ec
+        ON c.estadoCivilId = ec.id
+    WHERE c.idCliente = @idCliente;
 END;
 GO
 
-CREATE PROCEDURE sp_cliente_listar
+
+CREATE OR ALTER PROCEDURE sp_cliente_listar
 AS
 BEGIN
-    SELECT * FROM Cliente ORDER BY idCliente DESC;
+    SELECT
+        c.idCliente,
+        c.identidad,
+        c.nombres,
+        c.apellidos,
+        c.fechaNacimiento,
+        c.telefono,
+        c.correo,
+        c.direccion,
+        c.estadoCivilId,
+        ec.descripcion AS estadoCivil,
+        c.rtn,
+        c.estado
+    FROM Cliente c
+    LEFT JOIN EstadoCivil ec
+        ON c.estadoCivilId = ec.id
+    ORDER BY c.idCliente DESC;
 END;
 GO
 
