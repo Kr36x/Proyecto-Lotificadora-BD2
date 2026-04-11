@@ -25,7 +25,8 @@ public class frmConsultaVistaCreditos : ConsultaBaseForm
                 tasaInteresAnual,	
                 estadoId,	
                 idPlanPago,	
-                totalPlan
+                totalPlan,
+                saldoPendiente
             FROM dbo.vw_creditos_activos_cliente
             WHERE (@idCliente IS NULL OR idCliente = @idCliente)
             ORDER BY idCliente, idVentaCredito;";
