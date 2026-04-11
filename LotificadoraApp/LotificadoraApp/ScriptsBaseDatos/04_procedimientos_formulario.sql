@@ -895,35 +895,9 @@ END;
 GO
 
 
--- ==================================================================
--- 10. SP para consultar estados cuenta
--- ==================================================================
-CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_estado_cuenta_cliente
-    @idCliente INT
-AS
-BEGIN
-    SELECT
-        c.idCliente,
-        c.nombres + ' ' + c.apellidos AS cliente,
-        cu.idCuota,
-        cu.numeroCuota,
-        cu.fechaVencimiento,
-        cu.montoCuota,
-        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
-        cu.estadoCuota
-    FROM Cliente c
-    INNER JOIN Venta v ON v.idCliente = c.idCliente AND v.tipoVenta = 'credito'
-    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
-    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
-    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
-    WHERE c.idCliente = @idCliente
-    ORDER BY cu.numeroCuota;
-END;
-GO
-
 
 -- ==================================================================
--- 11. SP para consultar recaudación
+-- 10. SP para consultar recaudación
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_recaudacion_etapa
     @idEtapa INT,
@@ -948,7 +922,7 @@ END;
 GO
 
 -- ==================================================================
--- 12. SP para insertar datos laborales
+-- 11. SP para insertar datos laborales
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_insertar
     @idCliente INT,
@@ -986,7 +960,7 @@ END;
 GO
 
 -- ==================================================================
--- 13. SP para actualizar datos laborales
+-- 12. SP para actualizar datos laborales
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_actualizar
     @idDatosLaborales INT,

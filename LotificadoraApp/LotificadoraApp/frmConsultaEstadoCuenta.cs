@@ -24,10 +24,19 @@ namespace LotificadoraApp
                     return;
                 }
 
-                var datasource = Db.ExecuteStoredProcedure(
-                    "dbo.sp_consulta_sp_estado_cuenta_cliente",
+                var datasource = Db.ExecuteQuery(
+                    @"SELECT 
+                        idCliente,
+                        cliente,
+                        idCuota,
+                        numeroCuota,
+                        fechaVencimiento,
+                        montoCuota,
+                        saldoPendiente,
+                        estadoCuota
+                      FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente)",
                     new SqlParameter("@idCliente", Convert.ToInt32(txtCliente.Text))
-                    );
+                );
 
                 grdEstadoCuenta.DataSource = datasource;
             }
