@@ -39,9 +39,10 @@
             // 
             // btnConsultar
             // 
-            btnConsultar.Location = new Point(908, 37);
+            btnConsultar.Location = new Point(859, 28);
+            btnConsultar.Margin = new Padding(2, 2, 2, 2);
             btnConsultar.Name = "btnConsultar";
-            btnConsultar.Size = new Size(112, 34);
+            btnConsultar.Size = new Size(78, 25);
             btnConsultar.TabIndex = 2;
             btnConsultar.Text = "Consultar";
             btnConsultar.UseVisualStyleBackColor = true;
@@ -50,24 +51,27 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(43, 46);
+            label1.Location = new Point(30, 28);
+            label1.Margin = new Padding(2, 0, 2, 0);
             label1.Name = "label1";
-            label1.Size = new Size(90, 25);
+            label1.Size = new Size(60, 15);
             label1.TabIndex = 0;
             label1.Text = "Id Cliente:";
             // 
             // txtCliente
             // 
-            txtCliente.Location = new Point(139, 40);
+            txtCliente.Location = new Point(97, 24);
+            txtCliente.Margin = new Padding(2, 2, 2, 2);
             txtCliente.Name = "txtCliente";
-            txtCliente.Size = new Size(150, 31);
+            txtCliente.Size = new Size(106, 23);
             txtCliente.TabIndex = 1;
             // 
             // btnLimpiar
             // 
-            btnLimpiar.Location = new Point(1037, 37);
+            btnLimpiar.Location = new Point(949, 28);
+            btnLimpiar.Margin = new Padding(2, 2, 2, 2);
             btnLimpiar.Name = "btnLimpiar";
-            btnLimpiar.Size = new Size(112, 34);
+            btnLimpiar.Size = new Size(78, 25);
             btnLimpiar.TabIndex = 3;
             btnLimpiar.Text = "Limpiar";
             btnLimpiar.UseVisualStyleBackColor = true;
@@ -76,23 +80,25 @@
             // grdEstadoCuenta
             // 
             grdEstadoCuenta.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grdEstadoCuenta.Location = new Point(43, 107);
+            grdEstadoCuenta.Location = new Point(30, 64);
+            grdEstadoCuenta.Margin = new Padding(2, 2, 2, 2);
             grdEstadoCuenta.Name = "grdEstadoCuenta";
             grdEstadoCuenta.RowHeadersWidth = 62;
-            grdEstadoCuenta.Size = new Size(1106, 576);
+            grdEstadoCuenta.Size = new Size(997, 587);
             grdEstadoCuenta.TabIndex = 4;
             // 
-            // frmConsultaSpEstadoCuenta
+            // frmConsultaEstadoCuenta
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1210, 733);
+            ClientSize = new Size(1067, 676);
             Controls.Add(grdEstadoCuenta);
             Controls.Add(btnLimpiar);
             Controls.Add(btnConsultar);
             Controls.Add(txtCliente);
             Controls.Add(label1);
-            Name = "frmConsultaSpEstadoCuenta";
+            Margin = new Padding(2, 2, 2, 2);
+            Name = "frmConsultaEstadoCuenta";
             Text = "frmConsultaSpEstadoCuenta";
             ((System.ComponentModel.ISupportInitialize)grdEstadoCuenta).EndInit();
             ResumeLayout(false);

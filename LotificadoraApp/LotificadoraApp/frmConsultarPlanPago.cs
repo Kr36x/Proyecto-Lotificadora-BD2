@@ -154,5 +154,10 @@ namespace LotificadoraApp
             txtSaldoPendiente.Clear();
             txtEstadoCredito.Clear();
         }
+
+        private void dgvDetallesCuotas_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

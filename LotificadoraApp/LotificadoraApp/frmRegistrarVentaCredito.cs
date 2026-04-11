@@ -44,8 +44,6 @@ namespace LotificadoraApp
             cbFinanciarTotal.Checked = false;
             dtpFechaVenta.Value = DateTime.Today;
             dtpInicioPago.Value = DateTime.Today.AddMonths(1);
-
-            button1.Visible = false; // botón sobrante del diseñador
         }
 
         private void ConectarEventos()
@@ -380,7 +378,9 @@ namespace LotificadoraApp
                         $"Número de Cuotas: {row["numeroCuotas"]}\n" +
                         $"Cuota Mensual Estimada: {Convert.ToDecimal(row["cuotaMensualEstimada"]):N2}\n" +
                         $"Total Interés: {Convert.ToDecimal(row["totalInteres"]):N2}\n" +
-                        $"Total Plan: {Convert.ToDecimal(row["totalPlan"]):N2}";
+                        $"Total Plan: {Convert.ToDecimal(row["totalPlan"]):N2}\n" +
+                        $"Ingreso Mensual Cliente: {Convert.ToDecimal(row["ingresoMensual"]):N2}\n" +
+                        $"Capacidad Máxima (30%): {Convert.ToDecimal(row["capacidadMaxima"]):N2}";
 
                     MessageBox.Show(
                         mensaje,
@@ -416,8 +416,19 @@ namespace LotificadoraApp
             }
             catch (Exception ex)
             {
+                string mensaje = ex.Message;
+
+                if (mensaje.ToLower().Contains("30% del ingreso mensual"))
+                {
+                    mensaje = "No es posible registrar la venta porque la cuota estimada supera la capacidad de pago permitida del cliente.";
+                }
+                else if (mensaje.ToLower().Contains("datos laborales"))
+                {
+                    mensaje = "No es posible registrar la venta porque el cliente no tiene datos laborales registrados.";
+                }
+
                 MessageBox.Show(
-                    "Error al registrar la venta:\n" + ex.Message,
+                    "Error al registrar la venta:\n" + mensaje,
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error

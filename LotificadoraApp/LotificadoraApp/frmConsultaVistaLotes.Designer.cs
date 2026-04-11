@@ -41,7 +41,7 @@
             // label
             // 
             label.AutoSize = true;
-            label.Location = new Point(22, 21);
+            label.Location = new Point(34, 21);
             label.Name = "label";
             label.Size = new Size(64, 15);
             label.TabIndex = 0;
@@ -49,14 +49,14 @@
             // 
             // txtIdProyecto
             // 
-            txtIdProyecto.Location = new Point(92, 18);
+            txtIdProyecto.Location = new Point(104, 18);
             txtIdProyecto.Name = "txtIdProyecto";
             txtIdProyecto.Size = new Size(100, 23);
             txtIdProyecto.TabIndex = 1;
             // 
             // txtIdEtapa
             // 
-            txtIdEtapa.Location = new Point(296, 21);
+            txtIdEtapa.Location = new Point(308, 21);
             txtIdEtapa.Name = "txtIdEtapa";
             txtIdEtapa.Size = new Size(100, 23);
             txtIdEtapa.TabIndex = 3;
@@ -64,7 +64,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(226, 24);
+            label1.Location = new Point(238, 24);
             label1.Name = "label1";
             label1.Size = new Size(54, 15);
             label1.TabIndex = 2;
@@ -73,14 +73,14 @@
             // dgvVistaLotes
             // 
             dgvVistaLotes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVistaLotes.Location = new Point(22, 76);
+            dgvVistaLotes.Location = new Point(34, 76);
             dgvVistaLotes.Name = "dgvVistaLotes";
             dgvVistaLotes.Size = new Size(998, 585);
             dgvVistaLotes.TabIndex = 4;
             // 
             // btnConsultar
             // 
-            btnConsultar.Location = new Point(811, 24);
+            btnConsultar.Location = new Point(823, 24);
             btnConsultar.Name = "btnConsultar";
             btnConsultar.Size = new Size(75, 23);
             btnConsultar.TabIndex = 5;
@@ -89,7 +89,7 @@
             // 
             // btnLimpiar
             // 
-            btnLimpiar.Location = new Point(912, 24);
+            btnLimpiar.Location = new Point(924, 24);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(75, 23);
             btnLimpiar.TabIndex = 6;
@@ -100,7 +100,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1044, 673);
+            ClientSize = new Size(1067, 676);
             Controls.Add(btnLimpiar);
             Controls.Add(btnConsultar);
             Controls.Add(dgvVistaLotes);

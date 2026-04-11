@@ -65,7 +65,7 @@
             panel1.Controls.Add(label4);
             panel1.Controls.Add(txtCliente);
             panel1.Controls.Add(label3);
-            panel1.Location = new Point(12, 131);
+            panel1.Location = new Point(12, 120);
             panel1.Name = "panel1";
             panel1.Size = new Size(1043, 165);
             panel1.TabIndex = 5;
@@ -154,7 +154,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 113);
+            label1.Location = new Point(12, 102);
             label1.Name = "label1";
             label1.Size = new Size(132, 15);
             label1.TabIndex = 4;
@@ -165,7 +165,7 @@
             panel2.BackColor = Color.White;
             panel2.Controls.Add(txtIDVentaCredito);
             panel2.Controls.Add(label8);
-            panel2.Location = new Point(12, 47);
+            panel2.Location = new Point(12, 36);
             panel2.Name = "panel2";
             panel2.Size = new Size(1043, 55);
             panel2.TabIndex = 6;
@@ -190,7 +190,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(12, 29);
+            label7.Location = new Point(12, 18);
             label7.Name = "label7";
             label7.Size = new Size(49, 15);
             label7.TabIndex = 7;
@@ -199,15 +199,16 @@
             // dgvDetallesCuotas
             // 
             dgvDetallesCuotas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDetallesCuotas.Location = new Point(12, 329);
+            dgvDetallesCuotas.Location = new Point(12, 318);
             dgvDetallesCuotas.Name = "dgvDetallesCuotas";
-            dgvDetallesCuotas.Size = new Size(1043, 309);
+            dgvDetallesCuotas.Size = new Size(1043, 328);
             dgvDetallesCuotas.TabIndex = 8;
+            dgvDetallesCuotas.CellContentClick += dgvDetallesCuotas_CellContentClick;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(12, 311);
+            label9.Location = new Point(12, 300);
             label9.Name = "label9";
             label9.Size = new Size(115, 15);
             label9.TabIndex = 9;
@@ -216,7 +217,7 @@
             // lblRegistros
             // 
             lblRegistros.AutoSize = true;
-            lblRegistros.Location = new Point(12, 641);
+            lblRegistros.Location = new Point(12, 649);
             lblRegistros.Name = "lblRegistros";
             lblRegistros.Size = new Size(55, 15);
             lblRegistros.TabIndex = 10;
