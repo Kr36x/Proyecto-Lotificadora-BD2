@@ -306,16 +306,19 @@ END;
 GO
 
 --LISTAR
-CREATE PROCEDURE sp_bloque_listar
+CREATE OR ALTER PROCEDURE sp_bloque_listar
 AS
 BEGIN
     SELECT 
-        idBloque, 
-        idEtapa, 
-        nombreBloque, 
-        descripcion
-    FROM Bloque
-    ORDER BY idBloque DESC;
+        b.idBloque, 
+        b.idEtapa, 
+        b.nombreBloque, 
+        b.descripcion,
+        e.precioVaraCuadrada
+    FROM Bloque b
+    INNER JOIN Etapa e
+        ON b.idEtapa = e.idEtapa
+    ORDER BY b.idBloque DESC;
 END;
 GO
 
@@ -489,10 +492,13 @@ BEGIN
         c.estadoCivilId,
         ec.descripcion AS estadoCivil,
         c.rtn,
-        c.estadoId
+        c.estadoId,
+        e.nombre AS estado
     FROM Cliente c
     LEFT JOIN EstadoCivil ec
         ON c.estadoCivilId = ec.id
+    LEFT JOIN Estado e
+        ON c.estadoId = e.id
     WHERE c.idCliente = @idCliente;
 END;
 GO
@@ -513,10 +519,13 @@ BEGIN
         c.estadoCivilId,
         ec.descripcion AS estadoCivil,
         c.rtn,
-        c.estadoId
+        c.estadoId,
+        e.nombre AS estado
     FROM Cliente c
     LEFT JOIN EstadoCivil ec
         ON c.estadoCivilId = ec.id
+    LEFT JOIN Estado e
+        ON c.estadoId = e.id
     ORDER BY c.idCliente DESC;
 END;
 GO

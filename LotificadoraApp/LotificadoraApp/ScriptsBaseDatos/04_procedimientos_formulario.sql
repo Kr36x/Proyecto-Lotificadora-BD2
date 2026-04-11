@@ -71,6 +71,7 @@ BEGIN
         ISNULL(SUM(dpc.montoAplicado), 0) AS totalPagado,
         c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) AS saldoPendiente,
         c.estadoId,
+        e.nombre AS estadoCuota,
         CONCAT(
             'Cuota ', c.numeroCuota,
             ' | Vence ', CONVERT(varchar(10), c.fechaVencimiento, 103),
@@ -80,6 +81,7 @@ BEGIN
     INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
     INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
     INNER JOIN Cuota c ON c.idPlanPago = pp.idPlanPago
+    INNER JOIN Estado e ON e.id = c.estadoId
     LEFT JOIN DetallePagoCuota dpc ON dpc.idCuota = c.idCuota
     WHERE v.idVenta = @idVenta
     GROUP BY
@@ -87,7 +89,8 @@ BEGIN
         c.numeroCuota,
         c.fechaVencimiento,
         c.montoCuota,
-        c.estadoId
+        c.estadoId,
+        e.nombre
     HAVING c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) > 0
     ORDER BY c.numeroCuota;
 END;
@@ -128,11 +131,12 @@ BEGIN
         pp.idPlanPago,
         pp.totalPlan,
         dbo.fn_credito_saldo_pendiente(vc.idVentaCredito) AS saldoPendiente,
-        vc.estadoId
+        e.nombre AS estadoCredito
     FROM VentaCredito vc
     INNER JOIN Venta v ON v.idVenta = vc.idVenta
     INNER JOIN Cliente c ON c.idCliente = v.idCliente
     INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Estado e ON e.id = vc.estadoId
     WHERE vc.idVentaCredito = @idVentaCredito;
 END;
 GO
