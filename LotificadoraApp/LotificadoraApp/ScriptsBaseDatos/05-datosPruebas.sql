@@ -42,7 +42,6 @@ insert into Estado (nombre) values
 ('pagada'),
 ('vencida'),
 ('anulado');
-go
 
 INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estadoId)
 VALUES 

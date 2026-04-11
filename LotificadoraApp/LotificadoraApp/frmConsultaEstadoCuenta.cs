@@ -33,7 +33,7 @@ namespace LotificadoraApp
                         fechaVencimiento,
                         montoCuota,
                         saldoPendiente,
-                        estadoCuota
+                        estadoId
                       FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente)",
                     new SqlParameter("@idCliente", Convert.ToInt32(txtCliente.Text))
                 );

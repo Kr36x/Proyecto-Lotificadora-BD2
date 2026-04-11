@@ -5,7 +5,7 @@ namespace LotificadoraApp;
 
 internal static class Db
 {
-    public static string ConnectionString { get; set; } = "Server=3.128.144.165;Database=DB20222030195;User Id=carlos.alvarez;Password=CA20222030195;Encrypt=True;TrustServerCertificate=True;";
+    public static string ConnectionString { get; set; } = "Server=3.128.144.165;Database=DB20192002534;User Id=cindy.soler;Password=CS20192002534;Encrypt=True;TrustServerCertificate=True;";
 
 
     public static SqlParameter Parameter(string name, object? value)
