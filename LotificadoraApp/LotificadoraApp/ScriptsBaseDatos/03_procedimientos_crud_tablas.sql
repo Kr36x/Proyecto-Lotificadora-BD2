@@ -306,16 +306,19 @@ END;
 GO
 
 --LISTAR
-CREATE PROCEDURE sp_bloque_listar
+CREATE OR ALTER PROCEDURE sp_bloque_listar
 AS
 BEGIN
     SELECT 
-        idBloque, 
-        idEtapa, 
-        nombreBloque, 
-        descripcion
-    FROM Bloque
-    ORDER BY idBloque DESC;
+        b.idBloque, 
+        b.idEtapa, 
+        b.nombreBloque, 
+        b.descripcion,
+        e.precioVaraCuadrada
+    FROM Bloque b
+    INNER JOIN Etapa e
+        ON b.idEtapa = e.idEtapa
+    ORDER BY b.idBloque DESC;
 END;
 GO
 
