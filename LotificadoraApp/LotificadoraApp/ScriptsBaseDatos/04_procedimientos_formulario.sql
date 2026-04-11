@@ -128,11 +128,12 @@ BEGIN
         pp.idPlanPago,
         pp.totalPlan,
         dbo.fn_credito_saldo_pendiente(vc.idVentaCredito) AS saldoPendiente,
-        vc.estadoId
+        e.nombre AS estadoCredito
     FROM VentaCredito vc
     INNER JOIN Venta v ON v.idVenta = vc.idVenta
     INNER JOIN Cliente c ON c.idCliente = v.idCliente
     INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Estado e ON e.id = vc.estadoId
     WHERE vc.idVentaCredito = @idVentaCredito;
 END;
 GO
