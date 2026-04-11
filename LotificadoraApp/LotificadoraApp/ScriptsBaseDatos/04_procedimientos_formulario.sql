@@ -1152,6 +1152,42 @@ begin
 end
 go
 
+create or alter procedure dbo.sp_consultar_pagos_cliente_venta
+    @idCliente int,
+    @idVenta int = null,
+    @fechaInicio date,
+    @fechaFin date
+as
+begin
+    set nocount on;
+
+    select
+        p.idPago,
+        v.idVenta,
+        c.nombres + ' ' + c.apellidos as cliente,
+        pp.numeroCuota,
+        p.fechaPago,
+        p.montoTotal as montoPagado,
+        p.formaPago,
+        p.numeroReferencia,
+        f.numeroFactura,
+        p.observacion
+    from Pago p
+    inner join Venta v
+        on p.idVenta = v.idVenta
+    inner join Cliente c
+        on v.idCliente = c.idCliente
+    left join PlanPago pp
+        on p.idCuota = pp.idCuota
+    left join Factura f
+        on p.idFactura = f.idFactura
+    where v.idCliente = @idCliente
+      and (@idVenta is null or v.idVenta = @idVenta)
+      and cast(p.fechaPago as date) between @fechaInicio and @fechaFin
+    order by p.fechaPago desc, p.idPago desc;
+end
+go
+
 
 
 
