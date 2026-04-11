@@ -1,6 +1,9 @@
 use Grupo8
 go
 
+-- -------------------------
+-- 1
+-- -------------------------
 create or alter function dbo.fn_tvf_lotes_disponibles
 (
     @idEtapa int = null
@@ -71,7 +74,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 2
+-- -------------------------
 create or alter function dbo.fn_tvf_estado_cuenta_cliente
 (
     @idCliente int
@@ -112,7 +117,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 3
+-- -------------------------
 create or alter function dbo.fn_tvf_plan_pago_por_credito
 (
     @idVentaCredito int
@@ -162,7 +169,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 4
+-- -------------------------
 create or alter function dbo.fn_tvf_pagos_por_rango
 (
     @fechaInicio date,
@@ -199,6 +208,9 @@ return (
 );
 go
 
+-- -------------------------
+-- 5
+-- -------------------------
 create or alter function dbo.fn_tvf_gastos_proyecto
 (
     @idProyecto int,
@@ -234,7 +246,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 6
+-- -------------------------
 create or alter function dbo.fn_lotes_disponibles_por_proyecto
 (
     @idProyecto int
@@ -271,7 +285,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 7
+-- -------------------------
 create or alter function dbo.fn_historial_pagos_cliente
 (
     @idCliente int
@@ -309,7 +325,9 @@ return (
 );
 go
 
-
+-- -------------------------
+-- 8
+-- -------------------------
 create or alter function dbo.fn_gastos_por_proyecto
 (
     @idProyecto int

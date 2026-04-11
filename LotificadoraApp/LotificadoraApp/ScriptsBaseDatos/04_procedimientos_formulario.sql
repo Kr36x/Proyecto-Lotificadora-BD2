@@ -646,8 +646,9 @@ begin
     end catch
 end
 go
+
 -- ==================================================================
--- 7. funcion para validar los lotes disponibles por cliente
+-- 8. funcion para validar los lotes disponibles por cliente
 -- ==================================================================
 
 CREATE OR ALTER FUNCTION dbo.fn_tvf_lotes_aptos_por_cliente
@@ -873,8 +874,9 @@ RETURN
     CROSS JOIN LotesDisponibles ld
 );
 GO
+
 -- ==================================================================
--- 7. SP para obtener datos laborales por id del cliente
+-- 9. SP para obtener datos laborales por id del cliente
 -- ==================================================================
 
 
@@ -885,5 +887,32 @@ BEGIN
     SELECT TOP 1 *
     FROM DatosLaboralesCliente
     WHERE idCliente = @idCliente;
+END;
+GO
+
+
+-- ==================================================================
+-- 10. SP para consultar estados cuenta
+-- ==================================================================
+CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_estado_cuenta_cliente
+    @idCliente INT
+AS
+BEGIN
+    SELECT
+        c.idCliente,
+        c.nombres + ' ' + c.apellidos AS cliente,
+        cu.idCuota,
+        cu.numeroCuota,
+        cu.fechaVencimiento,
+        cu.montoCuota,
+        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
+        cu.estadoCuota
+    FROM Cliente c
+    INNER JOIN Venta v ON v.idCliente = c.idCliente AND v.tipoVenta = 'credito'
+    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
+    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
+    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
+    WHERE c.idCliente = @idCliente
+    ORDER BY cu.numeroCuota;
 END;
 GO

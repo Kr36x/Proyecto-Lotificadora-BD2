@@ -1,6 +1,9 @@
 use Grupo8
 go
 
+-- -------------------------
+-- 1
+-- -------------------------
 create or alter function dbo.fn_lote_precio_base
 (
     @idLote int
@@ -20,7 +23,9 @@ begin
 end;
 go
 
-
+-- -------------------------
+-- 2
+-- -------------------------
 create or alter function dbo.fn_lote_recargo_total
 (
     @idLote int
@@ -49,6 +54,9 @@ begin
 end;
 go
 
+-- -------------------------
+-- 3
+-- -------------------------
 create or alter function dbo.fn_lote_precio_final
 (
     @idLote int
@@ -80,7 +88,9 @@ begin
 end;
 go
 
-
+-- -------------------------
+-- 4
+-- -------------------------
 create or alter function dbo.fn_cuota_saldo_pendiente
 (
     @idCuota int
@@ -104,7 +114,9 @@ begin
 end;
 go
 
-
+-- -------------------------
+-- 5
+-- -------------------------
 create or alter function dbo.fn_credito_saldo_pendiente
 (
     @idVentaCredito int
