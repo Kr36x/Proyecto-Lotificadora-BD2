@@ -49,7 +49,7 @@ return (
             end
         ),0) as precioFinalCalculado,
 
-        l.estadoLote
+        l.estadoId
 
     from Lote l
     join Bloque b on l.idBloque = b.idBloque
@@ -60,8 +60,8 @@ return (
         on cl.idCaracteristica = lc.idCaracteristica 
        and cl.estado = 'activo'
 
-    where l.estadoLote = 'disponible'
-      and e.estado <> 'inactiva'
+    where l.estadoId = 7
+      and e.estadoId <> 5
       and (@idEtapa is null or e.idEtapa = @idEtapa)
 
     group by
@@ -70,7 +70,7 @@ return (
         b.idBloque, b.nombreBloque,
         l.idLote, l.numeroLote, l.areaV2,
         l.esEsquina, l.cercaParque, l.calleCerrada,
-        l.estadoLote
+        l.estadoId
 );
 go
 
@@ -101,7 +101,7 @@ return (
             else (cu.montoCuota - isnull(pg.totalPagado,0))
         end as saldoPendiente,
 
-        cu.estadoCuota
+        cu.estadoId
 
     from Cliente c
     join Venta v on v.idCliente = c.idCliente and v.tipoVenta = 'credito'
@@ -137,7 +137,7 @@ return (
         pp.totalInteres,
         pp.totalPlan,
         pp.cuotaMensualEstimada,
-        pp.estado as estadoPlan,
+        pp.estadoId as estadoPlan,
         cu.idCuota,
         cu.numeroCuota,
         cu.fechaVencimiento,
@@ -153,7 +153,7 @@ return (
             else (cu.montoCuota - isnull(pg.totalPagado,0))
         end as saldoPendiente,
 
-        cu.estadoCuota
+        cu.estadoId
 
     from PlanPago pp
     join VentaCredito vc on vc.idVentaCredito = pp.idVentaCredito
@@ -230,7 +230,7 @@ return (
         g.fechaGasto,
         g.descripcion,
         g.monto,
-        g.estado,
+        g.estadoId,
         cb.numeroCuenta,
         bk.nombreBanco
     from GastoProyecto g
@@ -240,7 +240,7 @@ return (
     join CuentaBancaria cb on cb.idCuentaBancaria = g.idCuentaBancaria
     join Banco bk on bk.idBanco = cb.idBanco
     where g.idProyecto = @idProyecto
-      and g.estado = 'activo'
+      and g.estadoId = 1
       and (@fechaInicio is null or g.fechaGasto >= @fechaInicio)
       and (@fechaFin is null or g.fechaGasto < dateadd(day,1,@fechaFin))
 );
@@ -274,14 +274,14 @@ return (
         l.precioBase,
         l.recargoTotal,
         l.precioFinal,
-        l.estadoLote
+        l.estadoId
     from Lote l
     join Bloque b on l.idBloque = b.idBloque
     join Etapa e on b.idEtapa = e.idEtapa
     join Proyecto p on e.idProyecto = p.idProyecto
     where p.idProyecto = @idProyecto
-      and l.estadoLote = 'disponible'
-      and e.estado <> 'inactiva'
+      and l.estadoId = 7
+      and e.estadoId <> 5
 );
 go
 
@@ -338,3 +338,5 @@ return (
     select * from dbo.fn_tvf_gastos_proyecto(@idProyecto, null, null)
 );
 go
+
+

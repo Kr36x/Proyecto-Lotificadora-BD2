@@ -122,7 +122,7 @@ BEGIN
                 interesProgramado,
                 montoCuota,
                 saldoFinal,
-                estadoCuota
+                estadoId
             )
             VALUES
             (
@@ -133,9 +133,7 @@ BEGIN
                 @capital,
                 @interes,
                 @montoCuota,
-                @saldoFinal,
-                'pendiente'
-            );
+                @saldoFinal, 13);
 
             SET @saldoActual = @saldoFinal;
 
@@ -248,7 +246,7 @@ BEGIN
         SELECT idCuota
         FROM Cuota
         WHERE fechaVencimiento <= @fechaCorte
-          AND estadoCuota IN ('pendiente', 'parcial', 'vencida');
+          AND estadoId IN (13, 14, 16);
 
     OPEN cur_cuotas_vencidas;
     FETCH NEXT FROM cur_cuotas_vencidas INTO @idCuota;
@@ -260,13 +258,13 @@ BEGIN
         IF @saldoPendiente <= 0
         BEGIN
             UPDATE Cuota
-            SET estadoCuota = 'pagada'
+            SET estadoId = 15
             WHERE idCuota = @idCuota;
         END
         ELSE
         BEGIN
             UPDATE Cuota
-            SET estadoCuota = 'vencida'
+            SET estadoId = 16
             WHERE idCuota = @idCuota;
         END
 
@@ -277,3 +275,5 @@ BEGIN
     DEALLOCATE cur_cuotas_vencidas;
 END;
 GO
+
+
