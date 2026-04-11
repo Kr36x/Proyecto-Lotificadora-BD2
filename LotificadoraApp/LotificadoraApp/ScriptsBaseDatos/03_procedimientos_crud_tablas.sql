@@ -513,10 +513,13 @@ BEGIN
         c.estadoCivilId,
         ec.descripcion AS estadoCivil,
         c.rtn,
-        c.estadoId
+        c.estadoId,
+        e.nombre AS estado
     FROM Cliente c
     LEFT JOIN EstadoCivil ec
         ON c.estadoCivilId = ec.id
+    LEFT JOIN Estado e
+        ON c.estadoId = e.id
     ORDER BY c.idCliente DESC;
 END;
 GO
