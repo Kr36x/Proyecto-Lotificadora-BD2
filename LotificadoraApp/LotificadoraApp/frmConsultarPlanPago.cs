@@ -109,21 +109,23 @@ namespace LotificadoraApp
         private void CargarDetalleCuotas(int idVentaCredito)
         {
             const string sql = @"
-                SELECT
-                    idPlanPago,
-                    idCuota,
-                    numeroCuota,
-                    fechaVencimiento,
-                    saldoInicial,
-                    capitalProgramado,
-                    interesProgramado,
-                    montoCuota,
-                    saldoFinal,
-                    totalPagado,
-                    saldoPendiente,
-                    estadoCuota
-                FROM dbo.fn_tvf_plan_pago_por_credito(@idVentaCredito)
-                ORDER BY numeroCuota;";
+            SELECT
+                    f.idPlanPago,
+                    f.idCuota,
+                    f.numeroCuota,
+                    f.fechaVencimiento,
+                    f.saldoInicial,
+                    f.capitalProgramado,
+                    f.interesProgramado,
+                    f.montoCuota,
+                    f.saldoFinal,
+                    f.totalPagado,
+                    f.saldoPendiente,
+                    e.nombre AS estadoCuota
+                FROM dbo.fn_tvf_plan_pago_por_credito(@idVentaCredito) f
+                INNER JOIN dbo.Estado e
+                    ON f.estadoId = e.id
+                ORDER BY f.numeroCuota";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);

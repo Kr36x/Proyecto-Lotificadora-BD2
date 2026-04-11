@@ -184,6 +184,8 @@ namespace LotificadoraApp
             using SqlCommand cmd = new SqlCommand("dbo.sp_cliente_insertar", cn);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            int estadoId = cbEstado.SelectedItem?.ToString() == "inactivo" ? 2 : 1;
+
             cmd.Parameters.AddWithValue("@identidad", txtIdentidad.Text.Trim());
             cmd.Parameters.AddWithValue("@nombres", txtNombres.Text.Trim());
             cmd.Parameters.AddWithValue("@apellidos", txtApellidos.Text.Trim());
@@ -193,7 +195,7 @@ namespace LotificadoraApp
             cmd.Parameters.AddWithValue("@direccion", ValorDb(txtDireccion.Text));
             cmd.Parameters.AddWithValue("@estadoCivilId", Convert.ToInt32(cbEstadoCivil.SelectedValue));
             cmd.Parameters.AddWithValue("@rtn", ValorDb(txtRTN.Text));
-            cmd.Parameters.AddWithValue("@estado", cbEstado.SelectedItem?.ToString() ?? "activo");
+            cmd.Parameters.AddWithValue("@estado", estadoId);
 
             DataTable dt = new DataTable();
             using SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -214,6 +216,8 @@ namespace LotificadoraApp
             using SqlCommand cmd = new SqlCommand("dbo.sp_cliente_actualizar", cn);
             cmd.CommandType = CommandType.StoredProcedure;
 
+            int estadoId = cbEstado.SelectedItem?.ToString() == "inactivo" ? 2 : 1;
+
             cmd.Parameters.AddWithValue("@idCliente", _idCliente);
             cmd.Parameters.AddWithValue("@identidad", txtIdentidad.Text.Trim());
             cmd.Parameters.AddWithValue("@nombres", txtNombres.Text.Trim());
@@ -224,7 +228,8 @@ namespace LotificadoraApp
             cmd.Parameters.AddWithValue("@direccion", ValorDb(txtDireccion.Text));
             cmd.Parameters.AddWithValue("@estadoCivilId", Convert.ToInt32(cbEstadoCivil.SelectedValue));
             cmd.Parameters.AddWithValue("@rtn", ValorDb(txtRTN.Text));
-            cmd.Parameters.AddWithValue("@estado", cbEstado.SelectedItem?.ToString() ?? "activo");
+            
+            cmd.Parameters.AddWithValue("@estado", estadoId);
 
             DataTable dt = new DataTable();
             using SqlDataAdapter da = new SqlDataAdapter(cmd);

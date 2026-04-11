@@ -10,12 +10,35 @@ namespace LotificadoraApp
         public frmRegistrarLote()
         {
             InitializeComponent();
+            ConectarEventosCalculo();
         }
 
         private void frmRegistrarLote_Load(object sender, EventArgs e)
         {
+            ConfigurarFormulario();
             CargarBloques();
             CargarEstados();
+            CalcularPrecios();
+        }
+
+        private void ConfigurarFormulario()
+        {
+            txtPrecioBase.ReadOnly = true;
+            txtRecargoTotal.ReadOnly = true;
+            txtPrecioFinal.ReadOnly = true;
+
+            txtPrecioBase.TabStop = false;
+            txtRecargoTotal.TabStop = false;
+            txtPrecioFinal.TabStop = false;
+        }
+
+        private void ConectarEventosCalculo()
+        {
+            txtArea.TextChanged += (_, _) => CalcularPrecios();
+            cmbBloque.SelectedIndexChanged += (_, _) => CalcularPrecios();
+            chkEsquina.CheckedChanged += (_, _) => CalcularPrecios();
+            chkParque.CheckedChanged += (_, _) => CalcularPrecios();
+            chkCalleCerrada.CheckedChanged += (_, _) => CalcularPrecios();
         }
 
         private void CargarBloques()
@@ -44,7 +67,12 @@ namespace LotificadoraApp
         {
             try
             {
-                const string sql = "SELECT id, nombre FROM [dbo].[Estado] ORDER BY id;";
+                const string sql = @"
+            SELECT id, nombre
+            FROM dbo.Estado
+            WHERE id IN (7, 8, 9)
+            ORDER BY id;";
+
                 DataTable dtEstados = Db.ExecuteQuery(sql);
 
                 cmbEstado.DataSource = dtEstados;
@@ -60,6 +88,55 @@ namespace LotificadoraApp
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
+            }
+        }
+
+        private void CalcularPrecios()
+        {
+            try
+            {
+                txtPrecioBase.Clear();
+                txtRecargoTotal.Clear();
+                txtPrecioFinal.Clear();
+
+                if (cmbBloque.SelectedIndex < 0)
+                    return;
+
+                if (!TryParseDecimal(txtArea.Text, out decimal areaV2) || areaV2 <= 0)
+                    return;
+
+                if (cmbBloque.SelectedItem is not DataRowView row)
+                    return;
+
+                if (!row.Row.Table.Columns.Contains("precioVaraCuadrada"))
+                    return;
+
+                decimal precioVaraCuadrada = Convert.ToDecimal(row["precioVaraCuadrada"]);
+                decimal precioBase = areaV2 * precioVaraCuadrada;
+
+                decimal porcentajeRecargo = 0m;
+
+                if (chkEsquina.Checked)
+                    porcentajeRecargo += 0.10m;
+
+                if (chkParque.Checked)
+                    porcentajeRecargo += 0.05m;
+
+                if (chkCalleCerrada.Checked)
+                    porcentajeRecargo += 0.03m;
+
+                decimal recargoTotal = precioBase * porcentajeRecargo;
+                decimal precioFinal = precioBase + recargoTotal;
+
+                txtPrecioBase.Text = precioBase.ToString("N2");
+                txtRecargoTotal.Text = recargoTotal.ToString("N2");
+                txtPrecioFinal.Text = precioFinal.ToString("N2");
+            }
+            catch
+            {
+                txtPrecioBase.Clear();
+                txtRecargoTotal.Clear();
+                txtPrecioFinal.Clear();
             }
         }
 
@@ -92,7 +169,7 @@ namespace LotificadoraApp
                 );
 
                 if (dt.Rows.Count == 0)
-                    throw new Exception("No se devolvio resultado al registrar el lote.");
+                    throw new Exception("No se devolvió resultado al registrar el lote.");
 
                 if (dt.Columns.Contains("MensajeError") && dt.Rows[0]["MensajeError"] != DBNull.Value)
                     throw new Exception(dt.Rows[0]["MensajeError"].ToString());
@@ -135,7 +212,7 @@ namespace LotificadoraApp
 
             if (string.IsNullOrWhiteSpace(txtLote.Text))
             {
-                MostrarWarning("Ingrese el numero de lote.");
+                MostrarWarning("Ingrese el número de lote.");
                 txtLote.Focus();
                 return false;
             }
@@ -149,57 +226,29 @@ namespace LotificadoraApp
 
             if (!TryParseDecimal(txtArea.Text, out areaV2))
             {
-                MostrarWarning("Ingrese un valor numerico valido para el area.");
+                MostrarWarning("Ingrese un valor numérico válido para el área.");
                 txtArea.Focus();
                 return false;
             }
 
             if (areaV2 <= 0)
             {
-                MostrarWarning("El area debe ser mayor que cero.");
+                MostrarWarning("El área debe ser mayor que cero.");
                 txtArea.Focus();
                 return false;
             }
 
-            if (!TryParseDecimal(txtPrecioBase.Text, out precioBase))
+            if (!TryParseDecimal(txtPrecioBase.Text, out precioBase) ||
+                !TryParseDecimal(txtRecargoTotal.Text, out recargoTotal) ||
+                !TryParseDecimal(txtPrecioFinal.Text, out precioFinal))
             {
-                MostrarWarning("Ingrese un valor numerico valido para el precio base.");
-                txtPrecioBase.Focus();
+                MostrarWarning("No se pudieron calcular los precios del lote.");
                 return false;
             }
 
-            if (precioBase < 0)
+            if (precioBase < 0 || recargoTotal < 0 || precioFinal < 0)
             {
-                MostrarWarning("El precio base no puede ser negativo.");
-                txtPrecioBase.Focus();
-                return false;
-            }
-
-            if (!TryParseDecimal(txtRecargoTotal.Text, out recargoTotal))
-            {
-                MostrarWarning("Ingrese un valor numerico valido para el recargo total.");
-                txtRecargoTotal.Focus();
-                return false;
-            }
-
-            if (recargoTotal < 0)
-            {
-                MostrarWarning("El recargo total no puede ser negativo.");
-                txtRecargoTotal.Focus();
-                return false;
-            }
-
-            if (!TryParseDecimal(txtPrecioFinal.Text, out precioFinal))
-            {
-                MostrarWarning("Ingrese un valor numerico valido para el precio final.");
-                txtPrecioFinal.Focus();
-                return false;
-            }
-
-            if (precioFinal < 0)
-            {
-                MostrarWarning("El precio final no puede ser negativo.");
-                txtPrecioFinal.Focus();
+                MostrarWarning("Los precios calculados no pueden ser negativos.");
                 return false;
             }
 
@@ -230,7 +279,7 @@ namespace LotificadoraApp
         {
             MessageBox.Show(
                 mensaje,
-                "Validacion",
+                "Validación",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning
             );
@@ -240,9 +289,11 @@ namespace LotificadoraApp
         {
             txtLote.Clear();
             txtArea.Clear();
+
             chkEsquina.Checked = false;
             chkParque.Checked = false;
             chkCalleCerrada.Checked = false;
+
             txtPrecioBase.Clear();
             txtRecargoTotal.Clear();
             txtPrecioFinal.Clear();
