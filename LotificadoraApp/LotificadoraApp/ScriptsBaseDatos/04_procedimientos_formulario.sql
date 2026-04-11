@@ -1051,7 +1051,7 @@ BEGIN
         idCliente,
         CONCAT(idCliente, ' - ', nombres, ' ', apellidos) AS nombreCompleto
         FROM Cliente
-        WHERE estado = 'activo'
+        WHERE estadoId = 1 -- 1 = activo
         ORDER BY nombres, apellidos;
 END;
 GO
@@ -1071,7 +1071,7 @@ BEGIN
     INNER JOIN DatosLaboralesCliente dl
         ON dl.idCliente = c.idCliente
     WHERE c.idCliente = @idCliente
-      AND c.estado = 'activo';
+      AND c.estadoId = 1; -- 1 = activo
 END;
 GO
 -- exec dbo.sp_obtener_resumen_cliente_capacidad_pago @idCliente = @idCliente

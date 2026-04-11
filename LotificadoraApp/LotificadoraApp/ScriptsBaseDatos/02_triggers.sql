@@ -1,4 +1,4 @@
-use Grupo8
+use Grupo8;
 go
 
 -- valida que el lote esté disponible antes de vender

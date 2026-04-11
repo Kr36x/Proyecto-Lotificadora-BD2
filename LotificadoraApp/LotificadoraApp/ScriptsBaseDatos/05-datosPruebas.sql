@@ -1,4 +1,4 @@
-use Grupo8
+use Grupo8;
 go
 /*
     DATOS DE PRUEBA MINIMOS PARA LOTIFICADORA
@@ -23,6 +23,26 @@ DECLARE
     @idVentaCredito1 INT, @idVentaCredito2 INT,
     @idVenta1 INT, @idVenta2 INT,
     @idCuota1Venta1 INT, @idCuota2Venta1 INT, @idCuota1Venta2 INT;
+
+insert into Estado (nombre) values
+('activo'),
+('inactivo'),
+('finalizado'),
+('activa'),
+('inactiva'),
+('finalizada'),
+('disponible'),
+('reservado'),
+('vendido'),
+('anulada'),
+('cancelado'),
+('moroso'),
+('pendiente'),
+('parcial'),
+('pagada'),
+('vencida'),
+('anulado');
+go
 
 INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estadoId)
 VALUES 
@@ -354,23 +374,4 @@ SELECT * FROM vw_creditos_activos_cliente;
               AND (idEtapa = 1)
             ORDER BY idProyecto, idEtapa, idBloque, numeroLote
 
-insert into Estado (id, nombre) values
-(1, 'activo'),
-(2, 'inactivo'),
-(3, 'finalizado'),
-(4, 'activa'),
-(5, 'inactiva'),
-(6, 'finalizada'),
-(7, 'disponible'),
-(8, 'reservado'),
-(9, 'vendido'),
-(10, 'anulada'),
-(11, 'cancelado'),
-(12, 'moroso'),
-(13, 'pendiente'),
-(14, 'parcial'),
-(15, 'pagada'),
-(16, 'vencida'),
-(17, 'anulado');
-go
 

@@ -1,4 +1,4 @@
-USE Grupo8
+USE Grupo8;
 GO
 
 -- =======================================================
@@ -528,30 +528,12 @@ BEGIN
         idCliente,
         CONCAT(idCliente, ' - ', nombres, ' ', apellidos) AS nombreCompleto
         FROM Cliente
-        WHERE estado = 'activo'
+        WHERE estadoId = 1
         ORDER BY nombres, apellidos;
 END;
 GO
 
 --exec sp_cliente_listar_activo;
-
-CREATE OR ALTER PROCEDURE dbo.sp_obtener_resumen_cliente_capacidad_pago
-    @idCliente INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT
-        c.nombres + ' ' + c.apellidos AS cliente,
-        dl.ingresoMensual
-    FROM Cliente c
-    INNER JOIN DatosLaboralesCliente dl
-        ON dl.idCliente = c.idCliente
-    WHERE c.idCliente = @idCliente
-      AND c.estado = 'activo';
-END;
-GO
--- exec dbo.sp_obtener_resumen_cliente_capacidad_pago @idCliente = @idCliente
 
 -- =======================================================
 -- PROCEDIMIENTOS PARA AVAL
@@ -630,20 +612,6 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_aval_listar_comboBox
-AS
-BEGIN
-    SELECT
-        idAval,
-        CONCAT(idAval, ' - ', nombres, ' ', apellidos) AS nombreCompleto
-        FROM Aval
-        ORDER BY nombres, apellidos;
-END;
-GO
-exec sp_aval_listar_comboBox;
-
-
-
 -- =======================================================
 -- PROCEDIMIENTOS PARA BENEFICIARIO
 -- =======================================================
@@ -716,24 +684,6 @@ BEGIN
     SELECT * FROM Beneficiario ORDER BY idBeneficiario DESC;
 END;
 GO
-
-CREATE PROCEDURE sp_beneficiario_listar_comboBox
-AS
-BEGIN
-     SELECT
-        idBeneficiario,
-        CONCAT(idBeneficiario, ' - ', nombres, ' ', apellidos) AS nombreCompleto
-        FROM Beneficiario
-        ORDER BY nombres, apellidos;
-END;
-GO
-
---exec sp_beneficiario_listar_comboBox
-
-
-
-
-
 
 -- =======================================================
 -- PROCEDIMIENTOS PARA BANCO
@@ -870,9 +820,6 @@ AS
 BEGIN
     SELECT * FROM CuentaBancaria ORDER BY idCuentaBancaria DESC;
 END;
-GO
-
-USE Grupo8;
 GO
 
 -- =======================================================
