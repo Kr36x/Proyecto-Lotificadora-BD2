@@ -13,7 +13,7 @@ begin
         select 1
         from inserted i
         inner join Lote l on i.idLote = l.idLote
-        where l.estadoLote <> 'disponible'
+        where l.estadoId <> 7
     )
     begin
         raiserror('el lote no está disponible para la venta', 16, 1);
@@ -33,7 +33,7 @@ begin
     set nocount on
 
     update l
-    set l.estadoLote = 'vendido'
+    set l.estadoId = 9
     from Lote l
     inner join inserted i on i.idLote = l.idLote
 end
@@ -101,19 +101,19 @@ begin
     set nocount on
 
     update c
-    set estadoCuota =
+    set estadoId =
         case
             when (
                 select isnull(sum(d.montoAplicado), 0)
                 from DetallePagoCuota d
                 where d.idCuota = c.idCuota
-            ) = 0 then 'pendiente'
+            ) = 0 then 13
             when (
                 select isnull(sum(d.montoAplicado), 0)
                 from DetallePagoCuota d
                 where d.idCuota = c.idCuota
-            ) < c.montoCuota then 'parcial'
-            else 'pagada'
+            ) < c.montoCuota then 14
+            else 15
         end
     from Cuota c
     inner join inserted i on c.idCuota = i.idCuota;
@@ -354,7 +354,7 @@ BEGIN
         SELECT 1
         FROM inserted i
         INNER JOIN CuentaBancaria cb ON cb.idCuentaBancaria = i.idCuentaBancaria
-        WHERE i.estado = 'activo'
+        WHERE i.estadoId = 1
           AND cb.saldoActual < i.monto
     )
     BEGIN
@@ -370,7 +370,7 @@ BEGIN
     (
         SELECT idCuentaBancaria, SUM(monto) AS totalGasto
         FROM inserted
-        WHERE estado = 'activo'
+        WHERE estadoId = 1
         GROUP BY idCuentaBancaria
     ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
 END;
@@ -390,7 +390,7 @@ BEGIN
     (
         SELECT idCuentaBancaria, SUM(monto) AS totalReintegro
         FROM deleted
-        WHERE estado = 'activo'
+        WHERE estadoId = 1
         GROUP BY idCuentaBancaria
     ) x ON x.idCuentaBancaria = cb.idCuentaBancaria;
 END;
@@ -415,12 +415,12 @@ BEGIN
     (
         SELECT d.idCuentaBancaria, SUM(d.monto) AS ajuste
         FROM deleted d
-        WHERE d.estado = 'activo'
+        WHERE d.estadoId = 1
         GROUP BY d.idCuentaBancaria
         UNION ALL
         SELECT i.idCuentaBancaria, -SUM(i.monto) AS ajuste
         FROM inserted i
-        WHERE i.estado = 'activo'
+        WHERE i.estadoId = 1
         GROUP BY i.idCuentaBancaria
     ) t
     GROUP BY idCuentaBancaria;
@@ -445,3 +445,6 @@ BEGIN
     INNER JOIN @mov m ON m.idCuentaBancaria = cb.idCuentaBancaria;
 END;
 GO
+
+
+

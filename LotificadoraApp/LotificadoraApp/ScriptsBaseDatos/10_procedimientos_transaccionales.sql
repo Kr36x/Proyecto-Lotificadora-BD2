@@ -32,7 +32,7 @@ BEGIN
             SELECT 1
             FROM Cliente
             WHERE idCliente = @idCliente
-              AND estado = 'activo'
+              AND estadoId = 1
         )
         BEGIN
             RAISERROR('El cliente no existe o esta inactivo.', 16, 1);
@@ -58,7 +58,7 @@ BEGIN
             descuento,
             recargo,
             totalVenta,
-            estadoVenta
+            estadoId
         )
         VALUES
         (
@@ -69,9 +69,7 @@ BEGIN
             @precioLote,
             @descuento,
             @recargo,
-            @totalVenta,
-            'activa'
-        );
+            @totalVenta, 4);
 
         SET @idVenta = SCOPE_IDENTITY();
 
@@ -132,7 +130,7 @@ BEGIN
             SELECT 1
             FROM CuentaBancaria
             WHERE idCuentaBancaria = @idCuentaBancaria
-              AND estado = 'activa'
+              AND estadoId = 4
         )
         BEGIN
             RAISERROR('La cuenta bancaria no existe o esta inactiva.', 16, 1);
@@ -245,7 +243,7 @@ BEGIN
             fechaGasto,
             descripcion,
             monto,
-            estado
+            estadoId
         )
         VALUES
         (
@@ -255,9 +253,7 @@ BEGIN
             @idCuentaBancaria,
             GETDATE(),
             @descripcion,
-            @monto,
-            'activo'
-        );
+            @monto, 1);
 
         SET @idGasto = SCOPE_IDENTITY();
 
@@ -274,4 +270,7 @@ BEGIN
     END CATCH
 END;
 GO
+
+
+
 

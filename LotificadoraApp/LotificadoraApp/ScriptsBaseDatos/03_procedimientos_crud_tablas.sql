@@ -13,11 +13,11 @@ CREATE PROCEDURE sp_proyecto_insertar
     @fechaFinEstimada DATE = NULL,
     @areaTotalV2 DECIMAL(18,2),
     @maxAniosFinanciamiento INT,
-    @estado VARCHAR(30) = 'activo'
+    @estado INT = 1
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estado)
+        INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estadoId)
         VALUES (@nombreProyecto, @descripcion, @fechaInicio, @fechaFinEstimada, @areaTotalV2, @maxAniosFinanciamiento, @estado);
         
         -- Opcional: Devolver el ID del proyecto recién insertado
@@ -38,7 +38,7 @@ CREATE PROCEDURE sp_proyecto_actualizar
     @fechaFinEstimada DATE = NULL,
     @areaTotalV2 DECIMAL(18,2),
     @maxAniosFinanciamiento INT,
-    @estado VARCHAR(30)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
@@ -49,7 +49,7 @@ BEGIN
             fechaFinEstimada = @fechaFinEstimada,
             areaTotalV2 = @areaTotalV2,
             maxAniosFinanciamiento = @maxAniosFinanciamiento,
-            estado = @estado
+            estadoId = @estado
         WHERE idProyecto = @idProyecto;
     END TRY
     BEGIN CATCH
@@ -88,7 +88,7 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        estado
+        estadoId
     FROM Proyecto
     WHERE idProyecto = @idProyecto;
 END;
@@ -106,7 +106,7 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        estado
+        estadoId
     FROM Proyecto
     ORDER BY idProyecto DESC; -- Los ordenamos del más reciente al más antiguo
 END;
@@ -128,14 +128,14 @@ CREATE PROCEDURE sp_etapa_insertar
     @porcentajeAreaLotes DECIMAL(5,2),
     @precioVaraCuadrada DECIMAL(18,2),
     @tasaInteresAnual DECIMAL(5,2),
-    @estado VARCHAR(30) = 'activa'
+    @estado INT = 4
 AS
 BEGIN
     BEGIN TRY
         INSERT INTO Etapa (
             idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, 
             areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, 
-            porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado
+            porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estadoId
         )
         VALUES (
             @idProyecto, @nombreEtapa, @fechaInicio, @fechaFinEstimada, 
@@ -164,7 +164,7 @@ CREATE PROCEDURE sp_etapa_actualizar
     @porcentajeAreaLotes DECIMAL(5,2),
     @precioVaraCuadrada DECIMAL(18,2),
     @tasaInteresAnual DECIMAL(5,2),
-    @estado VARCHAR(30)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
@@ -179,7 +179,7 @@ BEGIN
             porcentajeAreaLotes = @porcentajeAreaLotes,
             precioVaraCuadrada = @precioVaraCuadrada,
             tasaInteresAnual = @tasaInteresAnual,
-            estado = @estado
+            estadoId = @estado
         WHERE idEtapa = @idEtapa;
     END TRY
     BEGIN CATCH
@@ -211,7 +211,7 @@ BEGIN
     SELECT 
         idEtapa, idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, 
         areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, 
-        porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado
+        porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estadoId
     FROM Etapa
     WHERE idEtapa = @idEtapa;
 END;
@@ -224,7 +224,7 @@ BEGIN
     SELECT 
         idEtapa, idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, 
         areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, 
-        porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado
+        porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estadoId
     FROM Etapa
     ORDER BY idEtapa DESC;
 END;
@@ -242,7 +242,7 @@ CREATE PROCEDURE sp_bloque_insertar
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Bloque (idEtapa, nombreBloque, estado, descripcion)
+        INSERT INTO Bloque (idEtapa, nombreBloque, estadoId, descripcion)
         VALUES (@idEtapa, @nombreBloque, 4, @descripcion);
         
         -- Devuelve el ID generado automáticamente
@@ -334,11 +334,11 @@ CREATE PROCEDURE sp_lote_insertar
     @precioBase DECIMAL(18,2) = 0,
     @recargoTotal DECIMAL(18,2) = 0,
     @precioFinal DECIMAL(18,2) = 0,
-    @estadoLote VARCHAR(30) = 'disponible'
+    @estadoLote INT = 7
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Lote (idBloque, numeroLote, areaV2, esEsquina, cercaParque, calleCerrada, precioBase, recargoTotal, precioFinal, estadoLote)
+        INSERT INTO Lote (idBloque, numeroLote, areaV2, esEsquina, cercaParque, calleCerrada, precioBase, recargoTotal, precioFinal, estadoId)
         VALUES (@idBloque, @numeroLote, @areaV2, @esEsquina, @cercaParque, @calleCerrada, @precioBase, @recargoTotal, @precioFinal, @estadoLote);
         SELECT SCOPE_IDENTITY() AS idLoteGenerado;
     END TRY
@@ -360,14 +360,14 @@ CREATE PROCEDURE sp_lote_actualizar
     @precioBase DECIMAL(18,2),
     @recargoTotal DECIMAL(18,2),
     @precioFinal DECIMAL(18,2),
-    @estadoLote VARCHAR(30)
+    @estadoLote INT
 AS
 BEGIN
     BEGIN TRY
         UPDATE Lote
         SET idBloque = @idBloque, numeroLote = @numeroLote, areaV2 = @areaV2, esEsquina = @esEsquina, 
             cercaParque = @cercaParque, calleCerrada = @calleCerrada, precioBase = @precioBase, 
-            recargoTotal = @recargoTotal, precioFinal = @precioFinal, estadoLote = @estadoLote
+            recargoTotal = @recargoTotal, precioFinal = @precioFinal, estadoId = @estadoLote
         WHERE idLote = @idLote;
     END TRY
     BEGIN CATCH
@@ -407,53 +407,6 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE dbo.sp_listar_lotes_disponibles
-AS
-BEGIN
-    SELECT
-        idLote,
-        idProyecto,
-        nombreProyecto,
-        idEtapa,
-        nombreEtapa,
-        idBloque,
-        nombreBloque,
-        numeroLote,
-        precioFinalCalculado
-    FROM dbo.vw_lotes_disponibles
-    ORDER BY idProyecto, idEtapa, idBloque, numeroLote;
-END;
-GO
-
---exec sp_listar_lotes_disponibles;
-
-CREATE OR ALTER PROCEDURE dbo.sp_obtener_detalle_lote_disponible
-    @idLote INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT
-        v.idLote,
-        v.idProyecto,
-        v.nombreProyecto,
-        v.idEtapa,
-        v.nombreEtapa,
-        v.idBloque,
-        v.nombreBloque,
-        v.numeroLote,
-        v.precioFinalCalculado,
-        e.tasaInteresAnual
-    FROM dbo.vw_lotes_disponibles v
-    INNER JOIN Lote l ON l.idLote = v.idLote
-    INNER JOIN Bloque b ON b.idBloque = l.idBloque
-    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
-    WHERE v.idLote = @idLote;
-END;
-GO
---exec dbo.sp_obtener_detalle_lote_disponible @idLote = 4;
-
-
 -- =======================================================
 -- PROCEDIMIENTOS PARA CLIENTE
 -- =======================================================
@@ -467,11 +420,11 @@ CREATE PROCEDURE sp_cliente_insertar
     @direccion VARCHAR(255) = NULL,
     @estadoCivilId INT = NULL,
     @rtn VARCHAR(20) = NULL,
-    @estado VARCHAR(20) = 'activo'
+    @estado INT = 1
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estado)
+        INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estadoId)
         VALUES (@identidad, @nombres, @apellidos, @fechaNacimiento, @telefono, @correo, @direccion, @estadoCivilId, @rtn, @estado);
         SELECT SCOPE_IDENTITY() AS idClienteGenerado;
     END TRY
@@ -492,13 +445,13 @@ CREATE PROCEDURE sp_cliente_actualizar
     @direccion VARCHAR(255) = NULL,
     @estadoCivilId INT = NULL,
     @rtn VARCHAR(20) = NULL,
-    @estado VARCHAR(20)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
         UPDATE Cliente
         SET identidad = @identidad, nombres = @nombres, apellidos = @apellidos, fechaNacimiento = @fechaNacimiento, 
-            telefono = @telefono, correo = @correo, direccion = @direccion, estadoCivilId = @estadoCivilId, rtn = @rtn, estado = @estado
+            telefono = @telefono, correo = @correo, direccion = @direccion, estadoCivilId = @estadoCivilId, rtn = @rtn, estadoId = @estado
         WHERE idCliente = @idCliente;
     END TRY
     BEGIN CATCH
@@ -536,7 +489,7 @@ BEGIN
         c.estadoCivilId,
         ec.descripcion AS estadoCivil,
         c.rtn,
-        c.estado
+        c.estadoId
     FROM Cliente c
     LEFT JOIN EstadoCivil ec
         ON c.estadoCivilId = ec.id
@@ -560,7 +513,7 @@ BEGIN
         c.estadoCivilId,
         ec.descripcion AS estadoCivil,
         c.rtn,
-        c.estado
+        c.estadoId
     FROM Cliente c
     LEFT JOIN EstadoCivil ec
         ON c.estadoCivilId = ec.id
@@ -787,11 +740,11 @@ GO
 -- =======================================================
 CREATE PROCEDURE sp_banco_insertar
     @nombreBanco VARCHAR(100),
-    @estado VARCHAR(20) = 'activo'
+    @estado INT = 1
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO Banco (nombreBanco, estado)
+        INSERT INTO Banco (nombreBanco, estadoId)
         VALUES (@nombreBanco, @estado);
         SELECT SCOPE_IDENTITY() AS idBancoGenerado;
     END TRY
@@ -804,12 +757,12 @@ GO
 CREATE PROCEDURE sp_banco_actualizar
     @idBanco INT,
     @nombreBanco VARCHAR(100),
-    @estado VARCHAR(20)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
         UPDATE Banco
-        SET nombreBanco = @nombreBanco, estado = @estado
+        SET nombreBanco = @nombreBanco, estadoId = @estado
         WHERE idBanco = @idBanco;
     END TRY
     BEGIN CATCH
@@ -855,11 +808,11 @@ CREATE PROCEDURE sp_cuenta_bancaria_insertar
     @numeroCuenta VARCHAR(50),
     @tipoCuenta VARCHAR(30),
     @saldoActual DECIMAL(18,2) = 0,
-    @estado VARCHAR(20) = 'activa'
+    @estado INT = 4
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO CuentaBancaria (idBanco, idEtapa, numeroCuenta, tipoCuenta, saldoActual, estado)
+        INSERT INTO CuentaBancaria (idBanco, idEtapa, numeroCuenta, tipoCuenta, saldoActual, estadoId)
         VALUES (@idBanco, @idEtapa, @numeroCuenta, @tipoCuenta, @saldoActual, @estado);
         SELECT SCOPE_IDENTITY() AS idCuentaBancariaGenerada;
     END TRY
@@ -876,13 +829,13 @@ CREATE PROCEDURE sp_cuenta_bancaria_actualizar
     @numeroCuenta VARCHAR(50),
     @tipoCuenta VARCHAR(30),
     @saldoActual DECIMAL(18,2),
-    @estado VARCHAR(20)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
         UPDATE CuentaBancaria
         SET idBanco = @idBanco, idEtapa = @idEtapa, numeroCuenta = @numeroCuenta, 
-            tipoCuenta = @tipoCuenta, saldoActual = @saldoActual, estado = @estado
+            tipoCuenta = @tipoCuenta, saldoActual = @saldoActual, estadoId = @estado
         WHERE idCuentaBancaria = @idCuentaBancaria;
     END TRY
     BEGIN CATCH
@@ -929,11 +882,11 @@ GO
 -- 1. INSERTAR TIPO DE GASTO
 CREATE PROCEDURE sp_tipo_gasto_insertar
     @nombreTipoGasto VARCHAR(100),
-    @estado VARCHAR(20) = 'activo'
+    @estado INT = 1
 AS
 BEGIN
     BEGIN TRY
-        INSERT INTO TipoGasto (nombreTipoGasto, estado)
+        INSERT INTO TipoGasto (nombreTipoGasto, estadoId)
         VALUES (@nombreTipoGasto, @estado);
         
         SELECT SCOPE_IDENTITY() AS idTipoGastoGenerado;
@@ -948,13 +901,13 @@ GO
 CREATE PROCEDURE sp_tipo_gasto_actualizar
     @idTipoGasto INT,
     @nombreTipoGasto VARCHAR(100),
-    @estado VARCHAR(20)
+    @estado INT
 AS
 BEGIN
     BEGIN TRY
         UPDATE TipoGasto
         SET nombreTipoGasto = @nombreTipoGasto,
-            estado = @estado
+            estadoId = @estado
         WHERE idTipoGasto = @idTipoGasto;
     END TRY
     BEGIN CATCH
@@ -985,45 +938,10 @@ BEGIN
     SELECT 
         idTipoGasto, 
         nombreTipoGasto, 
-        estado
+        estadoId
     FROM TipoGasto
     ORDER BY idTipoGasto DESC;
 END;
 GO
 
--- =======================================================
--- PROCEDIMIENTOS PARA PARENTESCO
--- =======================================================
 
-CREATE OR ALTER PROCEDURE dbo.sp_parentesco_listar
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT
-        id,
-        descripcion
-    FROM Parentesco
-    ORDER BY id;
-END;
-GO
-
---exec dbo.sp_parentesco_listar;
--- =======================================================
--- PROCEDIMIENTOS PARA ESTADO CIVIL
--- =======================================================
-
-CREATE OR ALTER PROCEDURE dbo.sp_estado_civil_listar
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT
-        id,
-        descripcion
-    FROM EstadoCivil
-    ORDER BY descripcion;
-END;
-GO
-
---exec dbo.sp_estado_civil_listar

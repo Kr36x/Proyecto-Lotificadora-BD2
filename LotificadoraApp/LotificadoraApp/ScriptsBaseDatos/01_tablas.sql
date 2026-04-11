@@ -6,8 +6,8 @@ go
 -- ======================================
 
 create table Estado (
-    id int primary key,
-    nombre varchar(100) not null default 'activo',
+    id int identity(1,1) primary key,
+    nombre varchar(100) not null,
     constraint uq_Estado_Nombre unique (nombre),
     constraint chk_Estado_Nombre check (
         nombre in (
@@ -37,9 +37,9 @@ create table Proyecto (
     fechaFinEstimada date null,
     areaTotalV2 decimal(18,2) not null check (areaTotalV2 > 0),
     maxAniosFinanciamiento int not null check (maxAniosFinanciamiento > 0),
-    estado int not null,
+    estadoId int not null,
     constraint fk_Proyecto_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -97,11 +97,11 @@ create table Etapa (
     porcentajeAreaLotes decimal(5,2) not null check (porcentajeAreaLotes >= 0 and porcentajeAreaLotes <= 100),
     precioVaraCuadrada decimal(18,2) not null check (precioVaraCuadrada > 0),
     tasaInteresAnual decimal(5,2) not null check (tasaInteresAnual >= 0), -- interés para créditos de la etapa
-    estado int not null,
+    estadoId int not null,
     constraint fk_Etapa_Proyecto
         foreign key (idProyecto) references Proyecto(idProyecto),
     constraint fk_Etapa_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -110,12 +110,12 @@ create table Bloque (
     idBloque int identity(1,1) primary key,
     idEtapa int not null,
     nombreBloque varchar(50) not null,
-    estado int not null,
+    estadoId int not null,
     descripcion varchar(255) null,
     constraint fk_Bloque_Etapa
         foreign key (idEtapa) references Etapa(idEtapa),
     constraint fk_Bloque_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -131,12 +131,12 @@ create table Lote (
     precioBase decimal(18,2) not null default 0 check (precioBase >= 0),
     recargoTotal decimal(18,2) not null default 0 check (recargoTotal >= 0),
     precioFinal decimal(18,2) not null default 0 check (precioFinal >= 0),
-    estadoLote int not null,
+    estadoId int not null,
     constraint uq_Lote_Bloque_Numero unique (idBloque, numeroLote),
     constraint fk_Lote_Bloque
         foreign key (idBloque) references Bloque(idBloque),
     constraint fk_Lote_Estado
-        foreign key (estadoLote) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -188,13 +188,13 @@ create table Cliente (
     direccion varchar(255) null,
     estadoCivilId int null,
     rtn varchar(20) null,
-    estado int not null,
+    estadoId int not null,
     constraint uq_Cliente_Identidad unique (identidad),
     constraint uq_Cliente_Rtn unique (rtn),
     constraint fk_Cliente_EstadoCivil
         foreign key (estadoCivilId) references EstadoCivil(id),
     constraint fk_Cliente_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -269,13 +269,13 @@ create table Venta (
     descuento decimal(18,2) not null default 0 check (descuento >= 0),
     recargo decimal(18,2) not null default 0 check (recargo >= 0),
     totalVenta decimal(18,2) not null check (totalVenta >= 0),
-    estadoVenta int not null,
+    estadoId int not null,
     constraint fk_Venta_Lote
         foreign key (idLote) references Lote(idLote),
     constraint fk_Venta_Cliente
         foreign key (idCliente) references Cliente(idCliente),
     constraint fk_Venta_Estado
-        foreign key (estadoVenta) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -303,7 +303,7 @@ create table VentaCredito (
     plazoAnios int not null check (plazoAnios > 0),
     tasaInteresAnual decimal(5,2) not null check (tasaInteresAnual >= 0),
     fechaInicioPago date not null,
-    estadoCredito int not null,
+    estadoId int not null,
     constraint fk_VentaCredito_Venta
         foreign key (idVenta) references Venta(idVenta),
     constraint fk_VentaCredito_Aval
@@ -311,7 +311,7 @@ create table VentaCredito (
     constraint fk_VentaCredito_Beneficiario
         foreign key (idBeneficiario) references Beneficiario(idBeneficiario),
     constraint fk_VentaCredito_Estado
-        foreign key (estadoCredito) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -328,11 +328,11 @@ create table PlanPago (
     totalInteres decimal(18,2) not null check (totalInteres >= 0),
     totalPlan decimal(18,2) not null check (totalPlan >= 0),
     cuotaMensualEstimada decimal(18,2) not null check (cuotaMensualEstimada >= 0),
-    estado int not null,
+    estadoId int not null,
     constraint fk_PlanPago_VentaCredito
         foreign key (idVentaCredito) references VentaCredito(idVentaCredito),
     constraint fk_PlanPago_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -347,12 +347,12 @@ create table Cuota (
     interesProgramado decimal(18,2) not null check (interesProgramado >= 0),
     montoCuota decimal(18,2) not null check (montoCuota >= 0),
     saldoFinal decimal(18,2) not null check (saldoFinal >= 0),
-    estadoCuota int not null,
+    estadoId int not null,
     constraint uq_Cuota_Plan_Numero unique (idPlanPago, numeroCuota),
     constraint fk_Cuota_PlanPago
         foreign key (idPlanPago) references PlanPago(idPlanPago),
     constraint fk_Cuota_Estado
-        foreign key (estadoCuota) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -364,10 +364,10 @@ go
 create table Banco (
     idBanco int identity(1,1) primary key,
     nombreBanco varchar(100) not null,
-    estado int not null,
+    estadoId int not null,
     constraint uq_Banco_Nombre unique (nombreBanco),
     constraint fk_Banco_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -379,14 +379,14 @@ create table CuentaBancaria (
     numeroCuenta varchar(50) not null,
     tipoCuenta varchar(30) not null,
     saldoActual decimal(18,2) not null default 0 check (saldoActual >= 0),
-    estado int not null,
+    estadoId int not null,
     constraint uq_CuentaBancaria_Numero unique (numeroCuenta),
     constraint fk_CuentaBancaria_Banco
         foreign key (idBanco) references Banco(idBanco),
     constraint fk_CuentaBancaria_Etapa
         foreign key (idEtapa) references Etapa(idEtapa),
     constraint fk_CuentaBancaria_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -493,10 +493,10 @@ go
 create table TipoGasto (
     idTipoGasto int identity(1,1) primary key,
     nombreTipoGasto varchar(100) not null,
-    estado int not null,
+    estadoId int not null,
     constraint uq_TipoGasto_Nombre unique (nombreTipoGasto),
     constraint fk_TipoGasto_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
 
@@ -510,7 +510,7 @@ create table GastoProyecto (
     fechaGasto datetime not null default getdate(),
     descripcion varchar(255) not null,
     monto decimal(18,2) not null check (monto > 0),
-    estado int not null,
+    estadoId int not null,
     constraint fk_GastoProyecto_Proyecto
         foreign key (idProyecto) references Proyecto(idProyecto),
     constraint fk_GastoProyecto_Etapa
@@ -520,6 +520,7 @@ create table GastoProyecto (
     constraint fk_GastoProyecto_CuentaBancaria
         foreign key (idCuentaBancaria) references CuentaBancaria(idCuentaBancaria),
     constraint fk_GastoProyecto_Estado
-        foreign key (estado) references Estado(id)
+        foreign key (estadoId) references Estado(id)
 );
 go
+

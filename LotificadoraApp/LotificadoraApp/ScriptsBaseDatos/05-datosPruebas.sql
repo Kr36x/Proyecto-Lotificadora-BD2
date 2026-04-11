@@ -24,10 +24,10 @@ DECLARE
     @idVenta1 INT, @idVenta2 INT,
     @idCuota1Venta1 INT, @idCuota2Venta1 INT, @idCuota1Venta2 INT;
 
-INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estado)
+INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estadoId)
 VALUES 
-('Residencial Valle Verde', 'Proyecto principal de prueba para ventas y creditos', '2026-01-10', '2028-12-31', 50000, 15, 'activo'),
-('Residencial Senderos del Norte', 'Proyecto secundario de prueba', '2026-02-01', '2029-06-30', 32000, 12, 'activo');
+('Residencial Valle Verde', 'Proyecto principal de prueba para ventas y creditos', '2026-01-10', '2028-12-31', 50000, 15, 1),
+('Residencial Senderos del Norte', 'Proyecto secundario de prueba', '2026-02-01', '2029-06-30', 32000, 12, 1);
 
 SELECT @idProyecto1 = MIN(idProyecto), @idProyecto2 = MAX(idProyecto)
 FROM Proyecto
@@ -48,11 +48,11 @@ VALUES
 (@idProyecto2, 1, 2, 'Sector Norte', 'Entrada principal, calle de acceso pavimentada', 'SN-001', 'Proyecto secundario para pruebas');
 
 INSERT INTO Etapa
-(idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estado)
+(idProyecto, nombreEtapa, fechaInicio, fechaFinEstimada, areaTotalV2, porcentajeAreaVerde, porcentajeAreaComun, porcentajeAreaLotes, precioVaraCuadrada, tasaInteresAnual, estadoId)
 VALUES
-(@idProyecto1, 'Etapa 1', '2026-01-15', '2026-12-31', 18000, 10, 15, 75, 1200, 14.50, 'activa'),
-(@idProyecto1, 'Etapa 2', '2026-02-10', '2027-03-31', 16000, 12, 13, 75, 1350, 15.00, 'activa'),
-(@idProyecto2, 'Etapa 1', '2026-02-15', '2027-05-31', 14000, 8, 17, 75, 950, 13.25, 'activa');
+(@idProyecto1, 'Etapa 1', '2026-01-15', '2026-12-31', 18000, 10, 15, 75, 1200, 14.50, 4),
+(@idProyecto1, 'Etapa 2', '2026-02-10', '2027-03-31', 16000, 12, 13, 75, 1350, 15.00, 4),
+(@idProyecto2, 'Etapa 1', '2026-02-15', '2027-05-31', 14000, 8, 17, 75, 950, 13.25, 4);
 
 SELECT @idEtapa1 = MIN(idEtapa), @idEtapa3 = MAX(idEtapa)
 FROM Etapa
@@ -62,7 +62,7 @@ SELECT @idEtapa2 = idEtapa
 FROM Etapa
 WHERE idProyecto = @idProyecto1 AND nombreEtapa = 'Etapa 2';
 
-INSERT INTO Bloque (idEtapa, nombreBloque, estado, descripcion)
+INSERT INTO Bloque (idEtapa, nombreBloque, estadoId, descripcion)
 VALUES
 (@idEtapa1, 'Bloque A', 4, 'Bloque principal de la etapa 1'),
 (@idEtapa1, 'Bloque B', 4, 'Bloque secundario de la etapa 1'),
@@ -75,18 +75,18 @@ FROM Bloque;
 SELECT @idBloqueA2 = idBloque FROM Bloque WHERE idEtapa = @idEtapa1 AND nombreBloque = 'Bloque B';
 SELECT @idBloqueB1 = idBloque FROM Bloque WHERE idEtapa = @idEtapa2 AND nombreBloque = 'Bloque C';
 
-INSERT INTO Lote (idBloque, numeroLote, areaV2, esEsquina, cercaParque, calleCerrada, precioBase, recargoTotal, precioFinal, estadoLote)
+INSERT INTO Lote (idBloque, numeroLote, areaV2, esEsquina, cercaParque, calleCerrada, precioBase, recargoTotal, precioFinal, estadoId)
 VALUES
-(@idBloqueA1, 'A-01', 250, 1, 0, 0, 0, 0, 0, 'disponible'),
-(@idBloqueA1, 'A-02', 260, 0, 1, 0, 0, 0, 0, 'disponible'),
-(@idBloqueA1, 'A-03', 245, 0, 0, 1, 0, 0, 0, 'disponible'),
-(@idBloqueA2, 'B-01', 280, 1, 1, 0, 0, 0, 0, 'disponible'),
-(@idBloqueA2, 'B-02', 300, 0, 0, 0, 0, 0, 0, 'disponible'),
-(@idBloqueB1, 'C-01', 310, 1, 0, 1, 0, 0, 0, 'disponible'),
-(@idBloqueB1, 'C-02', 295, 0, 1, 0, 0, 0, 0, 'disponible'),
-(@idBloqueB1, 'C-03', 320, 0, 0, 0, 0, 0, 0, 'disponible'),
-(@idBloqueC1, 'D-01', 230, 0, 0, 0, 0, 0, 0, 'disponible'),
-(@idBloqueC1, 'D-02', 240, 1, 0, 0, 0, 0, 0, 'disponible');
+(@idBloqueA1, 'A-01', 250, 1, 0, 0, 0, 0, 0, 7),
+(@idBloqueA1, 'A-02', 260, 0, 1, 0, 0, 0, 0, 7),
+(@idBloqueA1, 'A-03', 245, 0, 0, 1, 0, 0, 0, 7),
+(@idBloqueA2, 'B-01', 280, 1, 1, 0, 0, 0, 0, 7),
+(@idBloqueA2, 'B-02', 300, 0, 0, 0, 0, 0, 0, 7),
+(@idBloqueB1, 'C-01', 310, 1, 0, 1, 0, 0, 0, 7),
+(@idBloqueB1, 'C-02', 295, 0, 1, 0, 0, 0, 0, 7),
+(@idBloqueB1, 'C-03', 320, 0, 0, 0, 0, 0, 0, 7),
+(@idBloqueC1, 'D-01', 230, 0, 0, 0, 0, 0, 0, 7),
+(@idBloqueC1, 'D-02', 240, 1, 0, 0, 0, 0, 0, 7);
 
 SELECT @idLote1 = idLote FROM Lote WHERE numeroLote = 'A-01' AND idBloque = @idBloqueA1;
 SELECT @idLote6 = idLote FROM Lote WHERE numeroLote = 'C-01' AND idBloque = @idBloqueB1;
@@ -118,16 +118,19 @@ EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa1;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa2;
 EXEC dbo.sp_recalcular_precios_lotes_etapa_cursor @idEtapa = @idEtapa3;
 
-INSERT INTO EstadoCivil (id, descripcion)
-VALUES
-(1, 'Soltero'),
-(2, 'Casado');
+insert into EstadoCivil values 
+    (1,'Soltero'),
+    (2,'Casado'),
+    (3,'Union Libre'),
+    (4,'Divorciado'),
+    (5,'Viudo'),
+    (6,'Casada');
 
-INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estado)
+INSERT INTO Cliente (identidad, nombres, apellidos, fechaNacimiento, telefono, correo, direccion, estadoCivilId, rtn, estadoId)
 VALUES
-('0801-1998-00001', 'Carlos', 'Mejia', '1998-04-11', '9876-1001', 'carlos.mejia@correo.com', 'Col. Trejo, SPS', 1, '0801199800001', 'activo'),
-('0801-1995-00002', 'Daniela', 'Santos', '1995-07-25', '9876-1002', 'daniela.santos@correo.com', 'Col. Satelite, SPS', 2, '0801199500002', 'activo'),
-('0501-1992-00003', 'Marvin', 'Lopez', '1992-10-08', '9876-1003', 'marvin.lopez@correo.com', 'La Lima, Cortes', 2, '0501199200003', 'activo');
+('0801-1998-00001', 'Carlos', 'Mejia', '1998-04-11', '9876-1001', 'carlos.mejia@correo.com', 'Col. Trejo, SPS', 1, '0801199800001', 1),
+('0801-1995-00002', 'Daniela', 'Santos', '1995-07-25', '9876-1002', 'daniela.santos@correo.com', 'Col. Satelite, SPS', 2, '0801199500002', 1),
+('0501-1992-00003', 'Marvin', 'Lopez', '1992-10-08', '9876-1003', 'marvin.lopez@correo.com', 'La Lima, Cortes', 2, '0501199200003', 1);
 
 SELECT @idCliente1 = idCliente FROM Cliente WHERE identidad = '0801-1998-00001';
 SELECT @idCliente2 = idCliente FROM Cliente WHERE identidad = '0801-1995-00002';
@@ -139,11 +142,18 @@ VALUES
 (@idCliente2, 'Inversiones Nova', 'Administradora', 42000, 5, '2233-1002', 'Circunvalacion, SPS'),
 (@idCliente3, 'Maquila Centro', 'Supervisor', 36000, 4, '2233-1003', 'La Lima, zona industrial');
 
-INSERT INTO Parentesco (id, descripcion)
-VALUES
-(1, 'Tio'),
-(2, 'Hermana'),
-(3, 'Hijo');
+INSERT INTO Parentesco (id, descripcion) VALUES
+(1, 'Madre'),
+(2, 'Padre'),
+(3, 'Hija'),
+(4, 'Hijo'),
+(5, 'Esposa'),
+(6, 'Esposo'),
+(7, 'Hermana'),
+(8, 'Hermano'),
+(9, 'Tia'),
+(10, 'Tio');
+
 
 INSERT INTO Aval (identidad, nombres, apellidos, telefono, direccion, lugarTrabajo, ingresoMensual, parentescoId)
 VALUES
@@ -161,27 +171,27 @@ VALUES
 SELECT @idBeneficiario1 = idBeneficiario FROM Beneficiario WHERE identidad = '0801-2001-00021';
 SELECT @idBeneficiario2 = idBeneficiario FROM Beneficiario WHERE identidad = '0501-2003-00022';
 
-INSERT INTO Banco (nombreBanco, estado)
-VALUES ('Banco Atlantida', 'activo'), ('BAC Credomatic', 'activo');
+INSERT INTO Banco (nombreBanco, estadoId)
+VALUES ('Banco Atlantida', 1), ('BAC Credomatic', 1);
 
 SELECT @idBanco1 = idBanco FROM Banco WHERE nombreBanco = 'Banco Atlantida';
 SELECT @idBanco2 = idBanco FROM Banco WHERE nombreBanco = 'BAC Credomatic';
 
-INSERT INTO CuentaBancaria (idBanco, idEtapa, numeroCuenta, tipoCuenta, saldoActual, estado)
+INSERT INTO CuentaBancaria (idBanco, idEtapa, numeroCuenta, tipoCuenta, saldoActual, estadoId)
 VALUES
-(@idBanco1, @idEtapa1, 'AT-0001-ET1', 'ahorro', 150000, 'activa'),
-(@idBanco2, @idEtapa2, 'BAC-0002-ET2', 'monetaria', 90000, 'activa'),
-(@idBanco1, @idEtapa3, 'AT-0003-ET3', 'ahorro', 80000, 'activa');
+(@idBanco1, @idEtapa1, 'AT-0001-ET1', 'ahorro', 150000, 4),
+(@idBanco2, @idEtapa2, 'BAC-0002-ET2', 'monetaria', 90000, 4),
+(@idBanco1, @idEtapa3, 'AT-0003-ET3', 'ahorro', 80000, 4);
 
 SELECT @idCuenta1 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'AT-0001-ET1';
 SELECT @idCuenta2 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'BAC-0002-ET2';
 SELECT @idCuenta3 = idCuentaBancaria FROM CuentaBancaria WHERE numeroCuenta = 'AT-0003-ET3';
 
-INSERT INTO TipoGasto (nombreTipoGasto, estado)
+INSERT INTO TipoGasto (nombreTipoGasto, estadoId)
 VALUES
-('Seguridad', 'activo'),
-('Mantenimiento', 'activo'),
-('Servicios publicos', 'activo');
+('Seguridad', 1),
+('Mantenimiento', 1),
+('Servicios publicos', 1);
 
 SELECT @idTipoGasto1 = idTipoGasto FROM TipoGasto WHERE nombreTipoGasto = 'Seguridad';
 SELECT @idTipoGasto2 = idTipoGasto FROM TipoGasto WHERE nombreTipoGasto = 'Mantenimiento';
@@ -363,3 +373,4 @@ insert into Estado (id, nombre) values
 (16, 'vencida'),
 (17, 'anulado');
 go
+

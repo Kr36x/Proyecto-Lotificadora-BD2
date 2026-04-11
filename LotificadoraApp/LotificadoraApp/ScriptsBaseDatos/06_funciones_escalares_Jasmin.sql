@@ -140,8 +140,9 @@ begin
         where idCuota = c.idCuota
     ) dpc
     where pp.idVentaCredito = @idVentaCredito
-      and c.estadoCuota in ('pendiente','parcial','vencida');
+      and c.estadoId in (13, 14, 16);
 
     return isnull(@saldo, 0);
 end;
 go
+

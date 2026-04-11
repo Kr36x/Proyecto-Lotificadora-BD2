@@ -22,8 +22,8 @@ BEGIN
     INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
     INNER JOIN Cliente c ON c.idCliente = v.idCliente
     INNER JOIN Lote l ON l.idLote = v.idLote
-    WHERE v.estadoVenta = 'activa'
-      AND vc.estadoCredito IN ('activo', 'moroso')
+    WHERE v.estadoId = 4
+      AND vc.estadoId IN (1, 12)
     ORDER BY v.idVenta DESC;
 END;
 GO
@@ -70,7 +70,7 @@ BEGIN
         c.montoCuota,
         ISNULL(SUM(dpc.montoAplicado), 0) AS totalPagado,
         c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) AS saldoPendiente,
-        c.estadoCuota,
+        c.estadoId,
         CONCAT(
             'Cuota ', c.numeroCuota,
             ' | Vence ', CONVERT(varchar(10), c.fechaVencimiento, 103),
@@ -87,7 +87,7 @@ BEGIN
         c.numeroCuota,
         c.fechaVencimiento,
         c.montoCuota,
-        c.estadoCuota
+        c.estadoId
     HAVING c.montoCuota - ISNULL(SUM(dpc.montoAplicado), 0) > 0
     ORDER BY c.numeroCuota;
 END;
@@ -107,7 +107,7 @@ BEGIN
         CONCAT(numeroCuenta, ' | ', tipoCuenta) AS descripcion
     FROM CuentaBancaria
     WHERE idEtapa = @idEtapa
-      AND estado = 'activa'
+      AND estadoId = 4
     ORDER BY numeroCuenta;
 END;
 GO
@@ -128,7 +128,7 @@ BEGIN
         pp.idPlanPago,
         pp.totalPlan,
         dbo.fn_credito_saldo_pendiente(vc.idVentaCredito) AS saldoPendiente,
-        vc.estadoCredito
+        vc.estadoId
     FROM VentaCredito vc
     INNER JOIN Venta v ON v.idVenta = vc.idVenta
     INNER JOIN Cliente c ON c.idCliente = v.idCliente
@@ -183,7 +183,7 @@ begin
             select 1
             from Cliente
             where idCliente = @idCliente
-              and estado = 'activo'
+              and estadoId = 1
         )
         begin
             raiserror('el cliente no existe o está inactivo', 16, 1)
@@ -333,7 +333,7 @@ begin
             descuento,
             recargo,
             totalVenta,
-            estadoVenta
+            estadoId
         )
         values (
             @idLote,
@@ -343,9 +343,7 @@ begin
             @precioLote,
             @descuento,
             @recargo,
-            @totalVenta,
-            'activa'
-        )
+            @totalVenta, 4)
 
         set @idVenta = scope_identity()
 
@@ -360,7 +358,7 @@ begin
             plazoAnios,
             tasaInteresAnual,
             fechaInicioPago,
-            estadoCredito
+            estadoId
         )
         values (
             @idVenta,
@@ -371,9 +369,7 @@ begin
             @montoFinanciado,
             @plazoAnios,
             @tasaInteresAnual,
-            @fechaInicioPago,
-            'activo'
-        )
+            @fechaInicioPago, 1)
 
         set @idVentaCredito = scope_identity()
 
@@ -385,7 +381,7 @@ begin
             totalInteres,
             totalPlan,
             cuotaMensualEstimada,
-            estado
+            estadoId
         )
         values (
             @idVentaCredito,
@@ -393,9 +389,7 @@ begin
             @montoFinanciado,
             @totalInteres,
             @totalPlan,
-            @cuotaMensualEstimada,
-            'activo'
-        )
+            @cuotaMensualEstimada, 1)
 
         commit transaction
 
@@ -445,7 +439,7 @@ begin
     declare @idFactura int
 
     declare @montoCuota decimal(18,2)
-    declare @estadoCuota varchar(30)
+    declare @estadoCuota int
     declare @capitalProgramado decimal(18,2)
     declare @interesProgramado decimal(18,2)
 
@@ -467,7 +461,7 @@ begin
             select 1
             from Venta
             where idVenta = @idVenta
-              and estadoVenta = 'activa'
+              and estadoId = 4
         )
         begin
             raiserror('la venta no existe o no está activa', 16, 1)
@@ -478,7 +472,7 @@ begin
         -- obtener datos de la cuota
         select
             @montoCuota = montoCuota,
-            @estadoCuota = estadoCuota,
+            @estadoCuota = estadoId,
             @capitalProgramado = capitalProgramado,
             @interesProgramado = interesProgramado
         from Cuota
@@ -493,7 +487,7 @@ begin
         end
 
         -- validar que la cuota no esté pagada
-        if @estadoCuota = 'pagada'
+        if @estadoCuota = 15
         begin
             raiserror('la cuota ya está pagada', 16, 1)
             rollback transaction
@@ -672,7 +666,7 @@ RETURN
         INNER JOIN DatosLaboralesCliente dl
             ON dl.idCliente = c.idCliente
         WHERE c.idCliente = @idCliente
-          AND c.estado = 'activo'
+          AND c.estadoId = 1
     ),
     LotesDisponibles AS
     (
@@ -895,35 +889,9 @@ END;
 GO
 
 
--- ==================================================================
--- 10. SP para consultar estados cuenta
--- ==================================================================
-CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_estado_cuenta_cliente
-    @idCliente INT
-AS
-BEGIN
-    SELECT
-        c.idCliente,
-        c.nombres + ' ' + c.apellidos AS cliente,
-        cu.idCuota,
-        cu.numeroCuota,
-        cu.fechaVencimiento,
-        cu.montoCuota,
-        dbo.fn_cuota_saldo_pendiente(cu.idCuota) AS saldoPendiente,
-        cu.estadoCuota
-    FROM Cliente c
-    INNER JOIN Venta v ON v.idCliente = c.idCliente AND v.tipoVenta = 'credito'
-    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
-    INNER JOIN PlanPago pp ON pp.idVentaCredito = vc.idVentaCredito
-    INNER JOIN Cuota cu ON cu.idPlanPago = pp.idPlanPago
-    WHERE c.idCliente = @idCliente
-    ORDER BY cu.numeroCuota;
-END;
-GO
-
 
 -- ==================================================================
--- 11. SP para consultar recaudación
+-- 10. SP para consultar recaudación
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_consulta_sp_recaudacion_etapa
     @idEtapa INT,
@@ -948,7 +916,7 @@ END;
 GO
 
 -- ==================================================================
--- 12. SP para insertar datos laborales
+-- 11. SP para insertar datos laborales
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_insertar
     @idCliente INT,
@@ -986,7 +954,7 @@ END;
 GO
 
 -- ==================================================================
--- 13. SP para actualizar datos laborales
+-- 12. SP para actualizar datos laborales
 -- ==================================================================
 CREATE OR ALTER PROCEDURE dbo.sp_datos_laborales_actualizar
     @idDatosLaborales INT,
@@ -1011,3 +979,6 @@ BEGIN
     WHERE idDatosLaborales = @idDatosLaborales;
 END;
 GO
+
+
+
