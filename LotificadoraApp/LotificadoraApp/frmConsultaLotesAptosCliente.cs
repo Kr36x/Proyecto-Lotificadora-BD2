@@ -100,14 +100,7 @@ namespace LotificadoraApp
 
         private void CargarResumenCliente(int idCliente, decimal porcentajeMaxIngreso)
         {
-            const string sql = @"
-                SELECT
-                    c.nombres + ' ' + c.apellidos AS cliente,
-                    dl.ingresoMensual
-                FROM Cliente c
-                INNER JOIN DatosLaboralesCliente dl ON dl.idCliente = c.idCliente
-                WHERE c.idCliente = @idCliente
-                  AND c.estado = 'activo';";
+            const string sql = @"exec dbo.sp_obtener_resumen_cliente_capacidad_pago @idCliente = @idCliente";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);

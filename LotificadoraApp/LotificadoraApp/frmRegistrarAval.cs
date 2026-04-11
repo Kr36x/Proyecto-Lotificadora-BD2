@@ -50,10 +50,7 @@ namespace LotificadoraApp
 
         private void CargarParentescos()
         {
-            const string sql = @"
-                SELECT id, descripcion
-                FROM Parentesco
-                ORDER BY descripcion;";
+            const string sql = @"exec dbo.sp_parentesco_listar;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);

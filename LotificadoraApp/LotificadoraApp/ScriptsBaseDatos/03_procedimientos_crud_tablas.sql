@@ -407,6 +407,53 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE dbo.sp_listar_lotes_disponibles
+AS
+BEGIN
+    SELECT
+        idLote,
+        idProyecto,
+        nombreProyecto,
+        idEtapa,
+        nombreEtapa,
+        idBloque,
+        nombreBloque,
+        numeroLote,
+        precioFinalCalculado
+    FROM dbo.vw_lotes_disponibles
+    ORDER BY idProyecto, idEtapa, idBloque, numeroLote;
+END;
+GO
+
+--exec sp_listar_lotes_disponibles;
+
+CREATE OR ALTER PROCEDURE dbo.sp_obtener_detalle_lote_disponible
+    @idLote INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.idLote,
+        v.idProyecto,
+        v.nombreProyecto,
+        v.idEtapa,
+        v.nombreEtapa,
+        v.idBloque,
+        v.nombreBloque,
+        v.numeroLote,
+        v.precioFinalCalculado,
+        e.tasaInteresAnual
+    FROM dbo.vw_lotes_disponibles v
+    INNER JOIN Lote l ON l.idLote = v.idLote
+    INNER JOIN Bloque b ON b.idBloque = l.idBloque
+    INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
+    WHERE v.idLote = @idLote;
+END;
+GO
+--exec dbo.sp_obtener_detalle_lote_disponible @idLote = 4;
+
+
 -- =======================================================
 -- PROCEDIMIENTOS PARA CLIENTE
 -- =======================================================
@@ -521,6 +568,38 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE sp_cliente_listar_activo
+AS
+BEGIN
+    SELECT
+        idCliente,
+        CONCAT(idCliente, ' - ', nombres, ' ', apellidos) AS nombreCompleto
+        FROM Cliente
+        WHERE estado = 'activo'
+        ORDER BY nombres, apellidos;
+END;
+GO
+
+--exec sp_cliente_listar_activo;
+
+CREATE OR ALTER PROCEDURE dbo.sp_obtener_resumen_cliente_capacidad_pago
+    @idCliente INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        c.nombres + ' ' + c.apellidos AS cliente,
+        dl.ingresoMensual
+    FROM Cliente c
+    INNER JOIN DatosLaboralesCliente dl
+        ON dl.idCliente = c.idCliente
+    WHERE c.idCliente = @idCliente
+      AND c.estado = 'activo';
+END;
+GO
+-- exec dbo.sp_obtener_resumen_cliente_capacidad_pago @idCliente = @idCliente
+
 -- =======================================================
 -- PROCEDIMIENTOS PARA AVAL
 -- =======================================================
@@ -598,6 +677,20 @@ BEGIN
 END;
 GO
 
+CREATE PROCEDURE sp_aval_listar_comboBox
+AS
+BEGIN
+    SELECT
+        idAval,
+        CONCAT(idAval, ' - ', nombres, ' ', apellidos) AS nombreCompleto
+        FROM Aval
+        ORDER BY nombres, apellidos;
+END;
+GO
+exec sp_aval_listar_comboBox;
+
+
+
 -- =======================================================
 -- PROCEDIMIENTOS PARA BENEFICIARIO
 -- =======================================================
@@ -670,6 +763,24 @@ BEGIN
     SELECT * FROM Beneficiario ORDER BY idBeneficiario DESC;
 END;
 GO
+
+CREATE PROCEDURE sp_beneficiario_listar_comboBox
+AS
+BEGIN
+     SELECT
+        idBeneficiario,
+        CONCAT(idBeneficiario, ' - ', nombres, ' ', apellidos) AS nombreCompleto
+        FROM Beneficiario
+        ORDER BY nombres, apellidos;
+END;
+GO
+
+--exec sp_beneficiario_listar_comboBox
+
+
+
+
+
 
 -- =======================================================
 -- PROCEDIMIENTOS PARA BANCO
@@ -879,3 +990,40 @@ BEGIN
     ORDER BY idTipoGasto DESC;
 END;
 GO
+
+-- =======================================================
+-- PROCEDIMIENTOS PARA PARENTESCO
+-- =======================================================
+
+CREATE OR ALTER PROCEDURE dbo.sp_parentesco_listar
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        id,
+        descripcion
+    FROM Parentesco
+    ORDER BY id;
+END;
+GO
+
+--exec dbo.sp_parentesco_listar;
+-- =======================================================
+-- PROCEDIMIENTOS PARA ESTADO CIVIL
+-- =======================================================
+
+CREATE OR ALTER PROCEDURE dbo.sp_estado_civil_listar
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        id,
+        descripcion
+    FROM EstadoCivil
+    ORDER BY descripcion;
+END;
+GO
+
+--exec dbo.sp_estado_civil_listar

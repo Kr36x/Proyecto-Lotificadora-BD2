@@ -84,19 +84,7 @@ namespace LotificadoraApp
 
         private void CargarLotesDisponibles()
         {
-            const string sql = @"
-                SELECT
-                    idLote,
-                    idProyecto,
-                    nombreProyecto,
-                    idEtapa,
-                    nombreEtapa,
-                    idBloque,
-                    nombreBloque,
-                    numeroLote,
-                    precioFinalCalculado
-                FROM dbo.vw_lotes_disponibles
-                ORDER BY idProyecto, idEtapa, idBloque, numeroLote;";
+            const string sql = @"exec dbo.sp_listar_lotes_disponibles;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
@@ -113,13 +101,7 @@ namespace LotificadoraApp
 
         private void CargarClientes()
         {
-            const string sql = @"
-                SELECT
-                    idCliente,
-                    CONCAT(idCliente, ' - ', nombres, ' ', apellidos) AS nombreCompleto
-                FROM Cliente
-                WHERE estado = 'activo'
-                ORDER BY nombres, apellidos;";
+            const string sql = @"exec dbo.sp_cliente_listar_activo;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
@@ -136,12 +118,7 @@ namespace LotificadoraApp
 
         private void CargarAvales()
         {
-            const string sql = @"
-                SELECT
-                    idAval,
-                    CONCAT(idAval, ' - ', nombres, ' ', apellidos) AS nombreCompleto
-                FROM Aval
-                ORDER BY nombres, apellidos;";
+            const string sql = @"exec dbo.sp_aval_listar_comboBox;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
@@ -158,12 +135,7 @@ namespace LotificadoraApp
 
         private void CargarBeneficiarios()
         {
-            const string sql = @"
-                SELECT
-                    idBeneficiario,
-                    CONCAT(idBeneficiario, ' - ', nombres, ' ', apellidos) AS nombreCompleto
-                FROM Beneficiario
-                ORDER BY nombres, apellidos;";
+            const string sql = @"exec dbo.sp_beneficiario_listar_comboBox;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
@@ -200,23 +172,7 @@ namespace LotificadoraApp
 
         private void CargarDetalleLote(int idLote)
         {
-            const string sql = @"
-                SELECT
-                    v.idLote,
-                    v.idProyecto,
-                    v.nombreProyecto,
-                    v.idEtapa,
-                    v.nombreEtapa,
-                    v.idBloque,
-                    v.nombreBloque,
-                    v.numeroLote,
-                    v.precioFinalCalculado,
-                    e.tasaInteresAnual
-                FROM dbo.vw_lotes_disponibles v
-                INNER JOIN Lote l ON l.idLote = v.idLote
-                INNER JOIN Bloque b ON b.idBloque = l.idBloque
-                INNER JOIN Etapa e ON e.idEtapa = b.idEtapa
-                WHERE v.idLote = @idLote;";
+            const string sql = @"exec dbo.sp_obtener_detalle_lote_disponible @idLote = @idLote;";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);

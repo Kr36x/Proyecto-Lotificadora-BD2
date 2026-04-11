@@ -86,12 +86,7 @@ namespace LotificadoraApp
 
         private void CargarEstadoCivil()
         {
-            const string sql = @"
-                SELECT
-                    id,
-                    descripcion
-                FROM EstadoCivil
-                ORDER BY descripcion;";
+            const string sql = @"exec dbo.sp_estado_civil_listar";
 
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
             using SqlCommand cmd = new SqlCommand(sql, cn);
