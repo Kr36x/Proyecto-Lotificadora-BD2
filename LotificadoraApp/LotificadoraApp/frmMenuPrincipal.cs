@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LotificadoraApp.Lote;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -135,7 +136,7 @@ namespace LotificadoraApp
             btnRegistrarLote.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnRegistrarLote);
-                AbrirEnContenedor(new frmRegistrarLote());
+                AbrirEnContenedor(new frmLote());
             };
 
             btnConsultarPagos.Click += (_, _) =>

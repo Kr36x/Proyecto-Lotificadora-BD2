@@ -323,6 +323,27 @@ END;
 GO
 
 -- =======================================================
+-- PROCEDIMIENTOS PARA ESTADO
+-- =======================================================
+CREATE OR ALTER PROCEDURE dbo.sp_ObtenerEstados
+    @Ids NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT e.id,
+           e.nombre
+    FROM dbo.Estado e
+    INNER JOIN (
+        SELECT DISTINCT TRY_CAST(LTRIM(RTRIM(value)) AS INT) AS id
+        FROM STRING_SPLIT(@Ids, ',')
+        WHERE TRY_CAST(LTRIM(RTRIM(value)) AS INT) IS NOT NULL
+    ) x ON e.id = x.id
+    ORDER BY e.id;
+END;
+GO
+
+-- =======================================================
 -- PROCEDIMIENTOS PARA LOTE
 -- =======================================================
 
@@ -394,19 +415,72 @@ END;
 GO
 
 --OBTENER
-CREATE PROCEDURE sp_lote_obtener
-    @idLote INT
+CREATE OR ALTER PROCEDURE sp_lote_obtener
+    @bloqueId INT,
+    @numeroLote VARCHAR(20)
 AS
 BEGIN
-    SELECT * FROM Lote WHERE idLote = @idLote;
+    SELECT T0.numeroLote AS NumeroLote,
+            T0.areaV2 AS AreaV2,
+            T1.nombreBloque AS Bloque,
+            CASE T0.esEsquina 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Es Esquina?',
+            CASE T0.cercaParque 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Está cerca del parque?',
+            CASE T0.calleCerrada 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Es calle cerrada?',
+            T0.precioBase AS PrecioBase,
+            T0.recargoTotal AS RecargoTotal,
+            T0.precioFinal AS PrecioFinal,
+            T2.nombre AS Estado
+    FROM Lote AS T0
+    INNER JOIN Bloque AS T1 ON T0.idBloque = T1.idBloque
+    INNER JOIN Estado AS T2 ON T0.estadoId = T2.id
+    WHERE T0.numeroLote = @numeroLote OR
+    T0.idBloque = @bloqueId
+    ORDER BY idLote DESC;
 END;
 GO
 
 --LISTAR
-CREATE PROCEDURE sp_lote_listar
+CREATE OR ALTER PROCEDURE sp_lote_listar
 AS
 BEGIN
-    SELECT * FROM Lote ORDER BY idLote DESC;
+    SELECT T0.numeroLote AS NumeroLote,
+            T0.areaV2 AS AreaV2,
+            T1.nombreBloque AS Bloque,
+            CASE T0.esEsquina 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Es Esquina?',
+            CASE T0.cercaParque 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Está cerca del parque?',
+            CASE T0.calleCerrada 
+                WHEN 0 THEN 'NO'
+                WHEN 1 THEN 'SI'
+                ELSE 'NO'
+            END AS '¿Es calle cerrada?',
+            T0.precioBase AS PrecioBase,
+            T0.recargoTotal AS RecargoTotal,
+            T0.precioFinal AS PrecioFinal,
+            T2.nombre AS Estado
+    FROM Lote AS T0
+    INNER JOIN Bloque AS T1 ON T0.idBloque = T1.idBloque
+    INNER JOIN Estado AS T2 ON T0.estadoId = T2.id
+    ORDER BY idLote DESC;
 END;
 GO
 

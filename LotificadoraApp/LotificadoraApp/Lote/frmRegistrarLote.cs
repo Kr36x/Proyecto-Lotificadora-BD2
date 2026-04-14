@@ -1,7 +1,7 @@
-﻿using System;
+﻿using LotificadoraApp.Lote;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Globalization;
-using System.Windows.Forms;
 
 namespace LotificadoraApp
 {
@@ -45,21 +45,16 @@ namespace LotificadoraApp
         {
             try
             {
-                DataTable dtBloques = Db.ExecuteStoredProcedure("sp_bloque_listar");
+                DataTable dtBloques = Db.ExecuteStoredProcedure(LoteQueries.QR003);
 
                 cmbBloque.DataSource = dtBloques;
                 cmbBloque.DisplayMember = "nombreBloque";
                 cmbBloque.ValueMember = "idBloque";
                 cmbBloque.SelectedIndex = -1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(
-                    "Error al cargar bloques:\n" + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MostrarMensajeError("Error al cargar los bloques");
             }
         }
 
@@ -67,27 +62,17 @@ namespace LotificadoraApp
         {
             try
             {
-                const string sql = @"
-            SELECT id, nombre
-            FROM dbo.Estado
-            WHERE id IN (7, 8, 9)
-            ORDER BY id;";
-
-                DataTable dtEstados = Db.ExecuteQuery(sql);
+                DataTable dtEstados = Db.ExecuteStoredProcedure(LoteQueries.QR005,
+                    new SqlParameter("@Ids", "7, 8, 9"));
 
                 cmbEstado.DataSource = dtEstados;
                 cmbEstado.DisplayMember = "nombre";
                 cmbEstado.ValueMember = "id";
                 cmbEstado.SelectedValue = 7;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(
-                    "Error al cargar estados:\n" + ex.Message,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                MostrarMensajeError("Error al cargar los estados");
             }
         }
 
@@ -154,8 +139,7 @@ namespace LotificadoraApp
                 bool calleCerrada = chkCalleCerrada.Checked;
                 int estadoLote = Convert.ToInt32(cmbEstado.SelectedValue);
 
-                DataTable dt = Db.ExecuteStoredProcedure(
-                    "dbo.sp_lote_insertar",
+                DataTable dt = Db.ExecuteStoredProcedure(LoteQueries.QR004,
                     Db.Parameter("@idBloque", idBloque),
                     Db.Parameter("@numeroLote", numeroLote),
                     Db.Parameter("@areaV2", areaV2),
@@ -169,10 +153,17 @@ namespace LotificadoraApp
                 );
 
                 if (dt.Rows.Count == 0)
-                    throw new Exception("No se devolvió resultado al registrar el lote.");
+                {
+                    MostrarMensajeError("No se devolvió resultado al registrar el lote.");
+                    return;
+                }
 
-                if (dt.Columns.Contains("MensajeError") && dt.Rows[0]["MensajeError"] != DBNull.Value)
-                    throw new Exception(dt.Rows[0]["MensajeError"].ToString());
+                if (dt.Columns.Contains("MensajeError") &&
+                    dt.Rows[0]["MensajeError"] != DBNull.Value)
+                {
+                    MostrarMensajeError(dt.Rows[0]["MensajeError"].ToString());
+                    return;
+                }
 
                 int idLoteGenerado = Convert.ToInt32(dt.Rows[0]["idLoteGenerado"]);
 
@@ -185,15 +176,20 @@ namespace LotificadoraApp
 
                 LimpiarFormulario();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(
-                    "Error al registrar lote:\n" + ex.Message,
+                MostrarMensajeError("Error al registrar lote");
+            }
+        }
+
+        private static void MostrarMensajeError(string mensaje)
+        {
+            MessageBox.Show(
+                    mensaje,
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
-            }
         }
 
         private bool ValidarFormulario(out decimal areaV2, out decimal precioBase, out decimal recargoTotal, out decimal precioFinal)
@@ -255,7 +251,7 @@ namespace LotificadoraApp
             return true;
         }
 
-        private bool TryParseDecimal(string valor, out decimal resultado)
+        private static bool TryParseDecimal(string valor, out decimal resultado)
         {
             if (string.IsNullOrWhiteSpace(valor))
             {
@@ -275,11 +271,11 @@ namespace LotificadoraApp
             return false;
         }
 
-        private void MostrarWarning(string mensaje)
+        private static void MostrarWarning(string mensaje)
         {
             MessageBox.Show(
                 mensaje,
-                "Validación",
+                "Atención",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning
             );

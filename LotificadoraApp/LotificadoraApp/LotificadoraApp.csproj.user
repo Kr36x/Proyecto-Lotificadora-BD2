@@ -40,7 +40,10 @@
     <Compile Update="frmRegistrarCliente.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="frmRegistrarLote.cs">
+    <Compile Update="Lote\frmLote.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Lote\frmRegistrarLote.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="frmRegistrarPago.cs">
@@ -49,5 +52,10 @@
     <Compile Update="frmRegistrarVentaCredito.cs">
       <SubType>Form</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
