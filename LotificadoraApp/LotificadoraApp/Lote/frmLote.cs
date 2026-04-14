@@ -10,12 +10,6 @@ namespace LotificadoraApp.Lote
             InitializeComponent();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            frmRegistrarLote frmRegistrarLote = new();
-            frmRegistrarLote.ShowDialog();
-        }
-
         private void frmLote_Load(object sender, EventArgs e)
         {
             ObtenerLotes();
@@ -72,12 +66,6 @@ namespace LotificadoraApp.Lote
             );
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            Limpiar();
-            ObtenerLotes();
-        }
-
         private void Limpiar()
         {
             txtNumeroLote.Clear();
@@ -108,6 +96,18 @@ namespace LotificadoraApp.Lote
             {
                 MostrarMensajeError("Ocurrió un error al consultar los lotes");
             }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Limpiar();
+            ObtenerLotes();
+        }
+
+        private void btnCrear_Click(object sender, EventArgs e)
+        {
+            frmRegistrarLote frmRegistrarLote = new();
+            frmRegistrarLote.ShowDialog();
         }
     }
 }

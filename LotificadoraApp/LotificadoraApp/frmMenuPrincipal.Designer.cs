@@ -44,9 +44,12 @@
             btnLotesDisponibles = new Button();
             label2 = new Label();
             panel3 = new Panel();
+            button4 = new Button();
+            button3 = new Button();
+            button2 = new Button();
+            button1 = new Button();
             btnRegistrarLote = new Button();
             btnGestionClientes = new Button();
-            btnRegistrarCliente = new Button();
             btnRegistrarPago = new Button();
             btnRegistrarVentaCredito = new Button();
             pnlEsqueleto.SuspendLayout();
@@ -237,23 +240,66 @@
             // panel3
             // 
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel3.Controls.Add(button4);
+            panel3.Controls.Add(button3);
+            panel3.Controls.Add(button2);
+            panel3.Controls.Add(button1);
             panel3.Controls.Add(btnRegistrarLote);
             panel3.Controls.Add(btnGestionClientes);
-            panel3.Controls.Add(btnRegistrarCliente);
             panel3.Controls.Add(btnRegistrarPago);
             panel3.Controls.Add(btnRegistrarVentaCredito);
             panel3.Location = new Point(4, 660);
             panel3.Margin = new Padding(4, 5, 4, 5);
             panel3.Name = "panel3";
-            panel3.Size = new Size(276, 312);
+            panel3.Size = new Size(276, 453);
             panel3.TabIndex = 6;
+            // 
+            // button4
+            // 
+            button4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button4.Location = new Point(0, 134);
+            button4.Name = "button4";
+            button4.Size = new Size(276, 52);
+            button4.TabIndex = 7;
+            button4.Text = "Banco";
+            button4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button3.Location = new Point(0, 307);
+            button3.Name = "button3";
+            button3.Size = new Size(276, 46);
+            button3.TabIndex = 6;
+            button3.Text = "Bloque";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button2.Location = new Point(0, 266);
+            button2.Name = "button2";
+            button2.Size = new Size(276, 46);
+            button2.TabIndex = 5;
+            button2.Text = "Proyecto";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button1.Location = new Point(0, 223);
+            button1.Name = "button1";
+            button1.Size = new Size(276, 46);
+            button1.TabIndex = 0;
+            button1.Text = "Etapa";
+            button1.UseVisualStyleBackColor = true;
             // 
             // btnRegistrarLote
             // 
             btnRegistrarLote.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrarLote.Location = new Point(0, 243);
+            btnRegistrarLote.Location = new Point(0, 183);
             btnRegistrarLote.Name = "btnRegistrarLote";
-            btnRegistrarLote.Size = new Size(276, 63);
+            btnRegistrarLote.Size = new Size(276, 46);
             btnRegistrarLote.TabIndex = 4;
             btnRegistrarLote.Text = "Lote";
             btnRegistrarLote.UseVisualStyleBackColor = true;
@@ -262,34 +308,24 @@
             // 
             btnGestionClientes.BackColor = Color.Transparent;
             btnGestionClientes.Dock = DockStyle.Top;
-            btnGestionClientes.Location = new Point(0, 186);
+            btnGestionClientes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnGestionClientes.Location = new Point(0, 92);
             btnGestionClientes.Margin = new Padding(4, 5, 4, 5);
             btnGestionClientes.Name = "btnGestionClientes";
-            btnGestionClientes.Size = new Size(276, 62);
+            btnGestionClientes.Size = new Size(276, 46);
             btnGestionClientes.TabIndex = 3;
-            btnGestionClientes.Text = "Gestionar Clientes";
+            btnGestionClientes.Text = "Cliente";
             btnGestionClientes.UseVisualStyleBackColor = false;
-            // 
-            // btnRegistrarCliente
-            // 
-            btnRegistrarCliente.BackColor = Color.Transparent;
-            btnRegistrarCliente.Dock = DockStyle.Top;
-            btnRegistrarCliente.Location = new Point(0, 124);
-            btnRegistrarCliente.Margin = new Padding(4, 5, 4, 5);
-            btnRegistrarCliente.Name = "btnRegistrarCliente";
-            btnRegistrarCliente.Size = new Size(276, 62);
-            btnRegistrarCliente.TabIndex = 2;
-            btnRegistrarCliente.Text = "Registrar Cliente";
-            btnRegistrarCliente.UseVisualStyleBackColor = false;
             // 
             // btnRegistrarPago
             // 
             btnRegistrarPago.BackColor = Color.Transparent;
             btnRegistrarPago.Dock = DockStyle.Top;
-            btnRegistrarPago.Location = new Point(0, 62);
+            btnRegistrarPago.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRegistrarPago.Location = new Point(0, 46);
             btnRegistrarPago.Margin = new Padding(4, 5, 4, 5);
             btnRegistrarPago.Name = "btnRegistrarPago";
-            btnRegistrarPago.Size = new Size(276, 62);
+            btnRegistrarPago.Size = new Size(276, 46);
             btnRegistrarPago.TabIndex = 1;
             btnRegistrarPago.Text = "Registrar Pago";
             btnRegistrarPago.UseVisualStyleBackColor = false;
@@ -298,10 +334,11 @@
             // 
             btnRegistrarVentaCredito.BackColor = Color.Transparent;
             btnRegistrarVentaCredito.Dock = DockStyle.Top;
+            btnRegistrarVentaCredito.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnRegistrarVentaCredito.Location = new Point(0, 0);
             btnRegistrarVentaCredito.Margin = new Padding(4, 5, 4, 5);
             btnRegistrarVentaCredito.Name = "btnRegistrarVentaCredito";
-            btnRegistrarVentaCredito.Size = new Size(276, 62);
+            btnRegistrarVentaCredito.Size = new Size(276, 46);
             btnRegistrarVentaCredito.TabIndex = 0;
             btnRegistrarVentaCredito.Text = "Registrar Venta Crédito";
             btnRegistrarVentaCredito.UseVisualStyleBackColor = false;
@@ -342,10 +379,13 @@
         private Button btnRegistrarPago;
         private Button btnRegistrarVentaCredito;
         private Panel pnlContenedor;
-        private Button btnRegistrarCliente;
         private Button btnConsultaLotesAptosCliente;
         private Button btnGestionClientes;
         private Button btnRegistrarLote;
         private Button btnConsultarPagos;
+        private Button button1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
     }
 }

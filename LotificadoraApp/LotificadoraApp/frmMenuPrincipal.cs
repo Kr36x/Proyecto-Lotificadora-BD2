@@ -115,12 +115,6 @@ namespace LotificadoraApp
                 AbrirEnContenedor(new frmRegistrarPago());
             };
 
-            btnRegistrarCliente.Click += (_, _) =>
-            {
-                MarcarBotonActivo(btnRegistrarCliente);
-                AbrirEnContenedor(new frmRegistrarCliente());
-            };
-
             btnConsultaLotesAptosCliente.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnConsultaLotesAptosCliente);

@@ -25,7 +25,7 @@
     <Compile Update="frmConsultaVistaLotes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="frmGestionClientes.cs">
+    <Compile Update="Cliente\frmGestionClientes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="frmMenuPrincipal.cs">
@@ -37,7 +37,7 @@
     <Compile Update="frmRegistrarBeneficiario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="frmRegistrarCliente.cs">
+    <Compile Update="Cliente\frmRegistrarCliente.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Lote\frmLote.cs">
