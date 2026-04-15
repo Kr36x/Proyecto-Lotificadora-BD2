@@ -1,8 +1,5 @@
 ﻿using LotificadoraApp.Lote;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+using LotificadoraApp.Proyecto;
 
 namespace LotificadoraApp
 {
@@ -137,6 +134,12 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnConsultarPagos);
                 AbrirEnContenedor(new frmConsultaPagos());
+            };
+
+            btnProyecto.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnProyecto);
+                AbrirEnContenedor(new frmProyecto());
             };
         }
 

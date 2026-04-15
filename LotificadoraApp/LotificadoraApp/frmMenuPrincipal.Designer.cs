@@ -46,7 +46,7 @@
             panel3 = new Panel();
             button4 = new Button();
             button3 = new Button();
-            button2 = new Button();
+            btnProyecto = new Button();
             button1 = new Button();
             btnRegistrarLote = new Button();
             btnGestionClientes = new Button();
@@ -242,7 +242,7 @@
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel3.Controls.Add(button4);
             panel3.Controls.Add(button3);
-            panel3.Controls.Add(button2);
+            panel3.Controls.Add(btnProyecto);
             panel3.Controls.Add(button1);
             panel3.Controls.Add(btnRegistrarLote);
             panel3.Controls.Add(btnGestionClientes);
@@ -274,15 +274,15 @@
             button3.Text = "Bloque";
             button3.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // btnProyecto
             // 
-            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button2.Location = new Point(0, 266);
-            button2.Name = "button2";
-            button2.Size = new Size(276, 46);
-            button2.TabIndex = 5;
-            button2.Text = "Proyecto";
-            button2.UseVisualStyleBackColor = true;
+            btnProyecto.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnProyecto.Location = new Point(0, 266);
+            btnProyecto.Name = "btnProyecto";
+            btnProyecto.Size = new Size(276, 46);
+            btnProyecto.TabIndex = 5;
+            btnProyecto.Text = "Proyecto";
+            btnProyecto.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
@@ -384,7 +384,7 @@
         private Button btnRegistrarLote;
         private Button btnConsultarPagos;
         private Button button1;
-        private Button button2;
+        private Button btnProyecto;
         private Button button3;
         private Button button4;
     }

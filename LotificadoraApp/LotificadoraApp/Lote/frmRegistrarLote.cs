@@ -45,9 +45,9 @@ namespace LotificadoraApp
         {
             try
             {
-                DataTable dtBloques = Db.ExecuteStoredProcedure(LoteQueries.QR003);
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR003);
 
-                cmbBloque.DataSource = dtBloques;
+                cmbBloque.DataSource = dataTable;
                 cmbBloque.DisplayMember = "nombreBloque";
                 cmbBloque.ValueMember = "idBloque";
                 cmbBloque.SelectedIndex = -1;
@@ -62,10 +62,10 @@ namespace LotificadoraApp
         {
             try
             {
-                DataTable dtEstados = Db.ExecuteStoredProcedure(LoteQueries.QR005,
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR005,
                     new SqlParameter("@Ids", "7, 8, 9"));
 
-                cmbEstado.DataSource = dtEstados;
+                cmbEstado.DataSource = dataTable;
                 cmbEstado.DisplayMember = "nombre";
                 cmbEstado.ValueMember = "id";
                 cmbEstado.SelectedValue = 7;
@@ -139,7 +139,7 @@ namespace LotificadoraApp
                 bool calleCerrada = chkCalleCerrada.Checked;
                 int estadoLote = Convert.ToInt32(cmbEstado.SelectedValue);
 
-                DataTable dt = Db.ExecuteStoredProcedure(LoteQueries.QR004,
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR004,
                     Db.Parameter("@idBloque", idBloque),
                     Db.Parameter("@numeroLote", numeroLote),
                     Db.Parameter("@areaV2", areaV2),
@@ -152,20 +152,20 @@ namespace LotificadoraApp
                     Db.Parameter("@estadoLote", estadoLote)
                 );
 
-                if (dt.Rows.Count == 0)
+                if (dataTable.Rows.Count == 0)
                 {
                     MostrarMensajeError("No se devolvió resultado al registrar el lote.");
                     return;
                 }
 
-                if (dt.Columns.Contains("MensajeError") &&
-                    dt.Rows[0]["MensajeError"] != DBNull.Value)
+                if (dataTable.Columns.Contains("MensajeError") &&
+                    dataTable.Rows[0]["MensajeError"] != DBNull.Value)
                 {
-                    MostrarMensajeError(dt.Rows[0]["MensajeError"].ToString());
+                    MostrarMensajeError(dataTable.Rows[0]["MensajeError"].ToString());
                     return;
                 }
 
-                int idLoteGenerado = Convert.ToInt32(dt.Rows[0]["idLoteGenerado"]);
+                int idLoteGenerado = Convert.ToInt32(dataTable.Rows[0]["idLoteGenerado"]);
 
                 MessageBox.Show(
                     $"Lote registrado correctamente. ID generado: {idLoteGenerado}",

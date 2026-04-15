@@ -20,8 +20,8 @@ namespace LotificadoraApp.Lote
         {
             try
             {
-                DataTable dt = Db.ExecuteStoredProcedure(LoteQueries.QR001);
-                dgvLote.DataSource = dt;
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR001);
+                dgvLote.DataSource = dataTable;
             }
             catch (Exception)
             {
@@ -33,9 +33,9 @@ namespace LotificadoraApp.Lote
         {
             try
             {
-                DataTable dtBloques = Db.ExecuteStoredProcedure(LoteQueries.QR003);
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR003);
 
-                cmbBloque.DataSource = dtBloques;
+                cmbBloque.DataSource = dataTable;
                 cmbBloque.DisplayMember = "nombreBloque";
                 cmbBloque.ValueMember = "idBloque";
                 cmbBloque.SelectedIndex = -1;
@@ -86,11 +86,11 @@ namespace LotificadoraApp.Lote
                     return;
                 }
 
-                DataTable dt = Db.ExecuteStoredProcedure(LoteQueries.QR002,
+                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR002,
                     new SqlParameter("@bloqueId", bloqueId),
                     new SqlParameter("@numeroLote", numeroLote));
 
-                dgvLote.DataSource = dt;
+                dgvLote.DataSource = dataTable;
             }
             catch (Exception)
             {

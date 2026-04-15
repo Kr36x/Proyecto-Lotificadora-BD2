@@ -76,8 +76,8 @@ END;
 GO
 
 --OBTENER
-CREATE PROCEDURE sp_proyecto_obtener
-    @idProyecto INT
+CREATE OR ALTER PROCEDURE sp_proyecto_obtener
+    @estadoId INT
 AS
 BEGIN
     SELECT 
@@ -88,14 +88,16 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        estadoId
-    FROM Proyecto
-    WHERE idProyecto = @idProyecto;
+        T1.nombre AS estado
+    FROM Proyecto AS T0
+    INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+    WHERE T0.estadoId = @estadoId
+    ORDER BY idProyecto DESC;
 END;
 GO
 
 --LISTAR
-CREATE PROCEDURE sp_proyecto_listar
+CREATE OR ALTER PROCEDURE sp_proyecto_listar
 AS
 BEGIN
     SELECT 
@@ -106,9 +108,10 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        estadoId
-    FROM Proyecto
-    ORDER BY idProyecto DESC; -- Los ordenamos del más reciente al más antiguo
+        T1.nombre AS estado
+    FROM Proyecto AS T0
+    INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+    ORDER BY idProyecto DESC;
 END;
 GO
 
