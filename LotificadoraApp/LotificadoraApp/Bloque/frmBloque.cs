@@ -147,7 +147,7 @@ namespace LotificadoraApp.Bloque
         {
             if (dgvMain.Columns.Contains("idBloque"))
             {
-                dgvMain.Columns["idBloque"].HeaderText = "ID Bloque";
+                //dgvMain.Columns["idBloque"].HeaderText = "ID Bloque";
                 dgvMain.Columns["idBloque"].FillWeight = 10;
                 dgvMain.Columns["idBloque"].MinimumWidth = 20;
                 dgvMain.Columns["idBloque"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -155,7 +155,7 @@ namespace LotificadoraApp.Bloque
 
             if (dgvMain.Columns.Contains("idEtapa"))
             {
-                dgvMain.Columns["idEtapa"].HeaderText = "ID Etapa";
+               // dgvMain.Columns["idEtapa"].HeaderText = "ID Etapa";
                 dgvMain.Columns["idEtapa"].FillWeight = 10;
                 dgvMain.Columns["idEtapa"].MinimumWidth = 20;
                 dgvMain.Columns["idEtapa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -163,21 +163,21 @@ namespace LotificadoraApp.Bloque
 
             if (dgvMain.Columns.Contains("nombreBloque"))
             {
-                dgvMain.Columns["nombreBloque"].HeaderText = "Nombre del bloque";
+               // dgvMain.Columns["nombreBloque"].HeaderText = "Nombre del bloque";
                 dgvMain.Columns["nombreBloque"].FillWeight = 20;
                 dgvMain.Columns["nombreBloque"].MinimumWidth = 140;
             }
 
             if (dgvMain.Columns.Contains("descripcion"))
             {
-                dgvMain.Columns["descripcion"].HeaderText = "Descripción";
+               // dgvMain.Columns["descripcion"].HeaderText = "Descripción";
                 dgvMain.Columns["descripcion"].FillWeight = 35;
                 dgvMain.Columns["descripcion"].MinimumWidth = 180;
             }
 
             if (dgvMain.Columns.Contains("precioVaraCuadrada"))
             {
-                dgvMain.Columns["precioVaraCuadrada"].HeaderText = "Precio V²";
+               // dgvMain.Columns["precioVaraCuadrada"].HeaderText = "Precio V²";
                 dgvMain.Columns["precioVaraCuadrada"].FillWeight = 15;
                 dgvMain.Columns["precioVaraCuadrada"].MinimumWidth = 50;
                 dgvMain.Columns["precioVaraCuadrada"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;

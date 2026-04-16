@@ -28,210 +28,458 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label8 = new Label();
-            label1 = new Label();
-            txtNombreProyecto = new TextBox();
-            txtDescripcion = new TextBox();
-            label2 = new Label();
-            pkrFechaInicio = new DateTimePicker();
-            label3 = new Label();
-            label4 = new Label();
-            label5 = new Label();
-            txtAreaTotal = new TextBox();
-            pkrFechaFin = new DateTimePicker();
-            label6 = new Label();
-            txtAnioFinanciamiento = new TextBox();
-            label7 = new Label();
-            cmbEstado = new ComboBox();
-            btnRegistrar = new Button();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            dtpFechaFinEstimada = new Guna.UI2.WinForms.Guna2DateTimePicker();
+            guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            guna2HtmlLabel7 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            txtAnioFinanciamiento = new Guna.UI2.WinForms.Guna2TextBox();
+            guna2HtmlLabel6 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            txtDescripcion = new Guna.UI2.WinForms.Guna2TextBox();
+            guna2HtmlLabel5 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            lblBloque = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            dtpFechaInicio = new Guna.UI2.WinForms.Guna2DateTimePicker();
+            pnlPrincipal = new Panel();
+            cmbEstado = new Guna.UI2.WinForms.Guna2ComboBox();
+            guna2HtmlLabel4 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            txtAreaTotal = new Guna.UI2.WinForms.Guna2TextBox();
+            guna2HtmlLabel3 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            btnCancelar = new Guna.UI2.WinForms.Guna2Button();
+            btnCrearEditar = new Guna.UI2.WinForms.Guna2Button();
+            txtNombreProyecto = new Guna.UI2.WinForms.Guna2TextBox();
+            guna2HtmlLabel2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
+            panel1 = new Panel();
+            guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
+            pnlFondo = new Guna.UI2.WinForms.Guna2Panel();
+            guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
+            pnlPrincipal.SuspendLayout();
+            guna2Panel1.SuspendLayout();
+            pnlFondo.SuspendLayout();
             SuspendLayout();
             // 
-            // label8
+            // dtpFechaFinEstimada
             // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            label8.Location = new Point(266, 9);
-            label8.Name = "label8";
-            label8.Size = new Size(373, 54);
-            label8.TabIndex = 19;
-            label8.Text = "Registrar Proyecto";
+            dtpFechaFinEstimada.BorderColor = Color.FromArgb(213, 218, 223);
+            dtpFechaFinEstimada.BorderRadius = 5;
+            dtpFechaFinEstimada.BorderThickness = 2;
+            dtpFechaFinEstimada.Checked = true;
+            dtpFechaFinEstimada.CustomizableEdges = customizableEdges1;
+            dtpFechaFinEstimada.FillColor = Color.White;
+            dtpFechaFinEstimada.Font = new Font("Segoe UI", 9F);
+            dtpFechaFinEstimada.Format = DateTimePickerFormat.Short;
+            dtpFechaFinEstimada.Location = new Point(604, 262);
+            dtpFechaFinEstimada.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            dtpFechaFinEstimada.MinDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);
+            dtpFechaFinEstimada.Name = "dtpFechaFinEstimada";
+            dtpFechaFinEstimada.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            dtpFechaFinEstimada.Size = new Size(200, 36);
+            dtpFechaFinEstimada.TabIndex = 19;
+            dtpFechaFinEstimada.Value = new DateTime(2026, 4, 16, 1, 45, 13, 838);
             // 
-            // label1
+            // guna2HtmlLabel1
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(34, 131);
-            label1.Name = "label1";
-            label1.Size = new Size(162, 25);
-            label1.TabIndex = 20;
-            label1.Text = "Nombre Proyecto";
+            guna2HtmlLabel1.BackColor = Color.Transparent;
+            guna2HtmlLabel1.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel1.Location = new Point(444, 262);
+            guna2HtmlLabel1.Name = "guna2HtmlLabel1";
+            guna2HtmlLabel1.Size = new Size(138, 23);
+            guna2HtmlLabel1.TabIndex = 18;
+            guna2HtmlLabel1.Text = "Fecha fin estimada";
+            guna2HtmlLabel1.TextAlignment = ContentAlignment.MiddleRight;
             // 
-            // txtNombreProyecto
+            // guna2HtmlLabel7
             // 
-            txtNombreProyecto.Location = new Point(34, 159);
-            txtNombreProyecto.Name = "txtNombreProyecto";
-            txtNombreProyecto.Size = new Size(223, 31);
-            txtNombreProyecto.TabIndex = 21;
-            // 
-            // txtDescripcion
-            // 
-            txtDescripcion.Location = new Point(341, 159);
-            txtDescripcion.Name = "txtDescripcion";
-            txtDescripcion.Size = new Size(223, 31);
-            txtDescripcion.TabIndex = 22;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(341, 131);
-            label2.Name = "label2";
-            label2.Size = new Size(111, 25);
-            label2.TabIndex = 23;
-            label2.Text = "Descripcion";
-            // 
-            // pkrFechaInicio
-            // 
-            pkrFechaInicio.Location = new Point(34, 288);
-            pkrFechaInicio.Name = "pkrFechaInicio";
-            pkrFechaInicio.Size = new Size(300, 31);
-            pkrFechaInicio.TabIndex = 24;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(34, 260);
-            label3.Name = "label3";
-            label3.Size = new Size(113, 25);
-            label3.TabIndex = 25;
-            label3.Text = "Fecha Inicio";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label4.Location = new Point(570, 260);
-            label4.Name = "label4";
-            label4.Size = new Size(173, 25);
-            label4.TabIndex = 26;
-            label4.Text = "Fecha Fin Estimada";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label5.Location = new Point(647, 131);
-            label5.Name = "label5";
-            label5.Size = new Size(126, 25);
-            label5.TabIndex = 27;
-            label5.Text = "Área Total V2";
-            // 
-            // txtAreaTotal
-            // 
-            txtAreaTotal.Location = new Point(647, 159);
-            txtAreaTotal.Name = "txtAreaTotal";
-            txtAreaTotal.Size = new Size(223, 31);
-            txtAreaTotal.TabIndex = 28;
-            // 
-            // pkrFechaFin
-            // 
-            pkrFechaFin.Location = new Point(570, 288);
-            pkrFechaFin.Name = "pkrFechaFin";
-            pkrFechaFin.Size = new Size(300, 31);
-            pkrFechaFin.TabIndex = 29;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label6.Location = new Point(34, 396);
-            label6.Name = "label6";
-            label6.Size = new Size(264, 25);
-            label6.TabIndex = 30;
-            label6.Text = "Máximo Años Financiamiento";
+            guna2HtmlLabel7.BackColor = Color.Transparent;
+            guna2HtmlLabel7.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel7.Location = new Point(444, 209);
+            guna2HtmlLabel7.Name = "guna2HtmlLabel7";
+            guna2HtmlLabel7.Size = new Size(88, 23);
+            guna2HtmlLabel7.TabIndex = 16;
+            guna2HtmlLabel7.Text = "Fecha inicio";
+            guna2HtmlLabel7.TextAlignment = ContentAlignment.MiddleRight;
             // 
             // txtAnioFinanciamiento
             // 
-            txtAnioFinanciamiento.Location = new Point(34, 439);
+            txtAnioFinanciamiento.BorderRadius = 5;
+            txtAnioFinanciamiento.BorderThickness = 2;
+            txtAnioFinanciamiento.CustomizableEdges = customizableEdges3;
+            txtAnioFinanciamiento.DefaultText = "";
+            txtAnioFinanciamiento.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtAnioFinanciamiento.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtAnioFinanciamiento.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtAnioFinanciamiento.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtAnioFinanciamiento.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtAnioFinanciamiento.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtAnioFinanciamiento.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtAnioFinanciamiento.Location = new Point(43, 230);
+            txtAnioFinanciamiento.Margin = new Padding(4);
             txtAnioFinanciamiento.Name = "txtAnioFinanciamiento";
-            txtAnioFinanciamiento.Size = new Size(300, 31);
-            txtAnioFinanciamiento.TabIndex = 31;
+            txtAnioFinanciamiento.PlaceholderText = "";
+            txtAnioFinanciamiento.SelectedText = "";
+            txtAnioFinanciamiento.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            txtAnioFinanciamiento.Size = new Size(214, 37);
+            txtAnioFinanciamiento.TabIndex = 15;
             // 
-            // label7
+            // guna2HtmlLabel6
             // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label7.Location = new Point(570, 396);
-            label7.Name = "label7";
-            label7.Size = new Size(69, 25);
-            label7.TabIndex = 32;
-            label7.Text = "Estado";
+            guna2HtmlLabel6.BackColor = Color.Transparent;
+            guna2HtmlLabel6.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel6.Location = new Point(43, 200);
+            guna2HtmlLabel6.Name = "guna2HtmlLabel6";
+            guna2HtmlLabel6.Size = new Size(217, 23);
+            guna2HtmlLabel6.TabIndex = 14;
+            guna2HtmlLabel6.Text = "Máximo Años Financiamiento";
+            // 
+            // txtDescripcion
+            // 
+            txtDescripcion.BorderRadius = 5;
+            txtDescripcion.BorderThickness = 2;
+            txtDescripcion.CustomizableEdges = customizableEdges5;
+            txtDescripcion.DefaultText = "";
+            txtDescripcion.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtDescripcion.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtDescripcion.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtDescripcion.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtDescripcion.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtDescripcion.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtDescripcion.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtDescripcion.Location = new Point(444, 63);
+            txtDescripcion.Margin = new Padding(4);
+            txtDescripcion.Multiline = true;
+            txtDescripcion.Name = "txtDescripcion";
+            txtDescripcion.PlaceholderText = "";
+            txtDescripcion.SelectedText = "";
+            txtDescripcion.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            txtDescripcion.Size = new Size(359, 124);
+            txtDescripcion.TabIndex = 13;
+            // 
+            // guna2HtmlLabel5
+            // 
+            guna2HtmlLabel5.BackColor = Color.Transparent;
+            guna2HtmlLabel5.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel5.Location = new Point(444, 33);
+            guna2HtmlLabel5.Name = "guna2HtmlLabel5";
+            guna2HtmlLabel5.Size = new Size(89, 23);
+            guna2HtmlLabel5.TabIndex = 12;
+            guna2HtmlLabel5.Text = "Descripción";
+            // 
+            // lblBloque
+            // 
+            lblBloque.AutoSize = false;
+            lblBloque.BackColor = Color.Transparent;
+            lblBloque.Dock = DockStyle.Fill;
+            lblBloque.Font = new Font("Century Gothic", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblBloque.ForeColor = Color.White;
+            lblBloque.Location = new Point(0, 0);
+            lblBloque.Name = "lblBloque";
+            lblBloque.Size = new Size(880, 45);
+            lblBloque.TabIndex = 1;
+            lblBloque.Text = "CREAR/EDITAR PROYECTO";
+            lblBloque.TextAlignment = ContentAlignment.MiddleCenter;
+            // 
+            // dtpFechaInicio
+            // 
+            dtpFechaInicio.BorderColor = Color.FromArgb(213, 218, 223);
+            dtpFechaInicio.BorderRadius = 5;
+            dtpFechaInicio.BorderThickness = 2;
+            dtpFechaInicio.Checked = true;
+            dtpFechaInicio.CustomizableEdges = customizableEdges7;
+            dtpFechaInicio.FillColor = Color.White;
+            dtpFechaInicio.Font = new Font("Segoe UI", 9F);
+            dtpFechaInicio.Format = DateTimePickerFormat.Short;
+            dtpFechaInicio.Location = new Point(604, 209);
+            dtpFechaInicio.MaxDate = new DateTime(2100, 12, 31, 0, 0, 0, 0);
+            dtpFechaInicio.MinDate = new DateTime(2020, 1, 1, 0, 0, 0, 0);
+            dtpFechaInicio.Name = "dtpFechaInicio";
+            dtpFechaInicio.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            dtpFechaInicio.Size = new Size(200, 36);
+            dtpFechaInicio.TabIndex = 17;
+            dtpFechaInicio.Value = new DateTime(2026, 4, 16, 1, 45, 13, 838);
+            // 
+            // pnlPrincipal
+            // 
+            pnlPrincipal.BackColor = Color.White;
+            pnlPrincipal.Controls.Add(dtpFechaFinEstimada);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel1);
+            pnlPrincipal.Controls.Add(dtpFechaInicio);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel7);
+            pnlPrincipal.Controls.Add(txtAnioFinanciamiento);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel6);
+            pnlPrincipal.Controls.Add(txtDescripcion);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel5);
+            pnlPrincipal.Controls.Add(cmbEstado);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel4);
+            pnlPrincipal.Controls.Add(txtAreaTotal);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel3);
+            pnlPrincipal.Controls.Add(btnCancelar);
+            pnlPrincipal.Controls.Add(btnCrearEditar);
+            pnlPrincipal.Controls.Add(txtNombreProyecto);
+            pnlPrincipal.Controls.Add(guna2HtmlLabel2);
+            pnlPrincipal.Dock = DockStyle.Fill;
+            pnlPrincipal.Location = new Point(7, 45);
+            pnlPrincipal.Name = "pnlPrincipal";
+            pnlPrincipal.Size = new Size(866, 408);
+            pnlPrincipal.TabIndex = 4;
             // 
             // cmbEstado
             // 
-            cmbEstado.FormattingEnabled = true;
-            cmbEstado.Location = new Point(570, 437);
+            cmbEstado.BackColor = Color.Transparent;
+            cmbEstado.BorderColor = Color.FromArgb(213, 218, 223);
+            cmbEstado.BorderRadius = 5;
+            cmbEstado.BorderThickness = 2;
+            cmbEstado.CustomizableEdges = customizableEdges9;
+            cmbEstado.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbEstado.FocusedColor = Color.FromArgb(94, 148, 255);
+            cmbEstado.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            cmbEstado.Font = new Font("Segoe UI", 12F);
+            cmbEstado.ForeColor = Color.FromArgb(68, 88, 112);
+            cmbEstado.ItemHeight = 30;
+            cmbEstado.Location = new Point(43, 315);
             cmbEstado.Name = "cmbEstado";
-            cmbEstado.Size = new Size(300, 33);
-            cmbEstado.TabIndex = 33;
+            cmbEstado.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            cmbEstado.Size = new Size(214, 36);
+            cmbEstado.TabIndex = 11;
             // 
-            // btnRegistrar
+            // guna2HtmlLabel4
             // 
-            btnRegistrar.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrar.Location = new Point(390, 532);
-            btnRegistrar.Name = "btnRegistrar";
-            btnRegistrar.Size = new Size(112, 34);
-            btnRegistrar.TabIndex = 34;
-            btnRegistrar.Text = "Registrar";
-            btnRegistrar.UseVisualStyleBackColor = true;
-            btnRegistrar.Click += btnRegistrar_Click;
+            guna2HtmlLabel4.BackColor = Color.Transparent;
+            guna2HtmlLabel4.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel4.Location = new Point(43, 286);
+            guna2HtmlLabel4.Name = "guna2HtmlLabel4";
+            guna2HtmlLabel4.Size = new Size(52, 23);
+            guna2HtmlLabel4.TabIndex = 10;
+            guna2HtmlLabel4.Text = "Estado";
+            // 
+            // txtAreaTotal
+            // 
+            txtAreaTotal.BorderRadius = 5;
+            txtAreaTotal.BorderThickness = 2;
+            txtAreaTotal.CustomizableEdges = customizableEdges11;
+            txtAreaTotal.DefaultText = "";
+            txtAreaTotal.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtAreaTotal.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtAreaTotal.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtAreaTotal.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtAreaTotal.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtAreaTotal.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtAreaTotal.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtAreaTotal.Location = new Point(43, 145);
+            txtAreaTotal.Margin = new Padding(4);
+            txtAreaTotal.Name = "txtAreaTotal";
+            txtAreaTotal.PlaceholderText = "";
+            txtAreaTotal.SelectedText = "";
+            txtAreaTotal.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            txtAreaTotal.Size = new Size(214, 37);
+            txtAreaTotal.TabIndex = 9;
+            // 
+            // guna2HtmlLabel3
+            // 
+            guna2HtmlLabel3.BackColor = Color.Transparent;
+            guna2HtmlLabel3.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel3.Location = new Point(43, 115);
+            guna2HtmlLabel3.Name = "guna2HtmlLabel3";
+            guna2HtmlLabel3.Size = new Size(101, 23);
+            guna2HtmlLabel3.TabIndex = 8;
+            guna2HtmlLabel3.Text = "Área Total V2";
+            // 
+            // btnCancelar
+            // 
+            btnCancelar.BorderColor = Color.Transparent;
+            btnCancelar.BorderRadius = 5;
+            btnCancelar.CustomizableEdges = customizableEdges13;
+            btnCancelar.DisabledState.BorderColor = Color.DarkGray;
+            btnCancelar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCancelar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCancelar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCancelar.FillColor = Color.FromArgb(64, 64, 0);
+            btnCancelar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnCancelar.ForeColor = Color.White;
+            btnCancelar.Location = new Point(738, 362);
+            btnCancelar.Name = "btnCancelar";
+            btnCancelar.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            btnCancelar.Size = new Size(108, 30);
+            btnCancelar.TabIndex = 7;
+            btnCancelar.Text = "CANCELAR";
+            // 
+            // btnCrearEditar
+            // 
+            btnCrearEditar.BorderColor = Color.Transparent;
+            btnCrearEditar.BorderRadius = 5;
+            btnCrearEditar.CustomizableEdges = customizableEdges15;
+            btnCrearEditar.DisabledState.BorderColor = Color.DarkGray;
+            btnCrearEditar.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCrearEditar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCrearEditar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCrearEditar.FillColor = Color.FromArgb(64, 64, 0);
+            btnCrearEditar.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnCrearEditar.ForeColor = Color.White;
+            btnCrearEditar.Location = new Point(604, 362);
+            btnCrearEditar.Name = "btnCrearEditar";
+            btnCrearEditar.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            btnCrearEditar.Size = new Size(108, 30);
+            btnCrearEditar.TabIndex = 6;
+            btnCrearEditar.Text = "C/E";
+            // 
+            // txtNombreProyecto
+            // 
+            txtNombreProyecto.BorderRadius = 5;
+            txtNombreProyecto.BorderThickness = 2;
+            txtNombreProyecto.CustomizableEdges = customizableEdges17;
+            txtNombreProyecto.DefaultText = "";
+            txtNombreProyecto.DisabledState.BorderColor = Color.FromArgb(208, 208, 208);
+            txtNombreProyecto.DisabledState.FillColor = Color.FromArgb(226, 226, 226);
+            txtNombreProyecto.DisabledState.ForeColor = Color.FromArgb(138, 138, 138);
+            txtNombreProyecto.DisabledState.PlaceholderForeColor = Color.FromArgb(138, 138, 138);
+            txtNombreProyecto.FocusedState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtNombreProyecto.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtNombreProyecto.HoverState.BorderColor = Color.FromArgb(94, 148, 255);
+            txtNombreProyecto.Location = new Point(43, 63);
+            txtNombreProyecto.Margin = new Padding(4);
+            txtNombreProyecto.Name = "txtNombreProyecto";
+            txtNombreProyecto.PlaceholderText = "";
+            txtNombreProyecto.SelectedText = "";
+            txtNombreProyecto.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            txtNombreProyecto.Size = new Size(362, 37);
+            txtNombreProyecto.TabIndex = 3;
+            // 
+            // guna2HtmlLabel2
+            // 
+            guna2HtmlLabel2.BackColor = Color.Transparent;
+            guna2HtmlLabel2.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            guna2HtmlLabel2.Location = new Point(43, 33);
+            guna2HtmlLabel2.Name = "guna2HtmlLabel2";
+            guna2HtmlLabel2.Size = new Size(162, 23);
+            guna2HtmlLabel2.TabIndex = 2;
+            guna2HtmlLabel2.Text = "Nombre del proyecto";
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.Transparent;
+            panel1.Dock = DockStyle.Right;
+            panel1.Location = new Point(873, 45);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(7, 408);
+            panel1.TabIndex = 3;
+            // 
+            // guna2Panel2
+            // 
+            guna2Panel2.BackColor = Color.Transparent;
+            guna2Panel2.CustomizableEdges = customizableEdges19;
+            guna2Panel2.Dock = DockStyle.Bottom;
+            guna2Panel2.Location = new Point(0, 453);
+            guna2Panel2.Name = "guna2Panel2";
+            guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            guna2Panel2.Size = new Size(880, 7);
+            guna2Panel2.TabIndex = 1;
+            // 
+            // guna2Panel1
+            // 
+            guna2Panel1.BackColor = Color.Olive;
+            guna2Panel1.Controls.Add(lblBloque);
+            guna2Panel1.CustomizableEdges = customizableEdges21;
+            guna2Panel1.Dock = DockStyle.Top;
+            guna2Panel1.Location = new Point(0, 0);
+            guna2Panel1.Name = "guna2Panel1";
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            guna2Panel1.Size = new Size(880, 45);
+            guna2Panel1.TabIndex = 0;
+            // 
+            // pnlFondo
+            // 
+            pnlFondo.BorderColor = Color.Olive;
+            pnlFondo.BorderThickness = 7;
+            pnlFondo.Controls.Add(pnlPrincipal);
+            pnlFondo.Controls.Add(panel1);
+            pnlFondo.Controls.Add(guna2Panel3);
+            pnlFondo.Controls.Add(guna2Panel2);
+            pnlFondo.Controls.Add(guna2Panel1);
+            pnlFondo.CustomizableEdges = customizableEdges25;
+            pnlFondo.Dock = DockStyle.Fill;
+            pnlFondo.Location = new Point(0, 0);
+            pnlFondo.Name = "pnlFondo";
+            pnlFondo.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            pnlFondo.Size = new Size(880, 460);
+            pnlFondo.TabIndex = 4;
+            // 
+            // guna2Panel3
+            // 
+            guna2Panel3.BackColor = Color.Transparent;
+            guna2Panel3.CustomizableEdges = customizableEdges23;
+            guna2Panel3.Dock = DockStyle.Left;
+            guna2Panel3.Location = new Point(0, 45);
+            guna2Panel3.Name = "guna2Panel3";
+            guna2Panel3.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            guna2Panel3.Size = new Size(7, 408);
+            guna2Panel3.TabIndex = 2;
             // 
             // frmRegistrarProyecto
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(914, 590);
-            Controls.Add(btnRegistrar);
-            Controls.Add(cmbEstado);
-            Controls.Add(label7);
-            Controls.Add(txtAnioFinanciamiento);
-            Controls.Add(label6);
-            Controls.Add(pkrFechaFin);
-            Controls.Add(txtAreaTotal);
-            Controls.Add(label5);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(pkrFechaInicio);
-            Controls.Add(label2);
-            Controls.Add(txtDescripcion);
-            Controls.Add(txtNombreProyecto);
-            Controls.Add(label1);
-            Controls.Add(label8);
+            ClientSize = new Size(880, 460);
+            Controls.Add(pnlFondo);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            Margin = new Padding(2);
             Name = "frmRegistrarProyecto";
             StartPosition = FormStartPosition.CenterScreen;
             Load += frmRegistrarProyecto_Load;
+            pnlPrincipal.ResumeLayout(false);
+            pnlPrincipal.PerformLayout();
+            guna2Panel1.ResumeLayout(false);
+            pnlFondo.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Label label8;
-        private Label label1;
-        private TextBox txtNombreProyecto;
-        private TextBox txtDescripcion;
-        private Label label2;
-        private DateTimePicker pkrFechaInicio;
-        private Label label3;
-        private Label label4;
-        private Label label5;
-        private TextBox txtAreaTotal;
-        private DateTimePicker pkrFechaFin;
-        private Label label6;
-        private TextBox txtAnioFinanciamiento;
-        private Label label7;
-        private ComboBox cmbEstado;
-        private Button btnRegistrar;
+        private Guna.UI2.WinForms.Guna2DateTimePicker dtpFechaFinEstimada;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel7;
+        private Guna.UI2.WinForms.Guna2TextBox txtAnioFinanciamiento;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel6;
+        private Guna.UI2.WinForms.Guna2TextBox txtDescripcion;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel5;
+        private Guna.UI2.WinForms.Guna2HtmlLabel lblBloque;
+        private Guna.UI2.WinForms.Guna2DateTimePicker dtpFechaInicio;
+        private Panel pnlPrincipal;
+        private Guna.UI2.WinForms.Guna2ComboBox cmbEstado;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel4;
+        private Guna.UI2.WinForms.Guna2TextBox txtAreaTotal;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel3;
+        private Guna.UI2.WinForms.Guna2Button btnCancelar;
+        private Guna.UI2.WinForms.Guna2Button btnCrearEditar;
+        private Guna.UI2.WinForms.Guna2TextBox txtNombreProyecto;
+        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel2;
+        private Panel panel1;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
+        private Guna.UI2.WinForms.Guna2Panel pnlFondo;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel3;
     }
 }

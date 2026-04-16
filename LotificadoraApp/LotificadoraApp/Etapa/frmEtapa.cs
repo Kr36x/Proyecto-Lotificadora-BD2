@@ -126,7 +126,7 @@ namespace LotificadoraApp.Etapa
         {
             if (dgvMain.Columns.Contains("idEtapa"))
             {
-                dgvMain.Columns["idEtapa"].HeaderText = "ID Etapa";
+                //dgvMain.Columns["idEtapa"].HeaderText = "ID Etapa";
                 dgvMain.Columns["idEtapa"].FillWeight = 5;
                 dgvMain.Columns["idEtapa"].MinimumWidth = 55;
                 dgvMain.Columns["idEtapa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -134,7 +134,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("idProyecto"))
             {
-                dgvMain.Columns["idProyecto"].HeaderText = "ID Proyecto";
+                //dgvMain.Columns["idProyecto"].HeaderText = "ID Proyecto";
                 dgvMain.Columns["idProyecto"].FillWeight = 5;
                 dgvMain.Columns["idProyecto"].MinimumWidth = 60;
                 dgvMain.Columns["idProyecto"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -142,14 +142,14 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("nombreEtapa"))
             {
-                dgvMain.Columns["nombreEtapa"].HeaderText = "Nombre de etapa";
+                //dgvMain.Columns["nombreEtapa"].HeaderText = "Nombre de etapa";
                 dgvMain.Columns["nombreEtapa"].FillWeight = 10; 
                 dgvMain.Columns["nombreEtapa"].MinimumWidth = 80;
             }
 
             if (dgvMain.Columns.Contains("fechaInicio"))
             {
-                dgvMain.Columns["fechaInicio"].HeaderText = "F. inicio";
+                //dgvMain.Columns["fechaInicio"].HeaderText = "F. inicio";
                 dgvMain.Columns["fechaInicio"].FillWeight = 9;
                 dgvMain.Columns["fechaInicio"].MinimumWidth = 95;
                 dgvMain.Columns["fechaInicio"].DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -158,7 +158,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("fechaFinEstimada"))
             {
-                dgvMain.Columns["fechaFinEstimada"].HeaderText = "F. fin estimada";
+                //dgvMain.Columns["fechaFinEstimada"].HeaderText = "F. fin estimada";
                 dgvMain.Columns["fechaFinEstimada"].FillWeight = 10;
                 dgvMain.Columns["fechaFinEstimada"].MinimumWidth = 105;
                 dgvMain.Columns["fechaFinEstimada"].DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -167,7 +167,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("areaTotalV2"))
             {
-                dgvMain.Columns["areaTotalV2"].HeaderText = "Área total (vr²)";
+                //dgvMain.Columns["areaTotalV2"].HeaderText = "Área total (vr²)";
                 dgvMain.Columns["areaTotalV2"].FillWeight = 10;
                 dgvMain.Columns["areaTotalV2"].MinimumWidth = 90;
                 dgvMain.Columns["areaTotalV2"].DefaultCellStyle.Format = "N2";
@@ -176,7 +176,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("porcentajeAreaVerde"))
             {
-                dgvMain.Columns["porcentajeAreaVerde"].HeaderText = "% Área verde";
+                //dgvMain.Columns["porcentajeAreaVerde"].HeaderText = "% Área verde";
                 dgvMain.Columns["porcentajeAreaVerde"].FillWeight = 8;
                 dgvMain.Columns["porcentajeAreaVerde"].MinimumWidth = 85;
                 dgvMain.Columns["porcentajeAreaVerde"].DefaultCellStyle.Format = "N2";
@@ -185,7 +185,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("porcentajeAreaComun"))
             {
-                dgvMain.Columns["porcentajeAreaComun"].HeaderText = "% Área común";
+               // dgvMain.Columns["porcentajeAreaComun"].HeaderText = "% Área común";
                 dgvMain.Columns["porcentajeAreaComun"].FillWeight = 8;
                 dgvMain.Columns["porcentajeAreaComun"].MinimumWidth = 85;
                 dgvMain.Columns["porcentajeAreaComun"].DefaultCellStyle.Format = "N2";
@@ -194,7 +194,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("porcentajeAreaLotes"))
             {
-                dgvMain.Columns["porcentajeAreaLotes"].HeaderText = "% Área lotes";
+                //dgvMain.Columns["porcentajeAreaLotes"].HeaderText = "% Área lotes";
                 dgvMain.Columns["porcentajeAreaLotes"].FillWeight = 8;
                 dgvMain.Columns["porcentajeAreaLotes"].MinimumWidth = 85;
                 dgvMain.Columns["porcentajeAreaLotes"].DefaultCellStyle.Format = "N2";
@@ -203,7 +203,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("precioVaraCuadrada"))
             {
-                dgvMain.Columns["precioVaraCuadrada"].HeaderText = "Precio Vr²";
+                //dgvMain.Columns["precioVaraCuadrada"].HeaderText = "Precio Vr²";
                 dgvMain.Columns["precioVaraCuadrada"].FillWeight = 9;
                 dgvMain.Columns["precioVaraCuadrada"].MinimumWidth = 95;
                 dgvMain.Columns["precioVaraCuadrada"].DefaultCellStyle.Format = "N2";
@@ -212,7 +212,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("tasaInteresAnual"))
             {
-                dgvMain.Columns["tasaInteresAnual"].HeaderText = " Interés (%)";
+                //dgvMain.Columns["tasaInteresAnual"].HeaderText = " Interés (%)";
                 dgvMain.Columns["tasaInteresAnual"].FillWeight = 7;
                 dgvMain.Columns["tasaInteresAnual"].MinimumWidth = 75;
                 dgvMain.Columns["tasaInteresAnual"].DefaultCellStyle.Format = "N2";
@@ -221,7 +221,7 @@ namespace LotificadoraApp.Etapa
 
             if (dgvMain.Columns.Contains("estadoId"))
             {
-                dgvMain.Columns["estadoId"].HeaderText = "Estado";
+                //dgvMain.Columns["estadoId"].HeaderText = "Estado";
                 dgvMain.Columns["estadoId"].FillWeight = 5;
                 dgvMain.Columns["estadoId"].MinimumWidth = 55;
                 dgvMain.Columns["estadoId"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;

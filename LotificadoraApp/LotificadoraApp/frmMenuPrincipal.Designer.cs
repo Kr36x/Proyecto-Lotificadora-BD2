@@ -66,7 +66,7 @@
             pnlEsqueleto.Dock = DockStyle.Fill;
             pnlEsqueleto.Location = new Point(0, 0);
             pnlEsqueleto.Name = "pnlEsqueleto";
-            pnlEsqueleto.Size = new Size(1271, 637);
+            pnlEsqueleto.Size = new Size(1584, 861);
             pnlEsqueleto.TabIndex = 0;
             // 
             // pnlContenedor
@@ -75,7 +75,7 @@
             pnlContenedor.Dock = DockStyle.Fill;
             pnlContenedor.Location = new Point(200, 0);
             pnlContenedor.Name = "pnlContenedor";
-            pnlContenedor.Size = new Size(1071, 637);
+            pnlContenedor.Size = new Size(1384, 861);
             pnlContenedor.TabIndex = 1;
             // 
             // flowLayoutPanel1
@@ -90,7 +90,7 @@
             flowLayoutPanel1.Dock = DockStyle.Left;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(200, 637);
+            flowLayoutPanel1.Size = new Size(200, 861);
             flowLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -340,7 +340,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1271, 637);
+            ClientSize = new Size(1584, 861);
             Controls.Add(pnlEsqueleto);
             Name = "frmMenuPrincipal";
             StartPosition = FormStartPosition.CenterScreen;

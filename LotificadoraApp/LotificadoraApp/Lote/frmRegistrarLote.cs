@@ -1,5 +1,4 @@
-﻿using LotificadoraApp.Lote;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Globalization;
 
@@ -7,10 +6,34 @@ namespace LotificadoraApp
 {
     public partial class frmRegistrarLote : Form
     {
+        private readonly bool _modoEdicion;
+        private readonly int _idLote;
+
         public frmRegistrarLote()
         {
             InitializeComponent();
+            _modoEdicion = false;
+            _idLote = 0;
+
             ConectarEventosCalculo();
+            ConectarEventosFormulario();
+        }
+
+        public frmRegistrarLote(int idLote)
+        {
+            InitializeComponent();
+            _modoEdicion = true;
+            _idLote = idLote;
+
+            ConectarEventosCalculo();
+            ConectarEventosFormulario();
+        }
+
+        private void ConectarEventosFormulario()
+        {
+            Load += frmRegistrarLote_Load;
+            btnCrearEditar.Click += btnCrearEditar_Click;
+            btnCancelar.Click += btnCancelar_Click;
         }
 
         private void frmRegistrarLote_Load(object sender, EventArgs e)
@@ -18,7 +41,19 @@ namespace LotificadoraApp
             ConfigurarFormulario();
             CargarBloques();
             CargarEstados();
-            CalcularPrecios();
+
+            if (_modoEdicion)
+            {
+                lblBloque.Text = "EDITAR LOTE";
+                btnCrearEditar.Text = "EDITAR";
+                CargarLote();
+            }
+            else
+            {
+                lblBloque.Text = "CREAR LOTE";
+                btnCrearEditar.Text = "CREAR";
+                CalcularPrecios();
+            }
         }
 
         private void ConfigurarFormulario()
@@ -45,16 +80,16 @@ namespace LotificadoraApp
         {
             try
             {
-                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR003);
+                DataTable dt = Db.ExecuteStoredProcedure("sp_lote_cargar_bloques");
 
-                cmbBloque.DataSource = dataTable;
+                cmbBloque.DataSource = dt;
                 cmbBloque.DisplayMember = "nombreBloque";
                 cmbBloque.ValueMember = "idBloque";
                 cmbBloque.SelectedIndex = -1;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MostrarMensajeError("Error al cargar los bloques");
+                MostrarMensajeError("Error al cargar los bloques: " + ex.Message);
             }
         }
 
@@ -62,17 +97,61 @@ namespace LotificadoraApp
         {
             try
             {
-                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR005,
-                    new SqlParameter("@Ids", "7, 8, 9"));
+                DataTable dt = Db.ExecuteQuery(@"
+                    SELECT id, nombre
+                    FROM Estado
+                    WHERE id IN (7, 8, 9)
+                    ORDER BY id;
+                ");
 
-                cmbEstado.DataSource = dataTable;
+                cmbEstado.DataSource = dt;
                 cmbEstado.DisplayMember = "nombre";
                 cmbEstado.ValueMember = "id";
                 cmbEstado.SelectedValue = 7;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MostrarMensajeError("Error al cargar los estados");
+                MostrarMensajeError("Error al cargar los estados: " + ex.Message);
+            }
+        }
+
+        private void CargarLote()
+        {
+            try
+            {
+                DataTable dt = Db.ExecuteStoredProcedure(
+                    "sp_lote_obtener_por_id",
+                    Db.Parameter("@idLote", _idLote)
+                );
+
+                if (dt.Rows.Count == 0)
+                {
+                    MostrarMensajeError("No se encontró el lote seleccionado.");
+                    Close();
+                    return;
+                }
+
+                DataRow row = dt.Rows[0];
+
+                cmbBloque.SelectedValue = Convert.ToInt32(row["idBloque"]);
+                txtLote.Text = row["numeroLote"]?.ToString() ?? "";
+                txtArea.Text = Convert.ToDecimal(row["areaV2"]).ToString("N2");
+
+                chkEsquina.Checked = row["esEsquina"] != DBNull.Value && Convert.ToBoolean(row["esEsquina"]);
+                chkParque.Checked = row["cercaParque"] != DBNull.Value && Convert.ToBoolean(row["cercaParque"]);
+                chkCalleCerrada.Checked = row["calleCerrada"] != DBNull.Value && Convert.ToBoolean(row["calleCerrada"]);
+
+                txtPrecioBase.Text = row["precioBase"] == DBNull.Value ? "" : Convert.ToDecimal(row["precioBase"]).ToString("N2");
+                txtRecargoTotal.Text = row["recargoTotal"] == DBNull.Value ? "" : Convert.ToDecimal(row["recargoTotal"]).ToString("N2");
+                txtPrecioFinal.Text = row["precioFinal"] == DBNull.Value ? "" : Convert.ToDecimal(row["precioFinal"]).ToString("N2");
+
+                cmbEstado.SelectedValue = Convert.ToInt32(row["estadoId"]);
+
+                CalcularPrecios();
+            }
+            catch (Exception ex)
+            {
+                MostrarMensajeError("Error al cargar el lote: " + ex.Message);
             }
         }
 
@@ -125,7 +204,7 @@ namespace LotificadoraApp
             }
         }
 
-        private void btnRegistrar_Click(object sender, EventArgs e)
+        private void btnCrearEditar_Click(object sender, EventArgs e)
         {
             try
             {
@@ -139,57 +218,58 @@ namespace LotificadoraApp
                 bool calleCerrada = chkCalleCerrada.Checked;
                 int estadoLote = Convert.ToInt32(cmbEstado.SelectedValue);
 
-                DataTable dataTable = Db.ExecuteStoredProcedure(LoteQueries.QR004,
-                    Db.Parameter("@idBloque", idBloque),
-                    Db.Parameter("@numeroLote", numeroLote),
-                    Db.Parameter("@areaV2", areaV2),
-                    Db.Parameter("@esEsquina", esEsquina),
-                    Db.Parameter("@cercaParque", cercaParque),
-                    Db.Parameter("@calleCerrada", calleCerrada),
-                    Db.Parameter("@precioBase", precioBase),
-                    Db.Parameter("@recargoTotal", recargoTotal),
-                    Db.Parameter("@precioFinal", precioFinal),
-                    Db.Parameter("@estadoLote", estadoLote)
-                );
+                DataTable dt;
 
-                if (dataTable.Rows.Count == 0)
+                if (_modoEdicion)
                 {
-                    MostrarMensajeError("No se devolvió resultado al registrar el lote.");
-                    return;
+                    dt = Db.ExecuteStoredProcedure(
+                        "sp_lote_actualizar",
+                        Db.Parameter("@idLote", _idLote),
+                        Db.Parameter("@idBloque", idBloque),
+                        Db.Parameter("@numeroLote", numeroLote),
+                        Db.Parameter("@areaV2", areaV2),
+                        Db.Parameter("@esEsquina", esEsquina),
+                        Db.Parameter("@cercaParque", cercaParque),
+                        Db.Parameter("@calleCerrada", calleCerrada),
+                        Db.Parameter("@precioBase", precioBase),
+                        Db.Parameter("@recargoTotal", recargoTotal),
+                        Db.Parameter("@precioFinal", precioFinal),
+                        Db.Parameter("@estadoLote", estadoLote)
+                    );
+                }
+                else
+                {
+                    dt = Db.ExecuteStoredProcedure(
+                        "sp_lote_insertar",
+                        Db.Parameter("@idBloque", idBloque),
+                        Db.Parameter("@numeroLote", numeroLote),
+                        Db.Parameter("@areaV2", areaV2),
+                        Db.Parameter("@esEsquina", esEsquina),
+                        Db.Parameter("@cercaParque", cercaParque),
+                        Db.Parameter("@calleCerrada", calleCerrada),
+                        Db.Parameter("@precioBase", precioBase),
+                        Db.Parameter("@recargoTotal", recargoTotal),
+                        Db.Parameter("@precioFinal", precioFinal),
+                        Db.Parameter("@estadoLote", estadoLote)
+                    );
                 }
 
-                if (dataTable.Columns.Contains("MensajeError") &&
-                    dataTable.Rows[0]["MensajeError"] != DBNull.Value)
-                {
-                    MostrarMensajeError(dataTable.Rows[0]["MensajeError"].ToString());
-                    return;
-                }
-
-                int idLoteGenerado = Convert.ToInt32(dataTable.Rows[0]["idLoteGenerado"]);
+                ValidarRespuestaError(dt);
 
                 MessageBox.Show(
-                    $"Lote registrado correctamente. ID generado: {idLoteGenerado}",
-                    "Registro exitoso",
+                    _modoEdicion ? "Lote actualizado correctamente." : "Lote registrado correctamente.",
+                    "Operación exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 );
 
-                LimpiarFormulario();
+                DialogResult = DialogResult.OK;
+                Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MostrarMensajeError("Error al registrar lote");
+                MostrarMensajeError("Error al guardar lote: " + ex.Message);
             }
-        }
-
-        private static void MostrarMensajeError(string mensaje)
-        {
-            MessageBox.Show(
-                    mensaje,
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
         }
 
         private bool ValidarFormulario(out decimal areaV2, out decimal precioBase, out decimal recargoTotal, out decimal precioFinal)
@@ -199,7 +279,7 @@ namespace LotificadoraApp
             recargoTotal = 0;
             precioFinal = 0;
 
-            if (cmbBloque.SelectedIndex < 0)
+            if (cmbBloque.SelectedIndex < 0 || cmbBloque.SelectedValue == null)
             {
                 MostrarWarning("Seleccione un bloque.");
                 cmbBloque.Focus();
@@ -213,7 +293,7 @@ namespace LotificadoraApp
                 return false;
             }
 
-            if (cmbEstado.SelectedIndex < 0)
+            if (cmbEstado.SelectedIndex < 0 || cmbEstado.SelectedValue == null)
             {
                 MostrarWarning("Seleccione un estado.");
                 cmbEstado.Focus();
@@ -251,6 +331,24 @@ namespace LotificadoraApp
             return true;
         }
 
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void ValidarRespuestaError(DataTable dt)
+        {
+            if (dt == null || dt.Columns.Count == 0 || dt.Rows.Count == 0)
+                return;
+
+            if (dt.Columns.Contains("MensajeError") &&
+                dt.Rows[0]["MensajeError"] != DBNull.Value)
+            {
+                throw new Exception(dt.Rows[0]["MensajeError"].ToString());
+            }
+        }
+
         private static bool TryParseDecimal(string valor, out decimal resultado)
         {
             if (string.IsNullOrWhiteSpace(valor))
@@ -259,16 +357,26 @@ namespace LotificadoraApp
                 return false;
             }
 
-            valor = valor.Trim().Replace(",", "");
+            valor = valor.Trim();
+
+            if (decimal.TryParse(valor, NumberStyles.Any, new CultureInfo("es-HN"), out resultado))
+                return true;
 
             if (decimal.TryParse(valor, NumberStyles.Any, CultureInfo.InvariantCulture, out resultado))
                 return true;
 
-            if (decimal.TryParse(valor, NumberStyles.Any, CultureInfo.CurrentCulture, out resultado))
-                return true;
-
             resultado = 0;
             return false;
+        }
+
+        private static void MostrarMensajeError(string mensaje)
+        {
+            MessageBox.Show(
+                mensaje,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
         }
 
         private static void MostrarWarning(string mensaje)
@@ -279,23 +387,6 @@ namespace LotificadoraApp
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning
             );
-        }
-
-        private void LimpiarFormulario()
-        {
-            txtLote.Clear();
-            txtArea.Clear();
-
-            chkEsquina.Checked = false;
-            chkParque.Checked = false;
-            chkCalleCerrada.Checked = false;
-
-            txtPrecioBase.Clear();
-            txtRecargoTotal.Clear();
-            txtPrecioFinal.Clear();
-
-            cmbBloque.SelectedIndex = -1;
-            cmbEstado.SelectedValue = 7;
         }
     }
 }
