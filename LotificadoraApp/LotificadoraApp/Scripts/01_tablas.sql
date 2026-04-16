@@ -8,17 +8,7 @@ go
 create table Estado (
     id int identity(1,1) primary key,
     nombre varchar(100) not null,
-    constraint uq_Estado_Nombre unique (nombre),
-    constraint chk_Estado_Nombre check (
-        nombre in (
-            'activo','inactivo','finalizado',
-            'activa','inactiva','finalizada',
-            'disponible','reservado','vendido',
-            'anulada','cancelado','moroso',
-            'pendiente','parcial','pagada','vencida',
-            'anulado'
-        )
-    )
+    constraint uq_Estado_Nombre unique (nombre)
 );
 go
 

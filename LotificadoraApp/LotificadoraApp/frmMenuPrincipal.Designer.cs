@@ -44,7 +44,7 @@
             btnLotesDisponibles = new Button();
             label2 = new Label();
             panel3 = new Panel();
-            button2 = new Button();
+            btnEstado = new Button();
             btnBanco = new Button();
             button3 = new Button();
             btnProyecto = new Button();
@@ -241,7 +241,7 @@
             // panel3
             // 
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel3.Controls.Add(button2);
+            panel3.Controls.Add(btnEstado);
             panel3.Controls.Add(btnBanco);
             panel3.Controls.Add(button3);
             panel3.Controls.Add(btnProyecto);
@@ -256,16 +256,16 @@
             panel3.Size = new Size(276, 453);
             panel3.TabIndex = 6;
             // 
-            // button2
+            // btnEstado
             // 
-            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button2.Location = new Point(0, 348);
-            button2.Margin = new Padding(4, 5, 4, 5);
-            button2.Name = "button2";
-            button2.Size = new Size(276, 46);
-            button2.TabIndex = 8;
-            button2.Text = "Estado";
-            button2.UseVisualStyleBackColor = true;
+            btnEstado.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnEstado.Location = new Point(0, 348);
+            btnEstado.Margin = new Padding(4, 5, 4, 5);
+            btnEstado.Name = "btnEstado";
+            btnEstado.Size = new Size(276, 46);
+            btnEstado.TabIndex = 8;
+            btnEstado.Text = "Estado";
+            btnEstado.UseVisualStyleBackColor = true;
             // 
             // btnBanco
             // 
@@ -405,6 +405,6 @@
         private Button btnProyecto;
         private Button button3;
         private Button btnBanco;
-        private Button button2;
+        private Button btnEstado;
     }
 }

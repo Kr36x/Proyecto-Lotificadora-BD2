@@ -2,6 +2,91 @@ USE Grupo8;
 GO
 
 -- =======================================================
+-- PROCEDIMIENTOS PARA ESTADO
+-- =======================================================
+CREATE OR ALTER PROCEDURE dbo.sp_ObtenerEstados
+    @Ids NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT e.id,
+           e.nombre
+    FROM dbo.Estado e
+    INNER JOIN (
+        SELECT DISTINCT TRY_CAST(LTRIM(RTRIM(value)) AS INT) AS id
+        FROM STRING_SPLIT(@Ids, ',')
+        WHERE TRY_CAST(LTRIM(RTRIM(value)) AS INT) IS NOT NULL
+    ) x ON e.id = x.id
+    ORDER BY e.id;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_estado_listar
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT e.id,
+           e.nombre
+    FROM dbo.Estado e
+    order by e.id asc
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_estado_insertar
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Estado (nombre)
+        VALUES (@nombre);
+
+        SELECT CAST(SCOPE_IDENTITY() AS INT) AS idEstadoGenerado;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_estado_actualizar
+    @id INT,
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE dbo.Estado
+        SET nombre = @nombre
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_estado_eliminar
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        DELETE FROM dbo.Estado
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+-- =======================================================
 --         PROCEDIMIENTOS PARA PROYECTO
 -- =======================================================
 
@@ -322,27 +407,6 @@ BEGIN
     INNER JOIN Etapa e
         ON b.idEtapa = e.idEtapa
     ORDER BY b.idBloque DESC;
-END;
-GO
-
--- =======================================================
--- PROCEDIMIENTOS PARA ESTADO
--- =======================================================
-CREATE OR ALTER PROCEDURE dbo.sp_ObtenerEstados
-    @Ids NVARCHAR(MAX)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT e.id,
-           e.nombre
-    FROM dbo.Estado e
-    INNER JOIN (
-        SELECT DISTINCT TRY_CAST(LTRIM(RTRIM(value)) AS INT) AS id
-        FROM STRING_SPLIT(@Ids, ',')
-        WHERE TRY_CAST(LTRIM(RTRIM(value)) AS INT) IS NOT NULL
-    ) x ON e.id = x.id
-    ORDER BY e.id;
 END;
 GO
 

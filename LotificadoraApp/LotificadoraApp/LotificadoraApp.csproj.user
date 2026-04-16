@@ -10,6 +10,12 @@
     <Compile Update="ConsultaBaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Estado\frmEstado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Estado\frmRegistrarEstado.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="frmConsultaEstadoCuenta.cs">
       <SubType>Form</SubType>
     </Compile>

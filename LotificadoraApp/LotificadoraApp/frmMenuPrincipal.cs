@@ -1,4 +1,5 @@
 ﻿using LotificadoraApp.Banco;
+using LotificadoraApp.Estado;
 using LotificadoraApp.Lote;
 using LotificadoraApp.Proyecto;
 
@@ -147,6 +148,12 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnProyecto);
                 AbrirEnContenedor(new frmBanco());
+            };
+
+            btnEstado.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnProyecto);
+                AbrirEnContenedor(new frmEstado());
             };
         }
 
