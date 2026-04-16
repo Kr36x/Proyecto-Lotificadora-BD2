@@ -49,11 +49,11 @@ namespace LotificadoraApp.Proyecto
         {
             try
             {
-                DataTable dtEstados = Db.ExecuteStoredProcedure(
+                DataTable dataTable = Db.ExecuteStoredProcedure(
                     ProyectoQueries.QR003,
                     new SqlParameter("@estadoId", estadoId));
 
-                dgvProyecto.DataSource = dtEstados;
+                dgvProyecto.DataSource = dataTable;
             }
             catch (Exception)
             {
@@ -65,8 +65,8 @@ namespace LotificadoraApp.Proyecto
         {
             try
             {
-                DataTable dtEstados = Db.ExecuteStoredProcedure(ProyectoQueries.QR002);
-                dgvProyecto.DataSource = dtEstados;
+                DataTable dataTable = Db.ExecuteStoredProcedure(ProyectoQueries.QR002);
+                dgvProyecto.DataSource = dataTable;
             }
             catch (Exception)
             {

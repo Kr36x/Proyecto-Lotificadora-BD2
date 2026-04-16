@@ -44,7 +44,8 @@
             btnLotesDisponibles = new Button();
             label2 = new Label();
             panel3 = new Panel();
-            button4 = new Button();
+            button2 = new Button();
+            btnBanco = new Button();
             button3 = new Button();
             btnProyecto = new Button();
             button1 = new Button();
@@ -52,7 +53,6 @@
             btnGestionClientes = new Button();
             btnRegistrarPago = new Button();
             btnRegistrarVentaCredito = new Button();
-            button2 = new Button();
             pnlEsqueleto.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -242,7 +242,7 @@
             // 
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel3.Controls.Add(button2);
-            panel3.Controls.Add(button4);
+            panel3.Controls.Add(btnBanco);
             panel3.Controls.Add(button3);
             panel3.Controls.Add(btnProyecto);
             panel3.Controls.Add(button1);
@@ -256,16 +256,27 @@
             panel3.Size = new Size(276, 453);
             panel3.TabIndex = 6;
             // 
-            // button4
+            // button2
             // 
-            button4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button4.Location = new Point(0, 136);
-            button4.Margin = new Padding(4, 5, 4, 5);
-            button4.Name = "button4";
-            button4.Size = new Size(276, 52);
-            button4.TabIndex = 7;
-            button4.Text = "Banco";
-            button4.UseVisualStyleBackColor = true;
+            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button2.Location = new Point(0, 348);
+            button2.Margin = new Padding(4, 5, 4, 5);
+            button2.Name = "button2";
+            button2.Size = new Size(276, 46);
+            button2.TabIndex = 8;
+            button2.Text = "Estado";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // btnBanco
+            // 
+            btnBanco.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnBanco.Location = new Point(0, 136);
+            btnBanco.Margin = new Padding(4, 5, 4, 5);
+            btnBanco.Name = "btnBanco";
+            btnBanco.Size = new Size(276, 52);
+            btnBanco.TabIndex = 7;
+            btnBanco.Text = "Banco";
+            btnBanco.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
@@ -350,17 +361,6 @@
             btnRegistrarVentaCredito.Text = "Registrar Venta Crédito";
             btnRegistrarVentaCredito.UseVisualStyleBackColor = false;
             // 
-            // button2
-            // 
-            button2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            button2.Location = new Point(0, 348);
-            button2.Margin = new Padding(4, 5, 4, 5);
-            button2.Name = "button2";
-            button2.Size = new Size(276, 46);
-            button2.TabIndex = 8;
-            button2.Text = "Estado";
-            button2.UseVisualStyleBackColor = true;
-            // 
             // frmMenuPrincipal
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -404,7 +404,7 @@
         private Button button1;
         private Button btnProyecto;
         private Button button3;
-        private Button button4;
+        private Button btnBanco;
         private Button button2;
     }
 }

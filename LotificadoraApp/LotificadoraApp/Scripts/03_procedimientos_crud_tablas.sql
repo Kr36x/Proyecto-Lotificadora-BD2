@@ -820,18 +820,29 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE sp_banco_obtener
-    @idBanco INT
+
+CREATE OR ALTER PROCEDURE sp_banco_obtener
+    @estadoId INT
 AS
 BEGIN
-    SELECT * FROM Banco WHERE idBanco = @idBanco;
+     SELECT T0.[idBanco] AS id
+      ,T0.[nombreBanco]
+      ,T1.nombre as estado
+  FROM [dbo].[Banco]  AS T0  
+  INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+  WHERE T1.id = @estadoId
 END;
 GO
 
-CREATE PROCEDURE sp_banco_listar
+CREATE OR ALTER PROCEDURE sp_banco_listar
 AS
-BEGIN
-    SELECT * FROM Banco ORDER BY idBanco DESC;
+BEGIN   
+ SELECT T0.[idBanco] AS id
+      ,T0.[nombreBanco]
+      ,T1.nombre as estado
+  FROM [dbo].[Banco]  AS T0  
+  INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+  ORDER BY idBanco ASC;
 END;
 GO
 
