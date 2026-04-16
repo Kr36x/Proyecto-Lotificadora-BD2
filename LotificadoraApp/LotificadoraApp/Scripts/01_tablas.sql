@@ -514,3 +514,24 @@ create table GastoProyecto (
 );
 go
 
+-- =========================
+-- empleados
+-- =========================
+
+create table Empleado (
+    id int identity(1,1) primary key,
+    nombres varchar(100) not null,
+    apellidos varchar(100) not null,
+    identidad varchar(14) not null,
+    fechaNacimiento date not null,
+    telefono varchar(20) null,
+    sexoId char(1) not null,
+    fechaIngreso datetime not null,
+    fechaEgreso datetime null,
+    salario decimal(18,2) not null,
+    estadoId int not null,
+    constraint fk_Empleado_Estado
+        foreign key (estadoId) references Estado(id)
+);
+go
+

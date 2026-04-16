@@ -1052,4 +1052,108 @@ BEGIN
 END;
 GO
 
+-- =======================================================
+-- PROCEDIMIENTOS PARA EMPLEADO
+-- =======================================================
+
+CREATE PROCEDURE sp_empleado_insertar
+    @nombres VARCHAR(100),
+    @apellidos VARCHAR(100),
+    @identidad VARCHAR(14),
+    @fechaNacimiento DATE,
+    @telefono VARCHAR(20) = NULL,
+    @sexoId CHAR(1),
+    @fechaIngreso DATETIME,
+    @fechaEgreso DATETIME = NULL,
+    @salario DECIMAL(18,2),
+    @estadoId INT
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO Empleado (
+            nombres, apellidos, identidad, fechaNacimiento, telefono,
+            sexoId, fechaIngreso, fechaEgreso, salario, estadoId
+        )
+        VALUES (
+            @nombres, @apellidos, @identidad, @fechaNacimiento, @telefono,
+            @sexoId, @fechaIngreso, @fechaEgreso, @salario, @estadoId
+        );
+
+        SELECT SCOPE_IDENTITY() AS idEmpleadoGenerado;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE PROCEDURE sp_empleado_actualizar
+    @id INT,
+    @nombres VARCHAR(100),
+    @apellidos VARCHAR(100),
+    @identidad VARCHAR(14),
+    @fechaNacimiento DATE,
+    @telefono VARCHAR(20) = NULL,
+    @sexoId CHAR(1),
+    @fechaIngreso DATETIME,
+    @fechaEgreso DATETIME = NULL,
+    @salario DECIMAL(18,2),
+    @estadoId INT
+AS
+BEGIN
+    BEGIN TRY
+        UPDATE Empleado
+        SET nombres = @nombres,
+            apellidos = @apellidos,
+            identidad = @identidad,
+            fechaNacimiento = @fechaNacimiento,
+            telefono = @telefono,
+            sexoId = @sexoId,
+            fechaIngreso = @fechaIngreso,
+            fechaEgreso = @fechaEgreso,
+            salario = @salario,
+            estadoId = @estadoId
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE PROCEDURE sp_empleado_eliminar
+    @id INT
+AS
+BEGIN
+    BEGIN TRY
+        DELETE FROM Empleado
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE PROCEDURE sp_empleado_obtener
+    @id INT
+AS
+BEGIN
+    SELECT 
+        id,
+        nombres,
+        apellidos,
+        identidad,
+        fechaNacimiento,
+        telefono,
+        sexoId,
+        fechaIngreso,
+        fechaEgreso,
+        salario,
+        estadoId
+    FROM Empleado
+    WHERE id = @id;
+END;
+GO
+
 
