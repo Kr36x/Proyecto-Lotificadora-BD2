@@ -53,6 +53,8 @@
             btnGestionClientes = new Button();
             btnRegistrarPago = new Button();
             btnRegistrarVentaCredito = new Button();
+            btnCuentaBancaria = new Button();
+            btnGasto = new Button();
             pnlEsqueleto.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -80,7 +82,7 @@
             // 
             // flowLayoutPanel1
             // 
-            flowLayoutPanel1.BackColor = Color.OliveDrab;
+            flowLayoutPanel1.BackColor = Color.Olive;
             flowLayoutPanel1.Controls.Add(label1);
             flowLayoutPanel1.Controls.Add(panel1);
             flowLayoutPanel1.Controls.Add(CONSULTAS);
@@ -226,6 +228,8 @@
             // panel3
             // 
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel3.Controls.Add(btnGasto);
+            panel3.Controls.Add(btnCuentaBancaria);
             panel3.Controls.Add(btnEstado);
             panel3.Controls.Add(btnBanco);
             panel3.Controls.Add(btnBloque);
@@ -237,13 +241,14 @@
             panel3.Controls.Add(btnRegistrarVentaCredito);
             panel3.Location = new Point(3, 379);
             panel3.Name = "panel3";
-            panel3.Size = new Size(193, 272);
+            panel3.Size = new Size(193, 317);
             panel3.TabIndex = 6;
             // 
             // btnEstado
             // 
+            btnEstado.Dock = DockStyle.Top;
             btnEstado.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnEstado.Location = new Point(0, 209);
+            btnEstado.Location = new Point(0, 227);
             btnEstado.Name = "btnEstado";
             btnEstado.Size = new Size(193, 28);
             btnEstado.TabIndex = 8;
@@ -252,8 +257,9 @@
             // 
             // btnBanco
             // 
+            btnBanco.Dock = DockStyle.Top;
             btnBanco.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnBanco.Location = new Point(0, 82);
+            btnBanco.Location = new Point(0, 196);
             btnBanco.Name = "btnBanco";
             btnBanco.Size = new Size(193, 31);
             btnBanco.TabIndex = 7;
@@ -262,8 +268,9 @@
             // 
             // btnBloque
             // 
+            btnBloque.Dock = DockStyle.Top;
             btnBloque.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnBloque.Location = new Point(0, 184);
+            btnBloque.Location = new Point(0, 168);
             btnBloque.Name = "btnBloque";
             btnBloque.Size = new Size(193, 28);
             btnBloque.TabIndex = 6;
@@ -272,8 +279,9 @@
             // 
             // btnProyecto
             // 
+            btnProyecto.Dock = DockStyle.Top;
             btnProyecto.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnProyecto.Location = new Point(0, 160);
+            btnProyecto.Location = new Point(0, 140);
             btnProyecto.Name = "btnProyecto";
             btnProyecto.Size = new Size(193, 28);
             btnProyecto.TabIndex = 5;
@@ -282,8 +290,9 @@
             // 
             // btnEtapa
             // 
+            btnEtapa.Dock = DockStyle.Top;
             btnEtapa.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnEtapa.Location = new Point(0, 134);
+            btnEtapa.Location = new Point(0, 112);
             btnEtapa.Name = "btnEtapa";
             btnEtapa.Size = new Size(193, 28);
             btnEtapa.TabIndex = 0;
@@ -292,8 +301,9 @@
             // 
             // btnRegistrarLote
             // 
+            btnRegistrarLote.Dock = DockStyle.Top;
             btnRegistrarLote.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrarLote.Location = new Point(0, 110);
+            btnRegistrarLote.Location = new Point(0, 84);
             btnRegistrarLote.Name = "btnRegistrarLote";
             btnRegistrarLote.Size = new Size(193, 28);
             btnRegistrarLote.TabIndex = 4;
@@ -335,6 +345,28 @@
             btnRegistrarVentaCredito.TabIndex = 0;
             btnRegistrarVentaCredito.Text = "Registrar Venta Crédito";
             btnRegistrarVentaCredito.UseVisualStyleBackColor = false;
+            // 
+            // btnCuentaBancaria
+            // 
+            btnCuentaBancaria.Dock = DockStyle.Top;
+            btnCuentaBancaria.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnCuentaBancaria.Location = new Point(0, 255);
+            btnCuentaBancaria.Name = "btnCuentaBancaria";
+            btnCuentaBancaria.Size = new Size(193, 28);
+            btnCuentaBancaria.TabIndex = 9;
+            btnCuentaBancaria.Text = "Cuenta Bancaria";
+            btnCuentaBancaria.UseVisualStyleBackColor = true;
+            // 
+            // btnGasto
+            // 
+            btnGasto.Dock = DockStyle.Top;
+            btnGasto.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnGasto.Location = new Point(0, 283);
+            btnGasto.Name = "btnGasto";
+            btnGasto.Size = new Size(193, 28);
+            btnGasto.TabIndex = 10;
+            btnGasto.Text = "Gasto";
+            btnGasto.UseVisualStyleBackColor = true;
             // 
             // frmMenuPrincipal
             // 
@@ -380,5 +412,7 @@
         private Button btnBloque;
         private Button btnBanco;
         private Button btnEstado;
+        private Button btnGasto;
+        private Button btnCuentaBancaria;
     }
 }

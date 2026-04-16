@@ -101,7 +101,7 @@ namespace LotificadoraApp
             btnConsultarPlanPago.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnConsultarPlanPago);
-                AbrirEnContenedor(new frmConsultarPlanPago());
+                AbrirEnContenedor(new frmConsultarPlanPago());  
             };
 
             btnRegistrarVentaCredito.Click += (_, _) =>
@@ -148,13 +148,13 @@ namespace LotificadoraApp
 
             btnBanco.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnProyecto);
+                MarcarBotonActivo(btnBanco);
                 AbrirEnContenedor(new frmBanco());
             };
 
             btnEstado.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnProyecto);
+                MarcarBotonActivo(btnEstado);
                 AbrirEnContenedor(new frmEstado());
             };
 
