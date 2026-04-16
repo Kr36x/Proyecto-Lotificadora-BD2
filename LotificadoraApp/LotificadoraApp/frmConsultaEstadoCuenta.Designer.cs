@@ -40,7 +40,7 @@
             // btnConsultar
             // 
             btnConsultar.Location = new Point(859, 28);
-            btnConsultar.Margin = new Padding(2, 2, 2, 2);
+            btnConsultar.Margin = new Padding(2);
             btnConsultar.Name = "btnConsultar";
             btnConsultar.Size = new Size(78, 25);
             btnConsultar.TabIndex = 2;
@@ -61,7 +61,7 @@
             // txtCliente
             // 
             txtCliente.Location = new Point(97, 24);
-            txtCliente.Margin = new Padding(2, 2, 2, 2);
+            txtCliente.Margin = new Padding(2);
             txtCliente.Name = "txtCliente";
             txtCliente.Size = new Size(106, 23);
             txtCliente.TabIndex = 1;
@@ -69,7 +69,7 @@
             // btnLimpiar
             // 
             btnLimpiar.Location = new Point(949, 28);
-            btnLimpiar.Margin = new Padding(2, 2, 2, 2);
+            btnLimpiar.Margin = new Padding(2);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(78, 25);
             btnLimpiar.TabIndex = 3;
@@ -81,7 +81,7 @@
             // 
             grdEstadoCuenta.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             grdEstadoCuenta.Location = new Point(30, 64);
-            grdEstadoCuenta.Margin = new Padding(2, 2, 2, 2);
+            grdEstadoCuenta.Margin = new Padding(2);
             grdEstadoCuenta.Name = "grdEstadoCuenta";
             grdEstadoCuenta.RowHeadersWidth = 62;
             grdEstadoCuenta.Size = new Size(997, 587);
@@ -97,7 +97,7 @@
             Controls.Add(btnConsultar);
             Controls.Add(txtCliente);
             Controls.Add(label1);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "frmConsultaEstadoCuenta";
             Text = "frmConsultaSpEstadoCuenta";
             ((System.ComponentModel.ISupportInitialize)grdEstadoCuenta).EndInit();

@@ -2,6 +2,8 @@
 using LotificadoraApp.Estado;
 using LotificadoraApp.Lote;
 using LotificadoraApp.Proyecto;
+using LotificadoraApp.Bloque;
+using LotificadoraApp.Etapa;
 
 namespace LotificadoraApp
 {
@@ -154,6 +156,18 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnProyecto);
                 AbrirEnContenedor(new frmEstado());
+            };
+
+            btnBloque.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnBloque);
+                AbrirEnContenedor(new frmBloque());
+            };
+
+            btnEtapa.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnEtapa);
+                AbrirEnContenedor(new frmEtapa());
             };
         }
 
