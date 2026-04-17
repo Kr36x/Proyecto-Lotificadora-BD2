@@ -1,6 +1,6 @@
 ﻿namespace LotificadoraApp.Gasto
 {
-    partial class frmGasto
+    partial class frmTipoGasto
     {
         /// <summary>
         /// Required designer variable.
@@ -467,7 +467,7 @@
             lblBloque.Name = "lblBloque";
             lblBloque.Size = new Size(1384, 45);
             lblBloque.TabIndex = 0;
-            lblBloque.Text = "GESTIÓN GASTO";
+            lblBloque.Text = "GESTIÓN TIPO DE GASTO";
             lblBloque.TextAlignment = ContentAlignment.MiddleCenter;
             // 
             // guna2Panel6
@@ -490,14 +490,14 @@
             pnlInferior.Size = new Size(1384, 50);
             pnlInferior.TabIndex = 0;
             // 
-            // frmGasto
+            // frmTipoGasto
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1384, 861);
             Controls.Add(pnlFondo);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "frmGasto";
+            Name = "frmTipoGasto";
             Text = "frmGasto";
             pnlCentral.ResumeLayout(false);
             pnlGrid.ResumeLayout(false);

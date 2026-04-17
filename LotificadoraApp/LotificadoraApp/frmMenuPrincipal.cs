@@ -4,6 +4,7 @@ using LotificadoraApp.Lote;
 using LotificadoraApp.Proyecto;
 using LotificadoraApp.Bloque;
 using LotificadoraApp.Etapa;
+using LotificadoraApp.CuentaBancaria;
 
 namespace LotificadoraApp
 {
@@ -168,6 +169,12 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnEtapa);
                 AbrirEnContenedor(new frmEtapa());
+            };
+
+            btnCuentaBancaria.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnCuentaBancaria);
+                AbrirEnContenedor(new frmCuentaBancaria());
             };
         }
 
