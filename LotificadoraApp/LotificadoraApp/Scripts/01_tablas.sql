@@ -475,6 +475,25 @@ create table DetalleDepositoCaja (
 );
 go
 
+-- relaciona los pagos con el empleado
+CREATE TABLE ControlCaja (
+    idControlCaja INT IDENTITY(1,1) PRIMARY KEY,
+    idPago INT NULL,
+    idDepositoCaja INT NULL,
+    idEmpleado INT NULL,
+    fechaMovimiento DATETIME NOT NULL DEFAULT GETDATE(),
+    tipoMovimiento VARCHAR(30) NOT NULL
+        CHECK (tipoMovimiento IN ('recepcion_efectivo', 'deposito_banco')),
+    monto DECIMAL(18,2) NOT NULL CHECK (monto > 0),
+    observacion VARCHAR(255) NULL,
+    CONSTRAINT fk_ControlCaja_Pago
+        FOREIGN KEY (idPago) REFERENCES Pago(idPago),
+    CONSTRAINT fk_ControlCaja_DepositoCaja
+        FOREIGN KEY (idDepositoCaja) REFERENCES DepositoCajaBanco(idDepositoCaja),
+    CONSTRAINT fk_ControlCaja_Empleado
+        FOREIGN KEY (idEmpleado) REFERENCES Empleado(id)
+);
+GO
 -- =========================
 -- gastos
 -- =========================
