@@ -425,7 +425,6 @@ go
 -- ==================================================================
 -- 7. registra un pago y genera su factura
 -- ==================================================================
-
 create or alter procedure sp_registrar_pago
     @idVenta int,
     @idCuota int,
@@ -433,7 +432,8 @@ create or alter procedure sp_registrar_pago
     @montoTotal decimal(18,2),
     @idCuentaBancaria int = null,
     @numeroReferencia varchar(100) = null,
-    @observacion varchar(255) = null
+    @observacion varchar(255) = null,
+    @idEmpleado INT = NULL
 as
 begin
     set nocount on
@@ -641,7 +641,7 @@ begin
             values (
                 @idPago,
                 null,
-                null,
+                @idEmpleado,
                 getdate(),
                 'recepcion_efectivo',
                 @montoTotal,
