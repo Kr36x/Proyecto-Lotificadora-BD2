@@ -1299,4 +1299,45 @@ BEGIN
     ORDER BY cc.fechaMovimiento DESC, cc.idControlCaja DESC;
 END;
 GO
+--Para la consulta de la vista de creditos activos
+CREATE OR ALTER PROCEDURE dbo.sp_resumen_creditos_activos
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT
+        idVentaCredito,
+        idVenta,
+        cliente,
+        numeroLote,
+        nombreProyecto,
+        nombreEtapa,
+        montoFinanciado,
+        cuotaMensualEstimada,
+        saldoPendiente,
+        cuotasPendientes,
+        cuotasVencidas,
+        estadoId
+    FROM dbo.vw_creditos_activos_cliente
+    ORDER BY idVenta DESC;
+END;
+GO
+
+--Para el estaod cuenta de un cliente en la consulta del mismo
+CREATE OR ALTER PROCEDURE dbo.sp_resumen_estado_cuenta_cliente @IdCliente int 
+AS
+BEGIN
+    SELECT 
+        ec.idCliente,
+        ec.cliente,
+        ec.idCuota,
+        ec.numeroCuota,
+        ec.fechaVencimiento,
+        ec.montoCuota,
+        ec.saldoPendiente,
+        e.nombre AS estado
+        FROM dbo.fn_tvf_estado_cuenta_cliente(@idCliente) ec
+        INNER JOIN dbo.Estado e
+        ON ec.estadoId = e.id
+END
+GO
