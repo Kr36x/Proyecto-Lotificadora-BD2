@@ -10,24 +10,19 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        v.idVenta,
-        vc.idVentaCredito,
-        c.idCliente,
+        idVenta,
+        idVentaCredito,
+        idCliente,
         CONCAT(
-            'Venta ', v.idVenta,
-            ' | Cliente ', c.nombres, ' ', c.apellidos,
-            ' | Lote ', l.numeroLote
+            'Venta ', idVenta,
+            ' | Cliente ', cliente,
+            ' | Lote ', numeroLote
         ) AS descripcion
-    FROM Venta v
-    INNER JOIN VentaCredito vc ON vc.idVenta = v.idVenta
-    INNER JOIN Cliente c ON c.idCliente = v.idCliente
-    INNER JOIN Lote l ON l.idLote = v.idLote
-    WHERE v.estadoId = 4
-      AND vc.estadoId IN (1, 12)
-    ORDER BY v.idVenta DESC;
+    FROM dbo.vw_creditos_activos_cliente
+    ORDER BY idVenta DESC;
 END;
 GO
-
+    
 -- =========================================
 -- 2. Detalle de una venta crédito
 -- =========================================
