@@ -438,7 +438,6 @@ as
 begin
     set nocount on
 
-    -- variables internas
     declare @idPago int
     declare @idFactura int
 
@@ -460,7 +459,6 @@ begin
     begin try
         begin transaction
 
-        -- validar que la venta exista
         if not exists (
             select 1
             from Venta
@@ -473,7 +471,6 @@ begin
             return
         end
 
-        -- obtener datos de la cuota
         select
             @montoCuota = montoCuota,
             @estadoCuota = estadoId,
@@ -482,7 +479,6 @@ begin
         from Cuota
         where idCuota = @idCuota
 
-        -- validar que la cuota exista
         if @montoCuota is null
         begin
             raiserror('la cuota no existe', 16, 1)
@@ -490,7 +486,6 @@ begin
             return
         end
 
-        -- validar que la cuota no esté pagada
         if @estadoCuota = 15
         begin
             raiserror('la cuota ya está pagada', 16, 1)
@@ -498,7 +493,6 @@ begin
             return
         end
 
-        -- obtener cuánto se ha pagado antes en esa cuota
         select
             @totalPagadoAntes = isnull(sum(montoAplicado), 0)
         from DetallePagoCuota
@@ -506,7 +500,6 @@ begin
 
         set @saldoPendiente = @montoCuota - @totalPagadoAntes
 
-        -- validar que el pago sea positivo
         if @montoTotal <= 0
         begin
             raiserror('el monto del pago debe ser mayor que cero', 16, 1)
@@ -514,7 +507,6 @@ begin
             return
         end
 
-        -- no permitir pagar más de lo pendiente en esta versión
         if @montoTotal > @saldoPendiente
         begin
             raiserror('el monto excede el saldo pendiente de la cuota', 16, 1)
@@ -522,8 +514,27 @@ begin
             return
         end
 
-        -- calcular cuánto del pago va a interés y cuánto a capital
-        -- aquí se toma primero el interés programado y luego capital
+        if @formaPago not in ('efectivo', 'deposito')
+        begin
+            raiserror('la forma de pago no es válida', 16, 1)
+            rollback transaction
+            return
+        end
+
+        if @formaPago = 'deposito' and @idCuentaBancaria is null
+        begin
+            raiserror('debe indicar la cuenta bancaria cuando el pago es por depósito', 16, 1)
+            rollback transaction
+            return
+        end
+
+        if @formaPago = 'deposito' and (isnull(ltrim(rtrim(@numeroReferencia)), '') = '')
+        begin
+            raiserror('debe indicar el número de referencia cuando el pago es por depósito', 16, 1)
+            rollback transaction
+            return
+        end
+
         if @montoTotal <= @interesProgramado
         begin
             set @montoInteres = @montoTotal
@@ -535,7 +546,6 @@ begin
             set @montoCapital = @montoTotal - @montoInteres
         end
 
-        -- registrar pago general
         insert into Pago (
             idVenta,
             fechaPago,
@@ -559,7 +569,6 @@ begin
 
         set @idPago = scope_identity()
 
-        -- aplicar pago a la cuota
         insert into DetallePagoCuota (
             idPago,
             idCuota,
@@ -575,7 +584,6 @@ begin
             @montoTotal
         )
 
-        -- obtener datos del cliente para la factura
         select
             @nombreCliente = c.nombres + ' ' + c.apellidos,
             @rtnCliente = c.rtn
@@ -583,10 +591,8 @@ begin
         inner join Cliente c on v.idCliente = c.idCliente
         where v.idVenta = @idVenta
 
-        -- generar número simple de factura
         set @numeroFactura = 'FAC-' + cast(@idPago as varchar(20))
 
-        -- insertar factura
         insert into Factura (
             idPago,
             numeroFactura,
@@ -606,7 +612,6 @@ begin
 
         set @idFactura = scope_identity()
 
-        -- insertar detalle de factura
         insert into DetalleFactura (
             idFactura,
             descripcion,
@@ -622,9 +627,30 @@ begin
             @montoTotal
         )
 
+        if @formaPago = 'efectivo'
+        begin
+            insert into ControlCaja (
+                idPago,
+                idDepositoCaja,
+                idEmpleado,
+                fechaMovimiento,
+                tipoMovimiento,
+                monto,
+                observacion
+            )
+            values (
+                @idPago,
+                null,
+                null,
+                getdate(),
+                'recepcion_efectivo',
+                @montoTotal,
+                @observacion
+            )
+        end
+
         commit transaction
 
-        -- devolver resumen
         select
             @idPago as idPago,
             @idFactura as idFactura,
