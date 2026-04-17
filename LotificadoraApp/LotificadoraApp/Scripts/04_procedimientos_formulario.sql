@@ -1190,6 +1190,92 @@ begin
 end
 go
 
+--SP PARA CONTROL DE FLUJO DE CAJA
+CREATE OR ALTER PROCEDURE dbo.sp_control_caja_registrar_pago_efectivo
+    @idPago INT,
+    @idEmpleado INT,
+    @observacion VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Pago
+            WHERE idPago = @idPago
+              AND formaPago = 'efectivo'
+        )
+        BEGIN
+            RAISERROR('El pago no existe o no es en efectivo.', 16, 1);
+            RETURN;
+        END
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Empleado
+            WHERE id = @idEmpleado
+        )
+        BEGIN
+            RAISERROR('El empleado no existe.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO ControlCaja
+        (
+            idPago,
+            idDepositoCaja,
+            idEmpleado,
+            fechaMovimiento,
+            tipoMovimiento,
+            monto,
+            observacion
+        )
+        SELECT
+            p.idPago,
+            NULL,
+            @idEmpleado,
+            p.fechaPago,
+            'recepcion_efectivo',
+            p.montoTotal,
+            COALESCE(@observacion, p.observacion)
+        FROM Pago p
+        WHERE p.idPago = @idPago
+          AND p.formaPago = 'efectivo';
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
 
 
+CREATE OR ALTER PROCEDURE dbo.sp_control_caja_listar
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        cc.idControlCaja,
+        cc.idPago,
+        cc.idDepositoCaja,
+        cc.idEmpleado,
+        e.nombres,
+        e.apellidos,
+        cc.fechaMovimiento,
+        cc.tipoMovimiento,
+        cc.monto,
+        cc.observacion
+    FROM ControlCaja cc
+    INNER JOIN Empleado e
+        ON cc.idEmpleado = e.id
+    WHERE (@fechaInicio IS NULL OR cc.fechaMovimiento >= @fechaInicio)
+      AND (@fechaFin IS NULL OR cc.fechaMovimiento < DATEADD(DAY, 1, @fechaFin))
+    ORDER BY cc.fechaMovimiento DESC, cc.idControlCaja DESC;
+END;
+GO
 
