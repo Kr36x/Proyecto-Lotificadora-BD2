@@ -109,6 +109,7 @@ GO
 -- -------------------------
 CREATE OR ALTER PROCEDURE dbo.sp_procesar_deposito_caja_transaccional
     @idCuentaBancaria INT,
+    @idEmpleado INT,
     @fechaOperacion DATE = NULL,
     @observacion VARCHAR(255) = NULL
 AS
@@ -134,6 +135,18 @@ BEGIN
         )
         BEGIN
             RAISERROR('La cuenta bancaria no existe o esta inactiva.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Empleado
+            WHERE id = @idEmpleado
+        )
+        BEGIN
+            RAISERROR('El empleado no existe.', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -184,6 +197,33 @@ BEGIN
         WHERE p.formaPago = 'efectivo'
           AND p.depositadoCaja = 0
           AND CAST(p.fechaPago AS DATE) = @fechaOperacion;
+
+        UPDATE Pago
+        SET depositadoCaja = 1
+        WHERE formaPago = 'efectivo'
+          AND depositadoCaja = 0
+          AND CAST(fechaPago AS DATE) = @fechaOperacion;
+
+        INSERT INTO ControlCaja
+        (
+            idPago,
+            idDepositoCaja,
+            idEmpleado,
+            fechaMovimiento,
+            tipoMovimiento,
+            monto,
+            observacion
+        )
+        VALUES
+        (
+            NULL,
+            @idDepositoCaja,
+            @idEmpleado,
+            GETDATE(),
+            'deposito_banco',
+            @totalDepositado,
+            @observacion
+        );
 
         COMMIT TRANSACTION;
 
