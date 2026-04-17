@@ -1155,5 +1155,24 @@ BEGIN
     WHERE id = @id;
 END;
 GO
-
+    
+CREATE OR ALTER PROCEDURE sp_empleado_listar
+AS
+BEGIN
+    SELECT
+        id,
+        nombres,
+        apellidos,
+        identidad,
+        fechaNacimiento,
+        telefono,
+        sexoId,
+        fechaIngreso,
+        fechaEgreso,
+        salario,
+        estadoId
+    FROM Empleado
+    ORDER BY id DESC;
+END;
+GO
 
