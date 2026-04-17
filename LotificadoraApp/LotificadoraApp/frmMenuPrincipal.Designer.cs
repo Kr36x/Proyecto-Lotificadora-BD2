@@ -28,12 +28,48 @@
         /// </summary>
         private void InitializeComponent()
         {
-            pnlEsqueleto = new Panel();
-            pnlContenedor = new Panel();
-            flowLayoutPanel1 = new FlowLayoutPanel();
-            label1 = new Label();
-            panel1 = new Panel();
-            CONSULTAS = new Label();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges16 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges17 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges18 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges19 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges20 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges21 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges22 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges23 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges24 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges25 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges26 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges27 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges28 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges29 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges30 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            btnCuentaBancaria = new Guna.UI2.WinForms.Guna2Button();
+            btnBeneficiario = new Guna.UI2.WinForms.Guna2Button();
+            btnEmpleado = new Guna.UI2.WinForms.Guna2Button();
+            btnBanco = new Guna.UI2.WinForms.Guna2Button();
+            btnLote = new Guna.UI2.WinForms.Guna2Button();
+            label8 = new Label();
+            panel9 = new Panel();
+            btnGestionGastos = new Guna.UI2.WinForms.Guna2Button();
+            btnRegistrarPago = new Guna.UI2.WinForms.Guna2Button();
+            btnRegistrarVentaCredito = new Guna.UI2.WinForms.Guna2Button();
+            btnAval = new Guna.UI2.WinForms.Guna2Button();
+            CATÁLOGOS = new Label();
             panel2 = new Panel();
             btnConsultarPagos = new Button();
             btnConsultaLotesAptosCliente = new Button();
@@ -42,86 +78,233 @@
             btnEstadoDeCuenta = new Button();
             btnCreditosActivos = new Button();
             btnLotesDisponibles = new Button();
-            label2 = new Label();
-            panel3 = new Panel();
-            btnEstado = new Button();
-            btnBanco = new Button();
-            btnBloque = new Button();
-            btnProyecto = new Button();
-            btnEtapa = new Button();
-            btnRegistrarLote = new Button();
-            btnGestionClientes = new Button();
-            btnRegistrarPago = new Button();
-            btnRegistrarVentaCredito = new Button();
-            btnCuentaBancaria = new Button();
-            btnGasto = new Button();
-            pnlEsqueleto.SuspendLayout();
-            flowLayoutPanel1.SuspendLayout();
+            btnCliente = new Guna.UI2.WinForms.Guna2Button();
+            pnlContenedor = new Panel();
+            pnlEsqueleto = new Panel();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            label4 = new Label();
+            panel5 = new Panel();
+            label5 = new Label();
+            panel6 = new Panel();
+            btnTipGasto = new Guna.UI2.WinForms.Guna2Button();
+            btnEstado = new Guna.UI2.WinForms.Guna2Button();
+            label6 = new Label();
+            panel7 = new Panel();
+            btnBloque = new Guna.UI2.WinForms.Guna2Button();
+            btnEtapa = new Guna.UI2.WinForms.Guna2Button();
+            btnProyecto = new Guna.UI2.WinForms.Guna2Button();
+            label7 = new Label();
+            panel8 = new Panel();
+            panel9.SuspendLayout();
             panel2.SuspendLayout();
-            panel3.SuspendLayout();
+            pnlEsqueleto.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            panel6.SuspendLayout();
+            panel7.SuspendLayout();
+            panel8.SuspendLayout();
             SuspendLayout();
             // 
-            // pnlEsqueleto
+            // btnCuentaBancaria
             // 
-            pnlEsqueleto.Controls.Add(pnlContenedor);
-            pnlEsqueleto.Controls.Add(flowLayoutPanel1);
-            pnlEsqueleto.Dock = DockStyle.Fill;
-            pnlEsqueleto.Location = new Point(0, 0);
-            pnlEsqueleto.Name = "pnlEsqueleto";
-            pnlEsqueleto.Size = new Size(1584, 861);
-            pnlEsqueleto.TabIndex = 0;
+            btnCuentaBancaria.BorderRadius = 5;
+            btnCuentaBancaria.CustomizableEdges = customizableEdges1;
+            btnCuentaBancaria.DisabledState.BorderColor = Color.DarkGray;
+            btnCuentaBancaria.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCuentaBancaria.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCuentaBancaria.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCuentaBancaria.Dock = DockStyle.Top;
+            btnCuentaBancaria.FillColor = Color.FromArgb(64, 64, 0);
+            btnCuentaBancaria.Font = new Font("Segoe UI", 9F);
+            btnCuentaBancaria.ForeColor = Color.White;
+            btnCuentaBancaria.Location = new Point(0, 185);
+            btnCuentaBancaria.Name = "btnCuentaBancaria";
+            btnCuentaBancaria.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            btnCuentaBancaria.Size = new Size(193, 37);
+            btnCuentaBancaria.TabIndex = 8;
+            btnCuentaBancaria.Text = "Cuenta Bancaria";
             // 
-            // pnlContenedor
+            // btnBeneficiario
             // 
-            pnlContenedor.BackColor = SystemColors.ControlDark;
-            pnlContenedor.Dock = DockStyle.Fill;
-            pnlContenedor.Location = new Point(200, 0);
-            pnlContenedor.Name = "pnlContenedor";
-            pnlContenedor.Size = new Size(1384, 861);
-            pnlContenedor.TabIndex = 1;
+            btnBeneficiario.BorderRadius = 5;
+            btnBeneficiario.CustomizableEdges = customizableEdges3;
+            btnBeneficiario.DisabledState.BorderColor = Color.DarkGray;
+            btnBeneficiario.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnBeneficiario.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnBeneficiario.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnBeneficiario.Dock = DockStyle.Top;
+            btnBeneficiario.FillColor = Color.FromArgb(64, 64, 0);
+            btnBeneficiario.Font = new Font("Segoe UI", 9F);
+            btnBeneficiario.ForeColor = Color.White;
+            btnBeneficiario.Location = new Point(0, 74);
+            btnBeneficiario.Name = "btnBeneficiario";
+            btnBeneficiario.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            btnBeneficiario.Size = new Size(193, 37);
+            btnBeneficiario.TabIndex = 2;
+            btnBeneficiario.Text = "Beneficiario";
             // 
-            // flowLayoutPanel1
+            // btnEmpleado
             // 
-            flowLayoutPanel1.BackColor = Color.Olive;
-            flowLayoutPanel1.Controls.Add(label1);
-            flowLayoutPanel1.Controls.Add(panel1);
-            flowLayoutPanel1.Controls.Add(CONSULTAS);
-            flowLayoutPanel1.Controls.Add(panel2);
-            flowLayoutPanel1.Controls.Add(label2);
-            flowLayoutPanel1.Controls.Add(panel3);
-            flowLayoutPanel1.Dock = DockStyle.Left;
-            flowLayoutPanel1.Location = new Point(0, 0);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(200, 861);
-            flowLayoutPanel1.TabIndex = 0;
+            btnEmpleado.BorderRadius = 5;
+            btnEmpleado.CustomizableEdges = customizableEdges5;
+            btnEmpleado.DisabledState.BorderColor = Color.DarkGray;
+            btnEmpleado.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnEmpleado.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnEmpleado.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnEmpleado.Dock = DockStyle.Top;
+            btnEmpleado.FillColor = Color.FromArgb(64, 64, 0);
+            btnEmpleado.Font = new Font("Segoe UI", 9F);
+            btnEmpleado.ForeColor = Color.White;
+            btnEmpleado.Location = new Point(0, 222);
+            btnEmpleado.Name = "btnEmpleado";
+            btnEmpleado.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            btnEmpleado.Size = new Size(193, 37);
+            btnEmpleado.TabIndex = 9;
+            btnEmpleado.Text = "Empleado";
             // 
-            // label1
+            // btnBanco
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.White;
-            label1.Location = new Point(3, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(193, 21);
-            label1.TabIndex = 0;
-            label1.Text = "SISTEMA LOTIFICADORA";
+            btnBanco.BorderRadius = 5;
+            btnBanco.CustomizableEdges = customizableEdges7;
+            btnBanco.DisabledState.BorderColor = Color.DarkGray;
+            btnBanco.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnBanco.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnBanco.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnBanco.Dock = DockStyle.Top;
+            btnBanco.FillColor = Color.FromArgb(64, 64, 0);
+            btnBanco.Font = new Font("Segoe UI", 9F);
+            btnBanco.ForeColor = Color.White;
+            btnBanco.Location = new Point(0, 148);
+            btnBanco.Name = "btnBanco";
+            btnBanco.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            btnBanco.Size = new Size(193, 37);
+            btnBanco.TabIndex = 7;
+            btnBanco.Text = "Banco";
             // 
-            // panel1
+            // btnLote
             // 
-            panel1.Location = new Point(3, 24);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(200, 41);
-            panel1.TabIndex = 1;
+            btnLote.BorderRadius = 5;
+            btnLote.CustomizableEdges = customizableEdges9;
+            btnLote.DisabledState.BorderColor = Color.DarkGray;
+            btnLote.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnLote.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnLote.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnLote.Dock = DockStyle.Top;
+            btnLote.FillColor = Color.FromArgb(64, 64, 0);
+            btnLote.Font = new Font("Segoe UI", 9F);
+            btnLote.ForeColor = Color.White;
+            btnLote.Location = new Point(0, 111);
+            btnLote.Name = "btnLote";
+            btnLote.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            btnLote.Size = new Size(193, 37);
+            btnLote.TabIndex = 6;
+            btnLote.Text = "Lote";
             // 
-            // CONSULTAS
+            // label8
             // 
-            CONSULTAS.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CONSULTAS.ForeColor = Color.WhiteSmoke;
-            CONSULTAS.Location = new Point(3, 68);
-            CONSULTAS.Name = "CONSULTAS";
-            CONSULTAS.Size = new Size(193, 15);
-            CONSULTAS.TabIndex = 2;
-            CONSULTAS.Text = "CONSULTAS";
+            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label8.ForeColor = Color.WhiteSmoke;
+            label8.Location = new Point(3, 603);
+            label8.Name = "label8";
+            label8.Size = new Size(193, 15);
+            label8.TabIndex = 8;
+            label8.Text = "OPERATIVOS";
+            // 
+            // panel9
+            // 
+            panel9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel9.Controls.Add(btnGestionGastos);
+            panel9.Controls.Add(btnRegistrarPago);
+            panel9.Controls.Add(btnRegistrarVentaCredito);
+            panel9.Location = new Point(3, 621);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(193, 120);
+            panel9.TabIndex = 9;
+            // 
+            // btnGestionGastos
+            // 
+            btnGestionGastos.BorderRadius = 5;
+            btnGestionGastos.CustomizableEdges = customizableEdges11;
+            btnGestionGastos.DisabledState.BorderColor = Color.DarkGray;
+            btnGestionGastos.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnGestionGastos.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnGestionGastos.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnGestionGastos.Dock = DockStyle.Top;
+            btnGestionGastos.FillColor = Color.FromArgb(64, 64, 0);
+            btnGestionGastos.Font = new Font("Segoe UI", 9F);
+            btnGestionGastos.ForeColor = Color.White;
+            btnGestionGastos.Location = new Point(0, 74);
+            btnGestionGastos.Name = "btnGestionGastos";
+            btnGestionGastos.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            btnGestionGastos.Size = new Size(193, 37);
+            btnGestionGastos.TabIndex = 5;
+            btnGestionGastos.Text = "Gestión de gastos";
+            // 
+            // btnRegistrarPago
+            // 
+            btnRegistrarPago.BorderRadius = 5;
+            btnRegistrarPago.CustomizableEdges = customizableEdges13;
+            btnRegistrarPago.DisabledState.BorderColor = Color.DarkGray;
+            btnRegistrarPago.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnRegistrarPago.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnRegistrarPago.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnRegistrarPago.Dock = DockStyle.Top;
+            btnRegistrarPago.FillColor = Color.FromArgb(64, 64, 0);
+            btnRegistrarPago.Font = new Font("Segoe UI", 9F);
+            btnRegistrarPago.ForeColor = Color.White;
+            btnRegistrarPago.Location = new Point(0, 37);
+            btnRegistrarPago.Name = "btnRegistrarPago";
+            btnRegistrarPago.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            btnRegistrarPago.Size = new Size(193, 37);
+            btnRegistrarPago.TabIndex = 4;
+            btnRegistrarPago.Text = "Gestión de pago";
+            // 
+            // btnRegistrarVentaCredito
+            // 
+            btnRegistrarVentaCredito.BorderRadius = 5;
+            btnRegistrarVentaCredito.CustomizableEdges = customizableEdges15;
+            btnRegistrarVentaCredito.DisabledState.BorderColor = Color.DarkGray;
+            btnRegistrarVentaCredito.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnRegistrarVentaCredito.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnRegistrarVentaCredito.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnRegistrarVentaCredito.Dock = DockStyle.Top;
+            btnRegistrarVentaCredito.FillColor = Color.FromArgb(64, 64, 0);
+            btnRegistrarVentaCredito.Font = new Font("Segoe UI", 9F);
+            btnRegistrarVentaCredito.ForeColor = Color.White;
+            btnRegistrarVentaCredito.Location = new Point(0, 0);
+            btnRegistrarVentaCredito.Name = "btnRegistrarVentaCredito";
+            btnRegistrarVentaCredito.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            btnRegistrarVentaCredito.Size = new Size(193, 37);
+            btnRegistrarVentaCredito.TabIndex = 3;
+            btnRegistrarVentaCredito.Text = "Gestión de venta";
+            // 
+            // btnAval
+            // 
+            btnAval.BorderRadius = 5;
+            btnAval.CustomizableEdges = customizableEdges17;
+            btnAval.DisabledState.BorderColor = Color.DarkGray;
+            btnAval.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnAval.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnAval.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnAval.Dock = DockStyle.Top;
+            btnAval.FillColor = Color.FromArgb(64, 64, 0);
+            btnAval.Font = new Font("Segoe UI", 9F);
+            btnAval.ForeColor = Color.White;
+            btnAval.Location = new Point(0, 37);
+            btnAval.Name = "btnAval";
+            btnAval.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            btnAval.Size = new Size(193, 37);
+            btnAval.TabIndex = 1;
+            btnAval.Text = "Aval";
+            // 
+            // CATÁLOGOS
+            // 
+            CATÁLOGOS.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            CATÁLOGOS.ForeColor = Color.WhiteSmoke;
+            CATÁLOGOS.Location = new Point(3, 744);
+            CATÁLOGOS.Name = "CATÁLOGOS";
+            CATÁLOGOS.Size = new Size(193, 15);
+            CATÁLOGOS.TabIndex = 10;
+            CATÁLOGOS.Text = "CATÁLOGOS";
             // 
             // panel2
             // 
@@ -133,10 +316,10 @@
             panel2.Controls.Add(btnEstadoDeCuenta);
             panel2.Controls.Add(btnCreditosActivos);
             panel2.Controls.Add(btnLotesDisponibles);
-            panel2.Location = new Point(3, 86);
+            panel2.Location = new Point(3, 762);
             panel2.Name = "panel2";
             panel2.Size = new Size(193, 272);
-            panel2.TabIndex = 3;
+            panel2.TabIndex = 11;
             // 
             // btnConsultarPagos
             // 
@@ -206,7 +389,7 @@
             // 
             // btnLotesDisponibles
             // 
-            btnLotesDisponibles.BackColor = Color.Transparent;
+            btnLotesDisponibles.BackColor = Color.IndianRed;
             btnLotesDisponibles.Dock = DockStyle.Top;
             btnLotesDisponibles.Location = new Point(0, 0);
             btnLotesDisponibles.Name = "btnLotesDisponibles";
@@ -215,158 +398,244 @@
             btnLotesDisponibles.Text = "Lotes Disponibles";
             btnLotesDisponibles.UseVisualStyleBackColor = false;
             // 
-            // label2
+            // btnCliente
             // 
-            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.WhiteSmoke;
-            label2.Location = new Point(3, 361);
-            label2.Name = "label2";
-            label2.Size = new Size(193, 15);
-            label2.TabIndex = 5;
-            label2.Text = "OPERACIONES";
+            btnCliente.BorderRadius = 5;
+            btnCliente.CustomizableEdges = customizableEdges19;
+            btnCliente.DisabledState.BorderColor = Color.DarkGray;
+            btnCliente.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnCliente.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnCliente.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnCliente.Dock = DockStyle.Top;
+            btnCliente.FillColor = Color.FromArgb(64, 64, 0);
+            btnCliente.Font = new Font("Segoe UI", 9F);
+            btnCliente.ForeColor = Color.White;
+            btnCliente.Location = new Point(0, 0);
+            btnCliente.Name = "btnCliente";
+            btnCliente.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            btnCliente.Size = new Size(193, 37);
+            btnCliente.TabIndex = 0;
+            btnCliente.Text = "Cliente";
             // 
-            // panel3
+            // pnlContenedor
             // 
-            panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel3.Controls.Add(btnGasto);
-            panel3.Controls.Add(btnCuentaBancaria);
-            panel3.Controls.Add(btnEstado);
-            panel3.Controls.Add(btnBanco);
-            panel3.Controls.Add(btnBloque);
-            panel3.Controls.Add(btnProyecto);
-            panel3.Controls.Add(btnEtapa);
-            panel3.Controls.Add(btnRegistrarLote);
-            panel3.Controls.Add(btnGestionClientes);
-            panel3.Controls.Add(btnRegistrarPago);
-            panel3.Controls.Add(btnRegistrarVentaCredito);
-            panel3.Location = new Point(3, 379);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(193, 317);
-            panel3.TabIndex = 6;
+            pnlContenedor.BackColor = SystemColors.ControlDark;
+            pnlContenedor.Dock = DockStyle.Fill;
+            pnlContenedor.Location = new Point(200, 0);
+            pnlContenedor.Name = "pnlContenedor";
+            pnlContenedor.Size = new Size(1384, 861);
+            pnlContenedor.TabIndex = 5;
+            // 
+            // pnlEsqueleto
+            // 
+            pnlEsqueleto.Controls.Add(pnlContenedor);
+            pnlEsqueleto.Controls.Add(flowLayoutPanel2);
+            pnlEsqueleto.Dock = DockStyle.Fill;
+            pnlEsqueleto.Location = new Point(0, 0);
+            pnlEsqueleto.Name = "pnlEsqueleto";
+            pnlEsqueleto.Size = new Size(1584, 861);
+            pnlEsqueleto.TabIndex = 2;
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.AutoScroll = true;
+            flowLayoutPanel2.BackColor = Color.Olive;
+            flowLayoutPanel2.Controls.Add(label4);
+            flowLayoutPanel2.Controls.Add(panel5);
+            flowLayoutPanel2.Controls.Add(label5);
+            flowLayoutPanel2.Controls.Add(panel6);
+            flowLayoutPanel2.Controls.Add(label6);
+            flowLayoutPanel2.Controls.Add(panel7);
+            flowLayoutPanel2.Controls.Add(label7);
+            flowLayoutPanel2.Controls.Add(panel8);
+            flowLayoutPanel2.Controls.Add(label8);
+            flowLayoutPanel2.Controls.Add(panel9);
+            flowLayoutPanel2.Controls.Add(CATÁLOGOS);
+            flowLayoutPanel2.Controls.Add(panel2);
+            flowLayoutPanel2.Dock = DockStyle.Left;
+            flowLayoutPanel2.Location = new Point(0, 0);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new Size(200, 861);
+            flowLayoutPanel2.TabIndex = 1;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.ForeColor = Color.White;
+            label4.Location = new Point(3, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(193, 21);
+            label4.TabIndex = 0;
+            label4.Text = "SISTEMA LOTIFICADORA";
+            // 
+            // panel5
+            // 
+            panel5.Location = new Point(3, 24);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(200, 41);
+            panel5.TabIndex = 1;
+            // 
+            // label5
+            // 
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.WhiteSmoke;
+            label5.Location = new Point(3, 68);
+            label5.Name = "label5";
+            label5.Size = new Size(193, 15);
+            label5.TabIndex = 2;
+            label5.Text = "CATÁLOGOS";
+            // 
+            // panel6
+            // 
+            panel6.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel6.Controls.Add(btnTipGasto);
+            panel6.Controls.Add(btnEstado);
+            panel6.Location = new Point(3, 86);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(193, 85);
+            panel6.TabIndex = 3;
+            // 
+            // btnTipGasto
+            // 
+            btnTipGasto.BorderRadius = 5;
+            btnTipGasto.CustomizableEdges = customizableEdges21;
+            btnTipGasto.DisabledState.BorderColor = Color.DarkGray;
+            btnTipGasto.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnTipGasto.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnTipGasto.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnTipGasto.Dock = DockStyle.Top;
+            btnTipGasto.FillColor = Color.FromArgb(64, 64, 0);
+            btnTipGasto.Font = new Font("Segoe UI", 9F);
+            btnTipGasto.ForeColor = Color.White;
+            btnTipGasto.Location = new Point(0, 37);
+            btnTipGasto.Name = "btnTipGasto";
+            btnTipGasto.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            btnTipGasto.Size = new Size(193, 37);
+            btnTipGasto.TabIndex = 1;
+            btnTipGasto.Text = "Tipo Gasto";
             // 
             // btnEstado
             // 
+            btnEstado.BorderRadius = 5;
+            btnEstado.CustomizableEdges = customizableEdges23;
+            btnEstado.DisabledState.BorderColor = Color.DarkGray;
+            btnEstado.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnEstado.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnEstado.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnEstado.Dock = DockStyle.Top;
-            btnEstado.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnEstado.Location = new Point(0, 227);
+            btnEstado.FillColor = Color.FromArgb(64, 64, 0);
+            btnEstado.Font = new Font("Segoe UI", 9F);
+            btnEstado.ForeColor = Color.White;
+            btnEstado.Location = new Point(0, 0);
             btnEstado.Name = "btnEstado";
-            btnEstado.Size = new Size(193, 28);
-            btnEstado.TabIndex = 8;
+            btnEstado.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            btnEstado.Size = new Size(193, 37);
+            btnEstado.TabIndex = 0;
             btnEstado.Text = "Estado";
-            btnEstado.UseVisualStyleBackColor = true;
             // 
-            // btnBanco
+            // label6
             // 
-            btnBanco.Dock = DockStyle.Top;
-            btnBanco.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnBanco.Location = new Point(0, 196);
-            btnBanco.Name = "btnBanco";
-            btnBanco.Size = new Size(193, 31);
-            btnBanco.TabIndex = 7;
-            btnBanco.Text = "Banco";
-            btnBanco.UseVisualStyleBackColor = true;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.ForeColor = Color.WhiteSmoke;
+            label6.Location = new Point(3, 174);
+            label6.Name = "label6";
+            label6.Size = new Size(193, 15);
+            label6.TabIndex = 4;
+            label6.Text = "ENTIDADES PRINCIPALES";
+            // 
+            // panel7
+            // 
+            panel7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel7.Controls.Add(btnEmpleado);
+            panel7.Controls.Add(btnCuentaBancaria);
+            panel7.Controls.Add(btnBanco);
+            panel7.Controls.Add(btnLote);
+            panel7.Controls.Add(btnBloque);
+            panel7.Controls.Add(btnEtapa);
+            panel7.Controls.Add(btnProyecto);
+            panel7.Location = new Point(3, 192);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(193, 271);
+            panel7.TabIndex = 5;
             // 
             // btnBloque
             // 
+            btnBloque.BorderRadius = 5;
+            btnBloque.CustomizableEdges = customizableEdges25;
+            btnBloque.DisabledState.BorderColor = Color.DarkGray;
+            btnBloque.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnBloque.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnBloque.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnBloque.Dock = DockStyle.Top;
-            btnBloque.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnBloque.Location = new Point(0, 168);
+            btnBloque.FillColor = Color.FromArgb(64, 64, 0);
+            btnBloque.Font = new Font("Segoe UI", 9F);
+            btnBloque.ForeColor = Color.White;
+            btnBloque.Location = new Point(0, 74);
             btnBloque.Name = "btnBloque";
-            btnBloque.Size = new Size(193, 28);
-            btnBloque.TabIndex = 6;
+            btnBloque.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            btnBloque.Size = new Size(193, 37);
+            btnBloque.TabIndex = 5;
             btnBloque.Text = "Bloque";
-            btnBloque.UseVisualStyleBackColor = true;
-            // 
-            // btnProyecto
-            // 
-            btnProyecto.Dock = DockStyle.Top;
-            btnProyecto.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnProyecto.Location = new Point(0, 140);
-            btnProyecto.Name = "btnProyecto";
-            btnProyecto.Size = new Size(193, 28);
-            btnProyecto.TabIndex = 5;
-            btnProyecto.Text = "Proyecto";
-            btnProyecto.UseVisualStyleBackColor = true;
             // 
             // btnEtapa
             // 
+            btnEtapa.BorderRadius = 5;
+            btnEtapa.CustomizableEdges = customizableEdges27;
+            btnEtapa.DisabledState.BorderColor = Color.DarkGray;
+            btnEtapa.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnEtapa.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnEtapa.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
             btnEtapa.Dock = DockStyle.Top;
-            btnEtapa.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnEtapa.Location = new Point(0, 112);
+            btnEtapa.FillColor = Color.FromArgb(64, 64, 0);
+            btnEtapa.Font = new Font("Segoe UI", 9F);
+            btnEtapa.ForeColor = Color.White;
+            btnEtapa.Location = new Point(0, 37);
             btnEtapa.Name = "btnEtapa";
-            btnEtapa.Size = new Size(193, 28);
-            btnEtapa.TabIndex = 0;
+            btnEtapa.ShadowDecoration.CustomizableEdges = customizableEdges28;
+            btnEtapa.Size = new Size(193, 37);
+            btnEtapa.TabIndex = 4;
             btnEtapa.Text = "Etapa";
-            btnEtapa.UseVisualStyleBackColor = true;
             // 
-            // btnRegistrarLote
+            // btnProyecto
             // 
-            btnRegistrarLote.Dock = DockStyle.Top;
-            btnRegistrarLote.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrarLote.Location = new Point(0, 84);
-            btnRegistrarLote.Name = "btnRegistrarLote";
-            btnRegistrarLote.Size = new Size(193, 28);
-            btnRegistrarLote.TabIndex = 4;
-            btnRegistrarLote.Text = "Lote";
-            btnRegistrarLote.UseVisualStyleBackColor = true;
+            btnProyecto.BorderRadius = 5;
+            btnProyecto.CustomizableEdges = customizableEdges29;
+            btnProyecto.DisabledState.BorderColor = Color.DarkGray;
+            btnProyecto.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnProyecto.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnProyecto.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnProyecto.Dock = DockStyle.Top;
+            btnProyecto.FillColor = Color.FromArgb(64, 64, 0);
+            btnProyecto.Font = new Font("Segoe UI", 9F);
+            btnProyecto.ForeColor = Color.White;
+            btnProyecto.Location = new Point(0, 0);
+            btnProyecto.Name = "btnProyecto";
+            btnProyecto.ShadowDecoration.CustomizableEdges = customizableEdges30;
+            btnProyecto.Size = new Size(193, 37);
+            btnProyecto.TabIndex = 3;
+            btnProyecto.Text = "Proyecto";
             // 
-            // btnGestionClientes
+            // label7
             // 
-            btnGestionClientes.BackColor = Color.Transparent;
-            btnGestionClientes.Dock = DockStyle.Top;
-            btnGestionClientes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnGestionClientes.Location = new Point(0, 56);
-            btnGestionClientes.Name = "btnGestionClientes";
-            btnGestionClientes.Size = new Size(193, 28);
-            btnGestionClientes.TabIndex = 3;
-            btnGestionClientes.Text = "Cliente";
-            btnGestionClientes.UseVisualStyleBackColor = false;
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.ForeColor = Color.WhiteSmoke;
+            label7.Location = new Point(3, 466);
+            label7.Name = "label7";
+            label7.Size = new Size(193, 15);
+            label7.TabIndex = 6;
+            label7.Text = "ENTIDADES PRINCIPALES";
             // 
-            // btnRegistrarPago
+            // panel8
             // 
-            btnRegistrarPago.BackColor = Color.Transparent;
-            btnRegistrarPago.Dock = DockStyle.Top;
-            btnRegistrarPago.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrarPago.Location = new Point(0, 28);
-            btnRegistrarPago.Name = "btnRegistrarPago";
-            btnRegistrarPago.Size = new Size(193, 28);
-            btnRegistrarPago.TabIndex = 1;
-            btnRegistrarPago.Text = "Registrar Pago";
-            btnRegistrarPago.UseVisualStyleBackColor = false;
-            // 
-            // btnRegistrarVentaCredito
-            // 
-            btnRegistrarVentaCredito.BackColor = Color.Transparent;
-            btnRegistrarVentaCredito.Dock = DockStyle.Top;
-            btnRegistrarVentaCredito.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRegistrarVentaCredito.Location = new Point(0, 0);
-            btnRegistrarVentaCredito.Name = "btnRegistrarVentaCredito";
-            btnRegistrarVentaCredito.Size = new Size(193, 28);
-            btnRegistrarVentaCredito.TabIndex = 0;
-            btnRegistrarVentaCredito.Text = "Registrar Venta Crédito";
-            btnRegistrarVentaCredito.UseVisualStyleBackColor = false;
-            // 
-            // btnCuentaBancaria
-            // 
-            btnCuentaBancaria.Dock = DockStyle.Top;
-            btnCuentaBancaria.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnCuentaBancaria.Location = new Point(0, 255);
-            btnCuentaBancaria.Name = "btnCuentaBancaria";
-            btnCuentaBancaria.Size = new Size(193, 28);
-            btnCuentaBancaria.TabIndex = 9;
-            btnCuentaBancaria.Text = "Cuenta Bancaria";
-            btnCuentaBancaria.UseVisualStyleBackColor = true;
-            // 
-            // btnGasto
-            // 
-            btnGasto.Dock = DockStyle.Top;
-            btnGasto.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnGasto.Location = new Point(0, 283);
-            btnGasto.Name = "btnGasto";
-            btnGasto.Size = new Size(193, 28);
-            btnGasto.TabIndex = 10;
-            btnGasto.Text = "Gasto";
-            btnGasto.UseVisualStyleBackColor = true;
+            panel8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel8.Controls.Add(btnBeneficiario);
+            panel8.Controls.Add(btnAval);
+            panel8.Controls.Add(btnCliente);
+            panel8.Location = new Point(3, 484);
+            panel8.Name = "panel8";
+            panel8.Size = new Size(193, 116);
+            panel8.TabIndex = 7;
             // 
             // frmMenuPrincipal
             // 
@@ -377,42 +646,55 @@
             Name = "frmMenuPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "frmMenuPrincipal";
-            pnlEsqueleto.ResumeLayout(false);
-            flowLayoutPanel1.ResumeLayout(false);
-            flowLayoutPanel1.PerformLayout();
+            panel9.ResumeLayout(false);
             panel2.ResumeLayout(false);
-            panel3.ResumeLayout(false);
+            pnlEsqueleto.ResumeLayout(false);
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            panel6.ResumeLayout(false);
+            panel7.ResumeLayout(false);
+            panel8.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel pnlEsqueleto;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private Label label1;
-        private Panel panel1;
-        private Label CONSULTAS;
+        private Guna.UI2.WinForms.Guna2Button btnCuentaBancaria;
+        private Guna.UI2.WinForms.Guna2Button btnBeneficiario;
+        private Guna.UI2.WinForms.Guna2Button btnEmpleado;
+        private Guna.UI2.WinForms.Guna2Button btnBanco;
+        private Guna.UI2.WinForms.Guna2Button btnLote;
+        private Label label8;
+        private Panel panel9;
+        private Guna.UI2.WinForms.Guna2Button btnGestionGastos;
+        private Guna.UI2.WinForms.Guna2Button btnRegistrarPago;
+        private Guna.UI2.WinForms.Guna2Button btnRegistrarVentaCredito;
+        private Guna.UI2.WinForms.Guna2Button btnAval;
+        private Label CATÁLOGOS;
         private Panel panel2;
-        private Button btnLotesDisponibles;
+        private Button btnConsultarPagos;
+        private Button btnConsultaLotesAptosCliente;
         private Button btnConsultarPlanPago;
         private Button btnRecaudacionEtapa;
         private Button btnEstadoDeCuenta;
         private Button btnCreditosActivos;
-        private Label label2;
-        private Panel panel3;
-        private Button btnRegistrarPago;
-        private Button btnRegistrarVentaCredito;
+        private Button btnLotesDisponibles;
+        private Guna.UI2.WinForms.Guna2Button btnCliente;
         private Panel pnlContenedor;
-        private Button btnConsultaLotesAptosCliente;
-        private Button btnGestionClientes;
-        private Button btnRegistrarLote;
-        private Button btnConsultarPagos;
-        private Button btnEtapa;
-        private Button btnProyecto;
-        private Button btnBloque;
-        private Button btnBanco;
-        private Button btnEstado;
-        private Button btnGasto;
-        private Button btnCuentaBancaria;
+        private Panel pnlEsqueleto;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private Label label4;
+        private Panel panel5;
+        private Label label5;
+        private Panel panel6;
+        private Guna.UI2.WinForms.Guna2Button btnTipGasto;
+        private Guna.UI2.WinForms.Guna2Button btnEstado;
+        private Label label6;
+        private Panel panel7;
+        private Guna.UI2.WinForms.Guna2Button btnBloque;
+        private Guna.UI2.WinForms.Guna2Button btnEtapa;
+        private Guna.UI2.WinForms.Guna2Button btnProyecto;
+        private Label label7;
+        private Panel panel8;
     }
 }

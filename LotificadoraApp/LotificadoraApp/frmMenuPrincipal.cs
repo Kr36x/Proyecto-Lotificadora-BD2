@@ -5,6 +5,10 @@ using LotificadoraApp.Proyecto;
 using LotificadoraApp.Bloque;
 using LotificadoraApp.Etapa;
 using LotificadoraApp.CuentaBancaria;
+using LotificadoraApp.Gasto;
+using LotificadoraApp.GestionGastos;
+using LotificadoraApp.Empleado;
+using Guna.UI2.WinForms;
 
 namespace LotificadoraApp
 {
@@ -77,32 +81,32 @@ namespace LotificadoraApp
             // Ajusta estos nombres a los nombres reales de tus botones
             btnLotesDisponibles.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnLotesDisponibles);
+                //MarcarBotonActivo(btnLotesDisponibles);
                 AbrirEnContenedor(new frmConsultaVistaLotes());
             };
 
             btnCreditosActivos.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnCreditosActivos);
+               // MarcarBotonActivo(btnCreditosActivos);
                 AbrirEnContenedor(new frmConsultaVistaCreditos());
             };
 
             btnEstadoDeCuenta.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnEstadoDeCuenta);
+                //MarcarBotonActivo(btnEstadoDeCuenta);
                 AbrirEnContenedor(new frmConsultaEstadoCuenta());
             };
 
             btnRecaudacionEtapa.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnRecaudacionEtapa);
+                //MarcarBotonActivo(btnRecaudacionEtapa);
                 AbrirEnContenedor(new frmConsultaRecaudacion());
             };
 
             btnConsultarPlanPago.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnConsultarPlanPago);
-                AbrirEnContenedor(new frmConsultarPlanPago());  
+                //MarcarBotonActivo(btnConsultarPlanPago);
+                AbrirEnContenedor(new frmConsultarPlanPago());
             };
 
             btnRegistrarVentaCredito.Click += (_, _) =>
@@ -119,25 +123,25 @@ namespace LotificadoraApp
 
             btnConsultaLotesAptosCliente.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnConsultaLotesAptosCliente);
+               // MarcarBotonActivo(btnConsultaLotesAptosCliente);
                 AbrirEnContenedor(new frmConsultaLotesAptosCliente());
             };
 
-            btnGestionClientes.Click += (_, _) =>
+            btnCliente.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnGestionClientes);
+                MarcarBotonActivo(btnCliente);
                 AbrirEnContenedor(new frmGestionClientes());
             };
 
-            btnRegistrarLote.Click += (_, _) =>
+            btnLote.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnRegistrarLote);
+                MarcarBotonActivo(btnLote);
                 AbrirEnContenedor(new frmLote());
             };
 
             btnConsultarPagos.Click += (_, _) =>
             {
-                MarcarBotonActivo(btnConsultarPagos);
+                //MarcarBotonActivo(btnConsultarPagos);
                 AbrirEnContenedor(new frmConsultaPagos());
             };
 
@@ -176,6 +180,24 @@ namespace LotificadoraApp
                 MarcarBotonActivo(btnCuentaBancaria);
                 AbrirEnContenedor(new frmCuentaBancaria());
             };
+
+            btnTipGasto.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnTipGasto);
+                AbrirEnContenedor(new frmTipoGasto());
+            };
+
+            btnGestionGastos.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnGestionGastos);
+                AbrirEnContenedor(new frmGestionGasto());
+            };
+
+            btnEmpleado.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnEmpleado);
+                AbrirEnContenedor(new FrmEmpleado());
+            };
         }
 
         private void AbrirEnContenedor(Form formularioHijo)
@@ -198,7 +220,7 @@ namespace LotificadoraApp
             formularioHijo.Show();
         }
 
-        private void MarcarBotonActivo(Button botonActivo)
+        private void MarcarBotonActivo(Guna2Button botonActivo)
         {
             Color botonNormal = Color.FromArgb(245, 245, 245);
             Color botonSeleccionado = Color.FromArgb(198, 219, 174);
@@ -229,6 +251,11 @@ namespace LotificadoraApp
                     return ObtenerBotones(c);
                 })
                 .ToArray();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

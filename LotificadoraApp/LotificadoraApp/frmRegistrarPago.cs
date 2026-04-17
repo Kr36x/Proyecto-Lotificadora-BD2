@@ -62,6 +62,7 @@ namespace LotificadoraApp
             try
             {
                 CargarVentasCredito();
+                CargarEmpleados(); 
                 LimpiarFormulario();
             }
             catch (Exception ex)
@@ -90,7 +91,34 @@ namespace LotificadoraApp
             cmbVentaCredito.ValueMember = "idVenta";
             cmbVentaCredito.SelectedIndex = -1;
         }
+        private void CargarEmpleados()
+        {
+            try
+            {
+                DataTable dt = Db.ExecuteStoredProcedure("sp_empleado_listar");
 
+                DataView view = dt.DefaultView;
+                view.RowFilter = "estadoId = 1";
+
+                DataTable dtFiltrado = view.ToTable();
+
+                dtFiltrado.Columns.Add("descripcion", typeof(string), "Convert(id, 'System.String') + ' - ' + nombres + ' ' + apellidos");
+
+                cmbEmpleado.DataSource = dtFiltrado;
+                cmbEmpleado.DisplayMember = "descripcion";
+                cmbEmpleado.ValueMember = "id";
+                cmbEmpleado.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Error al cargar empleados:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
         private void cmbVentaCredito_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbVentaCredito.SelectedIndex < 0)
@@ -253,6 +281,7 @@ namespace LotificadoraApp
                 cmd.Parameters.AddWithValue("@idCuentaBancaria", idCuentaBancaria);
                 cmd.Parameters.AddWithValue("@numeroReferencia", numeroReferencia);
                 cmd.Parameters.AddWithValue("@observacion", observacion);
+                cmd.Parameters.AddWithValue("@idEmpleado", cmbEmpleado.SelectedIndex < 0 ? DBNull.Value: Convert.ToInt32(cmbEmpleado.SelectedValue));
 
                 DataTable dt = new DataTable();
                 using SqlDataAdapter da = new SqlDataAdapter(cmd);
