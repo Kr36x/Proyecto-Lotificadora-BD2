@@ -189,5 +189,39 @@ namespace LotificadoraApp.Municipio
         {
             _municipioIdSeleccionado = 0;
         }
+
+        private void btnCrear_Click(object sender, EventArgs e)
+        {
+            using frmRegistrarMunicipio frmRegistrarMunicipio = new();
+
+            frmRegistrarMunicipio.FormClosed += (_, _) => ObtenerMunicipios();
+            frmRegistrarMunicipio.ShowDialog();
+        }
+
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+
+            if (_municipioIdSeleccionado <= 0)
+            {
+                MostrarWarning("Seleccione un municipio para editar");
+                return;
+            }
+
+            using frmRegistrarMunicipio frmRegistrarMunicipio =
+                new(_municipioIdSeleccionado);
+
+            frmRegistrarMunicipio.FormClosed += (_, _) => ObtenerMunicipios();
+            frmRegistrarMunicipio.ShowDialog();
+        }
+
+        private static void MostrarWarning(string mensaje)
+        {
+            MessageBox.Show(
+                mensaje,
+                "Atención",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+        }
     }
 }

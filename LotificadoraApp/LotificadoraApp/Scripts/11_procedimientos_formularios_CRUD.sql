@@ -142,3 +142,174 @@ BEGIN
     ORDER BY nombreProyecto, nombreEtapa, nombreBloque, numeroLote;
 END;
 GO
+
+--CONTROL DE CAJA
+
+
+
+--Resumen para grid
+CREATE OR ALTER PROCEDURE dbo.sp_control_caja_resumen_movimientos
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        cc.fechaMovimiento,
+        cc.tipoMovimiento,
+        cc.monto,
+        CONCAT(e.nombres, ' ', e.apellidos) AS empleado,
+        cc.observacion
+    FROM ControlCaja cc
+    INNER JOIN Empleado e
+        ON cc.idEmpleado = e.id
+    WHERE (@fechaInicio IS NULL OR cc.fechaMovimiento >= @fechaInicio)
+      AND (@fechaFin IS NULL OR cc.fechaMovimiento < DATEADD(DAY, 1, @fechaFin))
+    ORDER BY cc.fechaMovimiento DESC, cc.idControlCaja DESC;
+END;
+GO
+
+--Resumen para los labels
+CREATE OR ALTER PROCEDURE dbo.sp_control_caja_obtener_resumen
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        ISNULL(SUM(CASE WHEN tipoMovimiento = 'recepcion_efectivo' THEN monto ELSE 0 END), 0) AS totalRecibido,
+        ISNULL(SUM(CASE WHEN tipoMovimiento = 'deposito_banco' THEN monto ELSE 0 END), 0) AS totalDepositado,
+        ISNULL(SUM(CASE
+            WHEN tipoMovimiento = 'recepcion_efectivo' THEN monto
+            WHEN tipoMovimiento = 'deposito_banco' THEN -monto
+            ELSE 0
+        END), 0) AS saldoCaja,
+        COUNT(*) AS totalMovimientos
+    FROM ControlCaja
+    WHERE (@fechaInicio IS NULL OR fechaMovimiento >= @fechaInicio)
+      AND (@fechaFin IS NULL OR fechaMovimiento < DATEADD(DAY, 1, @fechaFin));
+END;
+GO
+
+--Consultar pendiente por cuenta/etapa
+CREATE OR ALTER PROCEDURE dbo.sp_control_caja_consultar_pendiente_deposito
+    @idCuentaBancaria INT,
+    @fechaOperacion DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @idEtapaCuenta INT;
+
+    IF @fechaOperacion IS NULL
+        SET @fechaOperacion = CAST(GETDATE() AS DATE);
+
+    SELECT @idEtapaCuenta = idEtapa
+    FROM CuentaBancaria
+    WHERE idCuentaBancaria = @idCuentaBancaria
+      AND estadoId = 4;
+
+    IF @idEtapaCuenta IS NULL
+    BEGIN
+        RAISERROR('La cuenta bancaria no existe o esta inactiva.', 16, 1);
+        RETURN;
+    END
+
+    SELECT
+        COUNT(1) AS cantidadPagos,
+        ISNULL(SUM(p.montoTotal), 0) AS totalPendiente
+    FROM Pago p
+    INNER JOIN Venta v ON p.idVenta = v.idVenta
+    INNER JOIN Lote l ON v.idLote = l.idLote
+    INNER JOIN Bloque b ON l.idBloque = b.idBloque
+    WHERE p.formaPago = 'efectivo'
+      AND p.depositadoCaja = 0
+      AND CAST(p.fechaPago AS DATE) = @fechaOperacion
+      AND b.idEtapa = @idEtapaCuenta;
+END;
+GO
+
+--Combo cuentas disponibles
+CREATE OR ALTER PROCEDURE dbo.sp_cuenta_bancaria_listar_activas_combo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        cb.idCuentaBancaria,
+        CONCAT(b.nombreBanco, ' - ', cb.numeroCuenta, ' - ', e.nombreEtapa) AS descripcion
+    FROM CuentaBancaria cb
+    INNER JOIN Banco b ON cb.idBanco = b.idBanco
+    INNER JOIN Etapa e ON cb.idEtapa = e.idEtapa
+    WHERE cb.estadoId = 4
+    ORDER BY b.nombreBanco, cb.numeroCuenta;
+END;
+GO
+
+--FACTURAS
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_listar
+    @numeroFactura VARCHAR(50) = NULL,
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL,
+    @nombreCliente VARCHAR(200) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idFactura,
+        idPago,
+        numeroFactura,
+        fechaFactura,
+        nombreCliente,
+        rtnCliente,
+        totalFactura
+    FROM Factura
+    WHERE (@numeroFactura IS NULL OR numeroFactura LIKE '%' + @numeroFactura + '%')
+      AND (@fechaInicio IS NULL OR CAST(fechaFactura AS DATE) >= @fechaInicio)
+      AND (@fechaFin IS NULL OR CAST(fechaFactura AS DATE) <= @fechaFin)
+      AND (@nombreCliente IS NULL OR nombreCliente LIKE '%' + @nombreCliente + '%')
+    ORDER BY idFactura DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_obtener
+    @idFactura INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idFactura,
+        idPago,
+        numeroFactura,
+        fechaFactura,
+        nombreCliente,
+        rtnCliente,
+        totalFactura
+    FROM Factura
+    WHERE idFactura = @idFactura;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_detalle_listar
+    @idFactura INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idDetalleFactura,
+        idFactura,
+        descripcion,
+        capital,
+        interes,
+        subtotal
+    FROM DetalleFactura
+    WHERE idFactura = @idFactura
+    ORDER BY idDetalleFactura ASC;
+END;
+GO

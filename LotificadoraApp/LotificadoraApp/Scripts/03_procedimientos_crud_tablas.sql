@@ -91,22 +91,53 @@ GO
 -- =======================================================
 
 --INSERT
-CREATE PROCEDURE sp_proyecto_insertar
+CREATE OR ALTER PROCEDURE sp_proyecto_insertar
     @nombreProyecto VARCHAR(150),
     @descripcion VARCHAR(255) = NULL,
     @fechaInicio DATE,
     @fechaFinEstimada DATE = NULL,
     @areaTotalV2 DECIMAL(18,2),
     @maxAniosFinanciamiento INT,
-    @estado INT = 1
+    @estado INT = 1,
+    @departamentoId INT,
+    @municipioId INT,
+    @aldeaColonia VARCHAR(150) = NULL,
+    @direccionDetalle VARCHAR(255) = NULL,
+    @claveCatastral VARCHAR(100) = NULL,
+    @observacionLegal VARCHAR(255) = NULL
 AS
 BEGIN
     BEGIN TRY
+        DECLARE @idProyectoGenerado INT;
+
         INSERT INTO Proyecto (nombreProyecto, descripcion, fechaInicio, fechaFinEstimada, areaTotalV2, maxAniosFinanciamiento, estadoId)
         VALUES (@nombreProyecto, @descripcion, @fechaInicio, @fechaFinEstimada, @areaTotalV2, @maxAniosFinanciamiento, @estado);
         
         -- Opcional: Devolver el ID del proyecto recién insertado
-        SELECT SCOPE_IDENTITY() AS idProyectoGenerado;
+        SET @idProyectoGenerado = CAST(SCOPE_IDENTITY() AS INT);
+
+        INSERT INTO UbicacionProyecto
+        (
+            idProyecto,
+            departamentoId,
+            municipioId,
+            aldeaColonia,
+            direccionDetalle,
+            claveCatastral,
+            observacionLegal
+        )
+        VALUES
+        (
+            @idProyectoGenerado,
+            @departamentoId,
+            @municipioId,
+            @aldeaColonia,
+            @direccionDetalle,
+            @claveCatastral,
+            @observacionLegal
+        );
+
+        SELECT @idProyectoGenerado AS idProyectoGenerado;
     END TRY
     BEGIN CATCH
         SELECT ERROR_MESSAGE() AS MensajeError;
@@ -115,7 +146,7 @@ END;
 GO
 
 -- ACTUALIZAR
-CREATE PROCEDURE sp_proyecto_actualizar
+CREATE OR ALTER PROCEDURE sp_proyecto_actualizar
     @idProyecto INT,
     @nombreProyecto VARCHAR(150),
     @descripcion VARCHAR(255) = NULL,
@@ -123,7 +154,13 @@ CREATE PROCEDURE sp_proyecto_actualizar
     @fechaFinEstimada DATE = NULL,
     @areaTotalV2 DECIMAL(18,2),
     @maxAniosFinanciamiento INT,
-    @estado INT
+    @estado INT,
+    @departamentoId INT,
+    @municipioId INT,
+    @aldeaColonia VARCHAR(150) = NULL,
+    @direccionDetalle VARCHAR(255) = NULL,
+    @claveCatastral VARCHAR(100) = NULL,
+    @observacionLegal VARCHAR(255) = NULL
 AS
 BEGIN
     BEGIN TRY
@@ -136,6 +173,41 @@ BEGIN
             maxAniosFinanciamiento = @maxAniosFinanciamiento,
             estadoId = @estado
         WHERE idProyecto = @idProyecto;
+
+        IF EXISTS (SELECT 1 FROM UbicacionProyecto WHERE idProyecto = @idProyecto)
+        BEGIN
+            UPDATE UbicacionProyecto
+            SET departamentoId = @departamentoId,
+                municipioId = @municipioId,
+                aldeaColonia = @aldeaColonia,
+                direccionDetalle = @direccionDetalle,
+                claveCatastral = @claveCatastral,
+                observacionLegal = @observacionLegal
+            WHERE idProyecto = @idProyecto;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO UbicacionProyecto
+            (
+                idProyecto,
+                departamentoId,
+                municipioId,
+                aldeaColonia,
+                direccionDetalle,
+                claveCatastral,
+                observacionLegal
+            )
+            VALUES
+            (
+                @idProyecto,
+                @departamentoId,
+                @municipioId,
+                @aldeaColonia,
+                @direccionDetalle,
+                @claveCatastral,
+                @observacionLegal
+            );
+        END
     END TRY
     BEGIN CATCH
         SELECT ERROR_MESSAGE() AS MensajeError;
@@ -193,9 +265,17 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        T1.nombre AS estado
+        T1.nombre AS estado,
+        U.idUbicacion,
+        U.departamentoId,
+        U.municipioId,
+        U.aldeaColonia,
+        U.direccionDetalle,
+        U.claveCatastral,
+        U.observacionLegal
     FROM Proyecto AS T0
     INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+    LEFT JOIN [dbo].[UbicacionProyecto] AS U ON T0.idProyecto = U.idProyecto
     ORDER BY idProyecto DESC;
 END;
 GO
@@ -1265,7 +1345,6 @@ GO
 -- PROCEDIMIENTOS PARA MUNICIPIO
 -- =======================================================
 CREATE OR ALTER PROCEDURE dbo.sp_municipio_insertar
-    @id INT,
     @codigo CHAR(2),
     @departamentoId INT,
     @nombre VARCHAR(100)
@@ -1274,10 +1353,10 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        INSERT INTO dbo.Municipio (id, codigo, departamentoId, nombre)
-        VALUES (@id, @codigo, @departamentoId, @nombre);
+        INSERT INTO dbo.Municipio (codigo, departamentoId, nombre)
+        VALUES (@codigo, @departamentoId, @nombre);
 
-        SELECT @id AS idMunicipioGenerado;
+        SELECT SCOPE_IDENTITY() AS idMunicipioGenerado;
     END TRY
     BEGIN CATCH
         SELECT ERROR_MESSAGE() AS MensajeError;

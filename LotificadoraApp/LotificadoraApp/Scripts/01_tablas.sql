@@ -52,9 +52,6 @@ create table Municipio (
 );
 go
 
-alter table Municipio
-add constraint uq_Municipio_Codigo unique (codigo);
-go
 
 create table UbicacionProyecto (
     idUbicacion int identity(1,1) primary key,
