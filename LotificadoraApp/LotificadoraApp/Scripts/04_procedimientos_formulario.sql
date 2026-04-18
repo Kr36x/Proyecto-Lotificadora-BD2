@@ -1341,3 +1341,28 @@ BEGIN
         ON ec.estadoId = e.id
 END
 GO
+
+--Resumen plan pago para el uso de control de cuotas
+CREATE OR ALTER PROCEDURE dbo.sp_resumen_plan_pago_por_credito
+    @idVentaCredito INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        f.numeroCuota,
+        f.fechaVencimiento,
+        f.saldoInicial,
+        f.capitalProgramado,
+        f.interesProgramado,
+        f.montoCuota,
+        f.saldoFinal,
+        e.nombre AS estadoCuota
+    FROM dbo.fn_tvf_plan_pago_por_credito(@idVentaCredito) f
+    INNER JOIN dbo.Estado e
+        ON f.estadoId = e.id
+    ORDER BY f.numeroCuota;
+END
+GO
+
+exec dbo.sp_resumen_plan_pago_por_credito @idVentaCredito = 2
