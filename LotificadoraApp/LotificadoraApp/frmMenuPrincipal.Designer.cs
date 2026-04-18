@@ -38,8 +38,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -72,6 +70,10 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges42 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges43 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges44 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges45 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges46 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             btnCuentaBancaria = new Guna.UI2.WinForms.Guna2Button();
             btnBeneficiario = new Guna.UI2.WinForms.Guna2Button();
             btnEmpleado = new Guna.UI2.WinForms.Guna2Button();
@@ -79,7 +81,7 @@
             btnLote = new Guna.UI2.WinForms.Guna2Button();
             label8 = new Label();
             panel9 = new Panel();
-            guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
+            btnControlCaja = new Guna.UI2.WinForms.Guna2Button();
             btnConsultarPlanPago = new Guna.UI2.WinForms.Guna2Button();
             btnEstadoDeCuenta = new Guna.UI2.WinForms.Guna2Button();
             btnCreditosActivos = new Guna.UI2.WinForms.Guna2Button();
@@ -88,7 +90,7 @@
             btnRegistrarPago = new Guna.UI2.WinForms.Guna2Button();
             btnRegistrarVentaCredito = new Guna.UI2.WinForms.Guna2Button();
             btnAval = new Guna.UI2.WinForms.Guna2Button();
-            CATÁLOGOS = new Label();
+            EXTRAS = new Label();
             panel2 = new Panel();
             btnRecaudacionEtapa = new Button();
             btnConsultarPagos = new Button();
@@ -112,6 +114,7 @@
             btnProyecto = new Guna.UI2.WinForms.Guna2Button();
             label7 = new Label();
             panel8 = new Panel();
+            btnFacturas = new Guna.UI2.WinForms.Guna2Button();
             panel9.SuspendLayout();
             panel2.SuspendLayout();
             pnlEsqueleto.SuspendLayout();
@@ -229,7 +232,8 @@
             // panel9
             // 
             panel9.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel9.Controls.Add(guna2Button1);
+            panel9.Controls.Add(btnFacturas);
+            panel9.Controls.Add(btnControlCaja);
             panel9.Controls.Add(btnConsultarPlanPago);
             panel9.Controls.Add(btnEstadoDeCuenta);
             panel9.Controls.Add(btnCreditosActivos);
@@ -239,32 +243,32 @@
             panel9.Controls.Add(btnRegistrarVentaCredito);
             panel9.Location = new Point(3, 659);
             panel9.Name = "panel9";
-            panel9.Size = new Size(193, 310);
+            panel9.Size = new Size(193, 343);
             panel9.TabIndex = 9;
             // 
-            // guna2Button1
+            // btnControlCaja
             // 
-            guna2Button1.BorderRadius = 5;
-            guna2Button1.CustomizableEdges = customizableEdges11;
-            guna2Button1.DisabledState.BorderColor = Color.DarkGray;
-            guna2Button1.DisabledState.CustomBorderColor = Color.DarkGray;
-            guna2Button1.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            guna2Button1.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            guna2Button1.Dock = DockStyle.Top;
-            guna2Button1.FillColor = Color.FromArgb(64, 64, 0);
-            guna2Button1.Font = new Font("Segoe UI", 9F);
-            guna2Button1.ForeColor = Color.White;
-            guna2Button1.Location = new Point(0, 259);
-            guna2Button1.Name = "guna2Button1";
-            guna2Button1.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            guna2Button1.Size = new Size(193, 37);
-            guna2Button1.TabIndex = 10;
-            guna2Button1.Text = "Control Caja";
+            btnControlCaja.BorderRadius = 5;
+            btnControlCaja.CustomizableEdges = customizableEdges13;
+            btnControlCaja.DisabledState.BorderColor = Color.DarkGray;
+            btnControlCaja.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnControlCaja.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnControlCaja.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnControlCaja.Dock = DockStyle.Top;
+            btnControlCaja.FillColor = Color.FromArgb(64, 64, 0);
+            btnControlCaja.Font = new Font("Segoe UI", 9F);
+            btnControlCaja.ForeColor = Color.White;
+            btnControlCaja.Location = new Point(0, 259);
+            btnControlCaja.Name = "btnControlCaja";
+            btnControlCaja.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            btnControlCaja.Size = new Size(193, 37);
+            btnControlCaja.TabIndex = 10;
+            btnControlCaja.Text = "Control Caja";
             // 
             // btnConsultarPlanPago
             // 
             btnConsultarPlanPago.BorderRadius = 5;
-            btnConsultarPlanPago.CustomizableEdges = customizableEdges13;
+            btnConsultarPlanPago.CustomizableEdges = customizableEdges15;
             btnConsultarPlanPago.DisabledState.BorderColor = Color.DarkGray;
             btnConsultarPlanPago.DisabledState.CustomBorderColor = Color.DarkGray;
             btnConsultarPlanPago.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -275,7 +279,7 @@
             btnConsultarPlanPago.ForeColor = Color.White;
             btnConsultarPlanPago.Location = new Point(0, 222);
             btnConsultarPlanPago.Name = "btnConsultarPlanPago";
-            btnConsultarPlanPago.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            btnConsultarPlanPago.ShadowDecoration.CustomizableEdges = customizableEdges16;
             btnConsultarPlanPago.Size = new Size(193, 37);
             btnConsultarPlanPago.TabIndex = 9;
             btnConsultarPlanPago.Text = "Consultar Plan Pago";
@@ -283,7 +287,7 @@
             // btnEstadoDeCuenta
             // 
             btnEstadoDeCuenta.BorderRadius = 5;
-            btnEstadoDeCuenta.CustomizableEdges = customizableEdges15;
+            btnEstadoDeCuenta.CustomizableEdges = customizableEdges17;
             btnEstadoDeCuenta.DisabledState.BorderColor = Color.DarkGray;
             btnEstadoDeCuenta.DisabledState.CustomBorderColor = Color.DarkGray;
             btnEstadoDeCuenta.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -294,7 +298,7 @@
             btnEstadoDeCuenta.ForeColor = Color.White;
             btnEstadoDeCuenta.Location = new Point(0, 185);
             btnEstadoDeCuenta.Name = "btnEstadoDeCuenta";
-            btnEstadoDeCuenta.ShadowDecoration.CustomizableEdges = customizableEdges16;
+            btnEstadoDeCuenta.ShadowDecoration.CustomizableEdges = customizableEdges18;
             btnEstadoDeCuenta.Size = new Size(193, 37);
             btnEstadoDeCuenta.TabIndex = 8;
             btnEstadoDeCuenta.Text = "Estado de Cuenta";
@@ -302,7 +306,7 @@
             // btnCreditosActivos
             // 
             btnCreditosActivos.BorderRadius = 5;
-            btnCreditosActivos.CustomizableEdges = customizableEdges17;
+            btnCreditosActivos.CustomizableEdges = customizableEdges19;
             btnCreditosActivos.DisabledState.BorderColor = Color.DarkGray;
             btnCreditosActivos.DisabledState.CustomBorderColor = Color.DarkGray;
             btnCreditosActivos.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -313,7 +317,7 @@
             btnCreditosActivos.ForeColor = Color.White;
             btnCreditosActivos.Location = new Point(0, 148);
             btnCreditosActivos.Name = "btnCreditosActivos";
-            btnCreditosActivos.ShadowDecoration.CustomizableEdges = customizableEdges18;
+            btnCreditosActivos.ShadowDecoration.CustomizableEdges = customizableEdges20;
             btnCreditosActivos.Size = new Size(193, 37);
             btnCreditosActivos.TabIndex = 7;
             btnCreditosActivos.Text = "Créditos Activos";
@@ -321,7 +325,7 @@
             // btnLotesDisponibles
             // 
             btnLotesDisponibles.BorderRadius = 5;
-            btnLotesDisponibles.CustomizableEdges = customizableEdges19;
+            btnLotesDisponibles.CustomizableEdges = customizableEdges21;
             btnLotesDisponibles.DisabledState.BorderColor = Color.DarkGray;
             btnLotesDisponibles.DisabledState.CustomBorderColor = Color.DarkGray;
             btnLotesDisponibles.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -332,7 +336,7 @@
             btnLotesDisponibles.ForeColor = Color.White;
             btnLotesDisponibles.Location = new Point(0, 111);
             btnLotesDisponibles.Name = "btnLotesDisponibles";
-            btnLotesDisponibles.ShadowDecoration.CustomizableEdges = customizableEdges20;
+            btnLotesDisponibles.ShadowDecoration.CustomizableEdges = customizableEdges22;
             btnLotesDisponibles.Size = new Size(193, 37);
             btnLotesDisponibles.TabIndex = 6;
             btnLotesDisponibles.Text = "Lotes Disponibles";
@@ -340,7 +344,7 @@
             // btnGestionGastos
             // 
             btnGestionGastos.BorderRadius = 5;
-            btnGestionGastos.CustomizableEdges = customizableEdges21;
+            btnGestionGastos.CustomizableEdges = customizableEdges23;
             btnGestionGastos.DisabledState.BorderColor = Color.DarkGray;
             btnGestionGastos.DisabledState.CustomBorderColor = Color.DarkGray;
             btnGestionGastos.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -351,7 +355,7 @@
             btnGestionGastos.ForeColor = Color.White;
             btnGestionGastos.Location = new Point(0, 74);
             btnGestionGastos.Name = "btnGestionGastos";
-            btnGestionGastos.ShadowDecoration.CustomizableEdges = customizableEdges22;
+            btnGestionGastos.ShadowDecoration.CustomizableEdges = customizableEdges24;
             btnGestionGastos.Size = new Size(193, 37);
             btnGestionGastos.TabIndex = 5;
             btnGestionGastos.Text = "Gestión de gastos";
@@ -359,7 +363,7 @@
             // btnRegistrarPago
             // 
             btnRegistrarPago.BorderRadius = 5;
-            btnRegistrarPago.CustomizableEdges = customizableEdges23;
+            btnRegistrarPago.CustomizableEdges = customizableEdges25;
             btnRegistrarPago.DisabledState.BorderColor = Color.DarkGray;
             btnRegistrarPago.DisabledState.CustomBorderColor = Color.DarkGray;
             btnRegistrarPago.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -370,7 +374,7 @@
             btnRegistrarPago.ForeColor = Color.White;
             btnRegistrarPago.Location = new Point(0, 37);
             btnRegistrarPago.Name = "btnRegistrarPago";
-            btnRegistrarPago.ShadowDecoration.CustomizableEdges = customizableEdges24;
+            btnRegistrarPago.ShadowDecoration.CustomizableEdges = customizableEdges26;
             btnRegistrarPago.Size = new Size(193, 37);
             btnRegistrarPago.TabIndex = 4;
             btnRegistrarPago.Text = "Registrar pago";
@@ -378,7 +382,7 @@
             // btnRegistrarVentaCredito
             // 
             btnRegistrarVentaCredito.BorderRadius = 5;
-            btnRegistrarVentaCredito.CustomizableEdges = customizableEdges25;
+            btnRegistrarVentaCredito.CustomizableEdges = customizableEdges27;
             btnRegistrarVentaCredito.DisabledState.BorderColor = Color.DarkGray;
             btnRegistrarVentaCredito.DisabledState.CustomBorderColor = Color.DarkGray;
             btnRegistrarVentaCredito.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -389,7 +393,7 @@
             btnRegistrarVentaCredito.ForeColor = Color.White;
             btnRegistrarVentaCredito.Location = new Point(0, 0);
             btnRegistrarVentaCredito.Name = "btnRegistrarVentaCredito";
-            btnRegistrarVentaCredito.ShadowDecoration.CustomizableEdges = customizableEdges26;
+            btnRegistrarVentaCredito.ShadowDecoration.CustomizableEdges = customizableEdges28;
             btnRegistrarVentaCredito.Size = new Size(193, 37);
             btnRegistrarVentaCredito.TabIndex = 3;
             btnRegistrarVentaCredito.Text = "Registrar venta";
@@ -397,7 +401,7 @@
             // btnAval
             // 
             btnAval.BorderRadius = 5;
-            btnAval.CustomizableEdges = customizableEdges27;
+            btnAval.CustomizableEdges = customizableEdges29;
             btnAval.DisabledState.BorderColor = Color.DarkGray;
             btnAval.DisabledState.CustomBorderColor = Color.DarkGray;
             btnAval.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -408,20 +412,20 @@
             btnAval.ForeColor = Color.White;
             btnAval.Location = new Point(0, 37);
             btnAval.Name = "btnAval";
-            btnAval.ShadowDecoration.CustomizableEdges = customizableEdges28;
+            btnAval.ShadowDecoration.CustomizableEdges = customizableEdges30;
             btnAval.Size = new Size(193, 37);
             btnAval.TabIndex = 1;
             btnAval.Text = "Aval";
             // 
-            // CATÁLOGOS
+            // EXTRAS
             // 
-            CATÁLOGOS.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            CATÁLOGOS.ForeColor = Color.WhiteSmoke;
-            CATÁLOGOS.Location = new Point(3, 972);
-            CATÁLOGOS.Name = "CATÁLOGOS";
-            CATÁLOGOS.Size = new Size(193, 15);
-            CATÁLOGOS.TabIndex = 10;
-            CATÁLOGOS.Text = "CATÁLOGOS";
+            EXTRAS.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            EXTRAS.ForeColor = Color.WhiteSmoke;
+            EXTRAS.Location = new Point(3, 1005);
+            EXTRAS.Name = "EXTRAS";
+            EXTRAS.Size = new Size(193, 15);
+            EXTRAS.TabIndex = 10;
+            EXTRAS.Text = "EXTRAS";
             // 
             // panel2
             // 
@@ -429,7 +433,7 @@
             panel2.Controls.Add(btnRecaudacionEtapa);
             panel2.Controls.Add(btnConsultarPagos);
             panel2.Controls.Add(btnConsultaLotesAptosCliente);
-            panel2.Location = new Point(3, 990);
+            panel2.Location = new Point(3, 1023);
             panel2.Name = "panel2";
             panel2.Size = new Size(193, 272);
             panel2.TabIndex = 11;
@@ -470,7 +474,7 @@
             // btnCliente
             // 
             btnCliente.BorderRadius = 5;
-            btnCliente.CustomizableEdges = customizableEdges29;
+            btnCliente.CustomizableEdges = customizableEdges31;
             btnCliente.DisabledState.BorderColor = Color.DarkGray;
             btnCliente.DisabledState.CustomBorderColor = Color.DarkGray;
             btnCliente.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -481,14 +485,14 @@
             btnCliente.ForeColor = Color.White;
             btnCliente.Location = new Point(0, 0);
             btnCliente.Name = "btnCliente";
-            btnCliente.ShadowDecoration.CustomizableEdges = customizableEdges30;
+            btnCliente.ShadowDecoration.CustomizableEdges = customizableEdges32;
             btnCliente.Size = new Size(193, 37);
             btnCliente.TabIndex = 0;
             btnCliente.Text = "Cliente";
             // 
             // pnlContenedor
             // 
-            pnlContenedor.BackColor = SystemColors.ControlDark;
+            pnlContenedor.BackColor = Color.White;
             pnlContenedor.Dock = DockStyle.Fill;
             pnlContenedor.Location = new Point(216, 0);
             pnlContenedor.Name = "pnlContenedor";
@@ -519,7 +523,7 @@
             flowLayoutPanel2.Controls.Add(panel8);
             flowLayoutPanel2.Controls.Add(label8);
             flowLayoutPanel2.Controls.Add(panel9);
-            flowLayoutPanel2.Controls.Add(CATÁLOGOS);
+            flowLayoutPanel2.Controls.Add(EXTRAS);
             flowLayoutPanel2.Controls.Add(panel2);
             flowLayoutPanel2.Dock = DockStyle.Left;
             flowLayoutPanel2.Location = new Point(0, 0);
@@ -570,7 +574,7 @@
             // btnMunicipio
             // 
             btnMunicipio.BorderRadius = 5;
-            btnMunicipio.CustomizableEdges = customizableEdges31;
+            btnMunicipio.CustomizableEdges = customizableEdges33;
             btnMunicipio.DisabledState.BorderColor = Color.DarkGray;
             btnMunicipio.DisabledState.CustomBorderColor = Color.DarkGray;
             btnMunicipio.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -581,7 +585,7 @@
             btnMunicipio.ForeColor = Color.White;
             btnMunicipio.Location = new Point(0, 111);
             btnMunicipio.Name = "btnMunicipio";
-            btnMunicipio.ShadowDecoration.CustomizableEdges = customizableEdges32;
+            btnMunicipio.ShadowDecoration.CustomizableEdges = customizableEdges34;
             btnMunicipio.Size = new Size(193, 37);
             btnMunicipio.TabIndex = 3;
             btnMunicipio.Text = "Municipio";
@@ -589,7 +593,7 @@
             // btnDepartamento
             // 
             btnDepartamento.BorderRadius = 5;
-            btnDepartamento.CustomizableEdges = customizableEdges33;
+            btnDepartamento.CustomizableEdges = customizableEdges35;
             btnDepartamento.DisabledState.BorderColor = Color.DarkGray;
             btnDepartamento.DisabledState.CustomBorderColor = Color.DarkGray;
             btnDepartamento.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -600,7 +604,7 @@
             btnDepartamento.ForeColor = Color.White;
             btnDepartamento.Location = new Point(0, 74);
             btnDepartamento.Name = "btnDepartamento";
-            btnDepartamento.ShadowDecoration.CustomizableEdges = customizableEdges34;
+            btnDepartamento.ShadowDecoration.CustomizableEdges = customizableEdges36;
             btnDepartamento.Size = new Size(193, 37);
             btnDepartamento.TabIndex = 2;
             btnDepartamento.Text = "Departamento";
@@ -608,7 +612,7 @@
             // btnTipGasto
             // 
             btnTipGasto.BorderRadius = 5;
-            btnTipGasto.CustomizableEdges = customizableEdges35;
+            btnTipGasto.CustomizableEdges = customizableEdges37;
             btnTipGasto.DisabledState.BorderColor = Color.DarkGray;
             btnTipGasto.DisabledState.CustomBorderColor = Color.DarkGray;
             btnTipGasto.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -619,7 +623,7 @@
             btnTipGasto.ForeColor = Color.White;
             btnTipGasto.Location = new Point(0, 37);
             btnTipGasto.Name = "btnTipGasto";
-            btnTipGasto.ShadowDecoration.CustomizableEdges = customizableEdges36;
+            btnTipGasto.ShadowDecoration.CustomizableEdges = customizableEdges38;
             btnTipGasto.Size = new Size(193, 37);
             btnTipGasto.TabIndex = 1;
             btnTipGasto.Text = "Tipo Gasto";
@@ -627,7 +631,7 @@
             // btnEstado
             // 
             btnEstado.BorderRadius = 5;
-            btnEstado.CustomizableEdges = customizableEdges37;
+            btnEstado.CustomizableEdges = customizableEdges39;
             btnEstado.DisabledState.BorderColor = Color.DarkGray;
             btnEstado.DisabledState.CustomBorderColor = Color.DarkGray;
             btnEstado.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -638,7 +642,7 @@
             btnEstado.ForeColor = Color.White;
             btnEstado.Location = new Point(0, 0);
             btnEstado.Name = "btnEstado";
-            btnEstado.ShadowDecoration.CustomizableEdges = customizableEdges38;
+            btnEstado.ShadowDecoration.CustomizableEdges = customizableEdges40;
             btnEstado.Size = new Size(193, 37);
             btnEstado.TabIndex = 0;
             btnEstado.Text = "Estado";
@@ -671,7 +675,7 @@
             // btnBloque
             // 
             btnBloque.BorderRadius = 5;
-            btnBloque.CustomizableEdges = customizableEdges39;
+            btnBloque.CustomizableEdges = customizableEdges41;
             btnBloque.DisabledState.BorderColor = Color.DarkGray;
             btnBloque.DisabledState.CustomBorderColor = Color.DarkGray;
             btnBloque.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -682,7 +686,7 @@
             btnBloque.ForeColor = Color.White;
             btnBloque.Location = new Point(0, 74);
             btnBloque.Name = "btnBloque";
-            btnBloque.ShadowDecoration.CustomizableEdges = customizableEdges40;
+            btnBloque.ShadowDecoration.CustomizableEdges = customizableEdges42;
             btnBloque.Size = new Size(193, 37);
             btnBloque.TabIndex = 5;
             btnBloque.Text = "Bloque";
@@ -690,7 +694,7 @@
             // btnEtapa
             // 
             btnEtapa.BorderRadius = 5;
-            btnEtapa.CustomizableEdges = customizableEdges41;
+            btnEtapa.CustomizableEdges = customizableEdges43;
             btnEtapa.DisabledState.BorderColor = Color.DarkGray;
             btnEtapa.DisabledState.CustomBorderColor = Color.DarkGray;
             btnEtapa.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -701,7 +705,7 @@
             btnEtapa.ForeColor = Color.White;
             btnEtapa.Location = new Point(0, 37);
             btnEtapa.Name = "btnEtapa";
-            btnEtapa.ShadowDecoration.CustomizableEdges = customizableEdges42;
+            btnEtapa.ShadowDecoration.CustomizableEdges = customizableEdges44;
             btnEtapa.Size = new Size(193, 37);
             btnEtapa.TabIndex = 4;
             btnEtapa.Text = "Etapa";
@@ -709,7 +713,7 @@
             // btnProyecto
             // 
             btnProyecto.BorderRadius = 5;
-            btnProyecto.CustomizableEdges = customizableEdges43;
+            btnProyecto.CustomizableEdges = customizableEdges45;
             btnProyecto.DisabledState.BorderColor = Color.DarkGray;
             btnProyecto.DisabledState.CustomBorderColor = Color.DarkGray;
             btnProyecto.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
@@ -720,7 +724,7 @@
             btnProyecto.ForeColor = Color.White;
             btnProyecto.Location = new Point(0, 0);
             btnProyecto.Name = "btnProyecto";
-            btnProyecto.ShadowDecoration.CustomizableEdges = customizableEdges44;
+            btnProyecto.ShadowDecoration.CustomizableEdges = customizableEdges46;
             btnProyecto.Size = new Size(193, 37);
             btnProyecto.TabIndex = 3;
             btnProyecto.Text = "Proyecto";
@@ -745,6 +749,25 @@
             panel8.Name = "panel8";
             panel8.Size = new Size(193, 116);
             panel8.TabIndex = 7;
+            // 
+            // btnFacturas
+            // 
+            btnFacturas.BorderRadius = 5;
+            btnFacturas.CustomizableEdges = customizableEdges11;
+            btnFacturas.DisabledState.BorderColor = Color.DarkGray;
+            btnFacturas.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFacturas.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFacturas.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFacturas.Dock = DockStyle.Top;
+            btnFacturas.FillColor = Color.FromArgb(64, 64, 0);
+            btnFacturas.Font = new Font("Segoe UI", 9F);
+            btnFacturas.ForeColor = Color.White;
+            btnFacturas.Location = new Point(0, 296);
+            btnFacturas.Name = "btnFacturas";
+            btnFacturas.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            btnFacturas.Size = new Size(193, 37);
+            btnFacturas.TabIndex = 11;
+            btnFacturas.Text = "Facturas";
             // 
             // frmMenuPrincipal
             // 
@@ -779,7 +802,7 @@
         private Guna.UI2.WinForms.Guna2Button btnRegistrarPago;
         private Guna.UI2.WinForms.Guna2Button btnRegistrarVentaCredito;
         private Guna.UI2.WinForms.Guna2Button btnAval;
-        private Label CATÁLOGOS;
+        private Label EXTRAS;
         private Panel panel2;
         private Button btnConsultarPagos;
         private Button btnConsultaLotesAptosCliente;
@@ -807,6 +830,7 @@
         private Guna.UI2.WinForms.Guna2Button btnEstadoDeCuenta;
         private Guna.UI2.WinForms.Guna2Button btnMunicipio;
         private Guna.UI2.WinForms.Guna2Button btnDepartamento;
-        private Guna.UI2.WinForms.Guna2Button guna2Button1;
+        private Guna.UI2.WinForms.Guna2Button btnControlCaja;
+        private Guna.UI2.WinForms.Guna2Button btnFacturas;
     }
 }

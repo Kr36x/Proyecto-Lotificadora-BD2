@@ -14,6 +14,7 @@ using LotificadoraApp.Beneficiario;
 using LotificadoraApp.RegistrarVentas;
 using LotificadoraApp.Departamento;
 using LotificadoraApp.Municipio;
+using LotificadoraApp.ControlCaja;
 
 namespace LotificadoraApp
 {
@@ -226,6 +227,18 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnMunicipio);
                 AbrirEnContenedor(new frmMunicipio());
+            };
+
+            btnControlCaja.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnControlCaja);
+                AbrirEnContenedor(new frmControlCaje());
+            };
+
+            btnFacturas.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnFacturas);
+                AbrirEnContenedor(new frmFacturas());
             };
         }
 

@@ -100,13 +100,12 @@
             lblBloque.BackColor = Color.Transparent;
             lblBloque.Dock = DockStyle.Fill;
             lblBloque.Font = new Font("Century Gothic", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblBloque.Location = new Point(0, 33);
-            lblBloque.Margin = new Padding(4, 5, 4, 5);
+            lblBloque.Location = new Point(0, 20);
             lblBloque.Name = "lblBloque";
-            lblBloque.Size = new Size(1906, 75);
+            lblBloque.Size = new Size(1384, 45);
             lblBloque.TabIndex = 0;
             lblBloque.Text = "GESTIÓN DEPARTAMENTO";
-            lblBloque.TextAlignment = ContentAlignment.MiddleCenter;
+            lblBloque.TextAlignment = ContentAlignment.TopCenter;
             // 
             // pnlSuperior
             // 
@@ -114,9 +113,8 @@
             pnlSuperior.Controls.Add(guna2Panel6);
             pnlSuperior.Dock = DockStyle.Top;
             pnlSuperior.Location = new Point(0, 0);
-            pnlSuperior.Margin = new Padding(4, 5, 4, 5);
             pnlSuperior.Name = "pnlSuperior";
-            pnlSuperior.Size = new Size(1906, 108);
+            pnlSuperior.Size = new Size(1384, 65);
             pnlSuperior.TabIndex = 1;
             // 
             // guna2Panel6
@@ -124,32 +122,29 @@
             guna2Panel6.CustomizableEdges = customizableEdges1;
             guna2Panel6.Dock = DockStyle.Top;
             guna2Panel6.Location = new Point(0, 0);
-            guna2Panel6.Margin = new Padding(4, 5, 4, 5);
             guna2Panel6.Name = "guna2Panel6";
             guna2Panel6.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2Panel6.Size = new Size(1906, 33);
+            guna2Panel6.Size = new Size(1384, 20);
             guna2Panel6.TabIndex = 1;
             // 
             // pnlSeparador
             // 
             pnlSeparador.CustomizableEdges = customizableEdges3;
             pnlSeparador.Dock = DockStyle.Top;
-            pnlSeparador.Location = new Point(0, 167);
-            pnlSeparador.Margin = new Padding(4, 5, 4, 5);
+            pnlSeparador.Location = new Point(0, 100);
             pnlSeparador.Name = "pnlSeparador";
             pnlSeparador.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            pnlSeparador.Size = new Size(1764, 33);
+            pnlSeparador.Size = new Size(1284, 20);
             pnlSeparador.TabIndex = 1;
             // 
             // pnlLateral
             // 
             pnlLateral.CustomizableEdges = customizableEdges5;
             pnlLateral.Dock = DockStyle.Left;
-            pnlLateral.Location = new Point(0, 108);
-            pnlLateral.Margin = new Padding(4, 5, 4, 5);
+            pnlLateral.Location = new Point(0, 65);
             pnlLateral.Name = "pnlLateral";
             pnlLateral.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlLateral.Size = new Size(71, 631);
+            pnlLateral.Size = new Size(50, 746);
             pnlLateral.TabIndex = 2;
             // 
             // pnlGrid
@@ -163,11 +158,10 @@
             pnlGrid.CustomizableEdges = customizableEdges13;
             pnlGrid.Dock = DockStyle.Fill;
             pnlGrid.FillColor = Color.White;
-            pnlGrid.Location = new Point(0, 200);
-            pnlGrid.Margin = new Padding(4, 5, 4, 5);
+            pnlGrid.Location = new Point(0, 120);
             pnlGrid.Name = "pnlGrid";
             pnlGrid.ShadowDecoration.CustomizableEdges = customizableEdges14;
-            pnlGrid.Size = new Size(1764, 431);
+            pnlGrid.Size = new Size(1284, 626);
             pnlGrid.TabIndex = 2;
             // 
             // dgvDepartamento
@@ -194,13 +188,11 @@
             dgvDepartamento.DefaultCellStyle = dataGridViewCellStyle3;
             dgvDepartamento.Dock = DockStyle.Fill;
             dgvDepartamento.GridColor = Color.FromArgb(231, 229, 255);
-            dgvDepartamento.Location = new Point(0, 42);
-            dgvDepartamento.Margin = new Padding(4, 5, 4, 5);
+            dgvDepartamento.Location = new Point(0, 25);
             dgvDepartamento.Name = "dgvDepartamento";
             dgvDepartamento.RowHeadersVisible = false;
             dgvDepartamento.RowHeadersWidth = 62;
-            dgvDepartamento.RowTemplate.Height = 25;
-            dgvDepartamento.Size = new Size(1764, 389);
+            dgvDepartamento.Size = new Size(1284, 601);
             dgvDepartamento.TabIndex = 5;
             dgvDepartamento.ThemeStyle.AlternatingRowsStyle.BackColor = Color.White;
             dgvDepartamento.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -235,10 +227,9 @@
             guna2Panel4.Dock = DockStyle.Top;
             guna2Panel4.FillColor = Color.Olive;
             guna2Panel4.Location = new Point(0, 0);
-            guna2Panel4.Margin = new Padding(4, 5, 4, 5);
             guna2Panel4.Name = "guna2Panel4";
             guna2Panel4.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            guna2Panel4.Size = new Size(1764, 42);
+            guna2Panel4.Size = new Size(1284, 25);
             guna2Panel4.TabIndex = 1;
             // 
             // guna2Panel5
@@ -246,11 +237,10 @@
             guna2Panel5.Controls.Add(btnActualizar);
             guna2Panel5.CustomizableEdges = customizableEdges9;
             guna2Panel5.FillColor = Color.Olive;
-            guna2Panel5.Location = new Point(0, 10);
-            guna2Panel5.Margin = new Padding(4, 5, 4, 5);
+            guna2Panel5.Location = new Point(0, 6);
             guna2Panel5.Name = "guna2Panel5";
             guna2Panel5.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            guna2Panel5.Size = new Size(1834, 32);
+            guna2Panel5.Size = new Size(1284, 19);
             guna2Panel5.TabIndex = 1;
             // 
             // btnActualizar
@@ -268,11 +258,10 @@
             btnActualizar.ForeColor = Color.White;
             btnActualizar.Image = Properties.Resources.refrescar_blanco;
             btnActualizar.ImageSize = new Size(10, 10);
-            btnActualizar.Location = new Point(1801, -2);
-            btnActualizar.Margin = new Padding(4, 5, 4, 5);
+            btnActualizar.Location = new Point(1261, -1);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.ShadowDecoration.CustomizableEdges = customizableEdges8;
-            btnActualizar.Size = new Size(26, 30);
+            btnActualizar.Size = new Size(18, 18);
             btnActualizar.TabIndex = 9;
             // 
             // pnlFondo
@@ -285,10 +274,9 @@
             pnlFondo.CustomizableEdges = customizableEdges31;
             pnlFondo.Dock = DockStyle.Fill;
             pnlFondo.Location = new Point(0, 0);
-            pnlFondo.Margin = new Padding(4, 5, 4, 5);
             pnlFondo.Name = "pnlFondo";
             pnlFondo.ShadowDecoration.CustomizableEdges = customizableEdges32;
-            pnlFondo.Size = new Size(1906, 822);
+            pnlFondo.Size = new Size(1384, 861);
             pnlFondo.TabIndex = 5;
             // 
             // pnlCentral
@@ -297,10 +285,9 @@
             pnlCentral.Controls.Add(pnlSeparador);
             pnlCentral.Controls.Add(pnlCRUD);
             pnlCentral.Dock = DockStyle.Fill;
-            pnlCentral.Location = new Point(71, 108);
-            pnlCentral.Margin = new Padding(4, 5, 4, 5);
+            pnlCentral.Location = new Point(50, 65);
             pnlCentral.Name = "pnlCentral";
-            pnlCentral.Size = new Size(1764, 631);
+            pnlCentral.Size = new Size(1284, 746);
             pnlCentral.TabIndex = 4;
             // 
             // pnlCRUD
@@ -317,10 +304,9 @@
             pnlCRUD.Dock = DockStyle.Top;
             pnlCRUD.FillColor = Color.White;
             pnlCRUD.Location = new Point(0, 0);
-            pnlCRUD.Margin = new Padding(4, 5, 4, 5);
             pnlCRUD.Name = "pnlCRUD";
             pnlCRUD.ShadowDecoration.CustomizableEdges = customizableEdges26;
-            pnlCRUD.Size = new Size(1764, 167);
+            pnlCRUD.Size = new Size(1284, 100);
             pnlCRUD.TabIndex = 0;
             // 
             // btnEliminar
@@ -335,11 +321,10 @@
             btnEliminar.FillColor = Color.FromArgb(64, 64, 0);
             btnEliminar.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnEliminar.ForeColor = Color.White;
-            btnEliminar.Location = new Point(1587, 80);
-            btnEliminar.Margin = new Padding(4, 5, 4, 5);
+            btnEliminar.Location = new Point(1111, 48);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.ShadowDecoration.CustomizableEdges = customizableEdges16;
-            btnEliminar.Size = new Size(140, 50);
+            btnEliminar.Size = new Size(98, 30);
             btnEliminar.TabIndex = 5;
             btnEliminar.Text = "ELIMINAR";
             btnEliminar.Click += btnEliminar_Click;
@@ -356,11 +341,10 @@
             btnEditar.FillColor = Color.FromArgb(64, 64, 0);
             btnEditar.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnEditar.ForeColor = Color.White;
-            btnEditar.Location = new Point(1419, 80);
-            btnEditar.Margin = new Padding(4, 5, 4, 5);
+            btnEditar.Location = new Point(993, 48);
             btnEditar.Name = "btnEditar";
             btnEditar.ShadowDecoration.CustomizableEdges = customizableEdges18;
-            btnEditar.Size = new Size(140, 50);
+            btnEditar.Size = new Size(98, 30);
             btnEditar.TabIndex = 4;
             btnEditar.Text = "EDITAR";
             btnEditar.Click += btnEditar_Click;
@@ -377,11 +361,10 @@
             btnCrear.FillColor = Color.FromArgb(64, 64, 0);
             btnCrear.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCrear.ForeColor = Color.White;
-            btnCrear.Location = new Point(1254, 80);
-            btnCrear.Margin = new Padding(4, 5, 4, 5);
+            btnCrear.Location = new Point(878, 48);
             btnCrear.Name = "btnCrear";
             btnCrear.ShadowDecoration.CustomizableEdges = customizableEdges20;
-            btnCrear.Size = new Size(140, 50);
+            btnCrear.Size = new Size(98, 30);
             btnCrear.TabIndex = 3;
             btnCrear.Text = "CREAR";
             btnCrear.Click += btnCrear_Click;
@@ -395,51 +378,49 @@
             guna2Panel2.Dock = DockStyle.Top;
             guna2Panel2.FillColor = Color.Olive;
             guna2Panel2.Location = new Point(0, 0);
-            guna2Panel2.Margin = new Padding(4, 5, 4, 5);
             guna2Panel2.Name = "guna2Panel2";
             guna2Panel2.ShadowDecoration.CustomizableEdges = customizableEdges24;
-            guna2Panel2.Size = new Size(1764, 42);
+            guna2Panel2.Size = new Size(1284, 25);
             guna2Panel2.TabIndex = 0;
             // 
             // guna2Panel3
             // 
             guna2Panel3.CustomizableEdges = customizableEdges21;
             guna2Panel3.FillColor = Color.Olive;
-            guna2Panel3.Location = new Point(0, 10);
-            guna2Panel3.Margin = new Padding(4, 5, 4, 5);
+            guna2Panel3.Location = new Point(0, 6);
             guna2Panel3.Name = "guna2Panel3";
             guna2Panel3.ShadowDecoration.CustomizableEdges = customizableEdges22;
-            guna2Panel3.Size = new Size(1834, 32);
+            guna2Panel3.Size = new Size(1284, 19);
             guna2Panel3.TabIndex = 1;
             // 
             // guna2Panel1
             // 
             guna2Panel1.CustomizableEdges = customizableEdges27;
             guna2Panel1.Dock = DockStyle.Right;
-            guna2Panel1.Location = new Point(1835, 108);
-            guna2Panel1.Margin = new Padding(4, 5, 4, 5);
+            guna2Panel1.Location = new Point(1334, 65);
             guna2Panel1.Name = "guna2Panel1";
             guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges28;
-            guna2Panel1.Size = new Size(71, 631);
+            guna2Panel1.Size = new Size(50, 746);
             guna2Panel1.TabIndex = 3;
             // 
             // pnlInferior
             // 
             pnlInferior.CustomizableEdges = customizableEdges29;
             pnlInferior.Dock = DockStyle.Bottom;
-            pnlInferior.Location = new Point(0, 739);
-            pnlInferior.Margin = new Padding(4, 5, 4, 5);
+            pnlInferior.Location = new Point(0, 811);
             pnlInferior.Name = "pnlInferior";
             pnlInferior.ShadowDecoration.CustomizableEdges = customizableEdges30;
-            pnlInferior.Size = new Size(1906, 83);
+            pnlInferior.Size = new Size(1384, 50);
             pnlInferior.TabIndex = 0;
             // 
             // frmDepartamento
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1906, 822);
+            ClientSize = new Size(1384, 861);
             Controls.Add(pnlFondo);
+            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(2, 2, 2, 2);
             Name = "frmDepartamento";
             Load += frmDepartamento_Load;
             pnlSuperior.ResumeLayout(false);

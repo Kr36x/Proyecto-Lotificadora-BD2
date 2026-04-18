@@ -9,6 +9,17 @@ namespace LotificadoraApp.Proyecto
         private readonly bool _modoEdicion;
         private readonly int _idProyecto;
 
+        private string _estadoInicialNombre = string.Empty;
+        private int _departamentoInicialId = 0;
+        private int _municipioInicialId = 0;
+        private string _coloniaInicial = string.Empty;
+        private string _direccionDetalleInicial = string.Empty;
+        private string _claveCatastralInicial = string.Empty;
+        private string _observacionLegalInicial = string.Empty;
+
+        private bool _cargandoCombos = false;
+        private DataTable _dtMunicipios = new DataTable();
+
         public frmRegistrarProyecto()
         {
             InitializeComponent();
@@ -30,19 +41,24 @@ namespace LotificadoraApp.Proyecto
             int maxAniosFinanciamiento,
             string estadoNombre,
             int departamentoId,
-            //Nuevos Campos
             int municipioId,
             string aldeaColonia,
             string direccionDetalle,
             string claveCatastral,
-            string observacionLegal
-            )
-
+            string observacionLegal)
         {
             InitializeComponent();
 
             _modoEdicion = true;
             _idProyecto = idProyecto;
+
+            _estadoInicialNombre = estadoNombre ?? string.Empty;
+            _departamentoInicialId = departamentoId;
+            _municipioInicialId = municipioId;
+            _coloniaInicial = aldeaColonia ?? string.Empty;
+            _direccionDetalleInicial = direccionDetalle ?? string.Empty;
+            _claveCatastralInicial = claveCatastral ?? string.Empty;
+            _observacionLegalInicial = observacionLegal ?? string.Empty;
 
             ConfigurarDateTimePicker();
             ConectarEventos();
@@ -56,23 +72,18 @@ namespace LotificadoraApp.Proyecto
 
             txtAreaTotal.Text = areaTotalV2.ToString("N2");
             txtAnioFinanciamiento.Text = maxAniosFinanciamiento.ToString();
-
-            _estadoInicialNombre = estadoNombre ?? string.Empty;
-
-            /*
-             txtDireccionDetalle.Text = direccionDetalle;
-             txtClaveCatastral.Text = claveCatastral;
-             txtObsLegal.Text = observacionLegal;
-             */
+            txtColonia.Text = _coloniaInicial;
+            txtDireccionDetalle.Text = _direccionDetalleInicial;
+            txtClaveCatastral.Text = _claveCatastralInicial;
+            txtObsLegal.Text = _observacionLegalInicial;
         }
-
-        private string _estadoInicialNombre = string.Empty;
 
         private void ConectarEventos()
         {
             Load += frmRegistrarProyecto_Load;
             btnCrearEditar.Click += btnCrearEditar_Click;
             btnCancelar.Click += btnCancelar_Click;
+            cmbDepartamento.SelectedIndexChanged += cmbDepartamento_SelectedIndexChanged;
         }
 
         private void ConfigurarDateTimePicker()
@@ -92,34 +103,42 @@ namespace LotificadoraApp.Proyecto
 
         private void frmRegistrarProyecto_Load(object sender, EventArgs e)
         {
+            _cargandoCombos = true;
+
             CargarEstados();
+            CargarDepartamentos();
+            CargarMunicipios();
 
             if (_modoEdicion)
             {
                 lblBloque.Text = "EDITAR PROYECTO";
                 btnCrearEditar.Text = "EDITAR";
 
-                if (!string.IsNullOrWhiteSpace(_estadoInicialNombre))
+                SeleccionarEstadoPorNombre(_estadoInicialNombre);
+
+                if (_departamentoInicialId > 0)
                 {
-                    for (int i = 0; i < cmbEstado.Items.Count; i++)
-                    {
-                        if (cmbEstado.Items[i] is DataRowView item)
-                        {
-                            string nombre = item["nombre"]?.ToString() ?? "";
-                            if (string.Equals(nombre, _estadoInicialNombre, StringComparison.OrdinalIgnoreCase))
-                            {
-                                cmbEstado.SelectedIndex = i;
-                                break;
-                            }
-                        }
-                    }
+                    cmbDepartamento.SelectedValue = _departamentoInicialId;
+                    FiltrarMunicipiosPorDepartamento();
                 }
+
+                if (_municipioInicialId > 0)
+                {
+                    cmbMunicipio.SelectedValue = _municipioInicialId;
+                }
+
+                txtColonia.Text = _coloniaInicial;
             }
             else
             {
                 lblBloque.Text = "CREAR PROYECTO";
                 btnCrearEditar.Text = "CREAR";
+                cmbEstado.SelectedIndex = -1;
+                cmbDepartamento.SelectedIndex = -1;
+                cmbMunicipio.DataSource = null;
             }
+
+            _cargandoCombos = false;
         }
 
         private void CargarEstados()
@@ -134,12 +153,100 @@ namespace LotificadoraApp.Proyecto
                 cmbEstado.DataSource = dataTable;
                 cmbEstado.DisplayMember = "nombre";
                 cmbEstado.ValueMember = "id";
-                cmbEstado.SelectedIndex = _modoEdicion ? cmbEstado.SelectedIndex : -1;
             }
             catch (Exception)
             {
                 MostrarMensajeError("Error al cargar los estados");
             }
+        }
+
+        private void CargarDepartamentos()
+        {
+            try
+            {
+                DataTable dataTable = Db.ExecuteStoredProcedure("sp_departamento_listar");
+
+                cmbDepartamento.DataSource = dataTable;
+                cmbDepartamento.DisplayMember = "nombre";
+                cmbDepartamento.ValueMember = "id";
+                cmbDepartamento.SelectedIndex = -1;
+            }
+            catch (Exception)
+            {
+                MostrarMensajeError("Error al cargar los departamentos");
+            }
+        }
+
+        private void CargarMunicipios()
+        {
+            try
+            {
+                _dtMunicipios = Db.ExecuteStoredProcedure("sp_municipio_listar");
+            }
+            catch (Exception)
+            {
+                MostrarMensajeError("Error al cargar los municipios");
+            }
+        }
+
+        private void FiltrarMunicipiosPorDepartamento()
+        {
+            try
+            {
+                if (cmbDepartamento.SelectedItem is not DataRowView departamentoSeleccionado)
+                {
+                    cmbMunicipio.DataSource = null;
+                    return;
+                }
+
+                string nombreDepartamento = departamentoSeleccionado["nombre"]?.ToString() ?? "";
+
+                if (_dtMunicipios == null || _dtMunicipios.Rows.Count == 0)
+                {
+                    cmbMunicipio.DataSource = null;
+                    return;
+                }
+
+                DataView view = _dtMunicipios.DefaultView;
+                view.RowFilter = $"departamento = '{nombreDepartamento.Replace("'", "''")}'";
+
+                cmbMunicipio.DataSource = view.ToTable();
+                cmbMunicipio.DisplayMember = "nombre";
+                cmbMunicipio.ValueMember = "id";
+                cmbMunicipio.SelectedIndex = -1;
+            }
+            catch (Exception)
+            {
+                MostrarMensajeError("Error al filtrar los municipios");
+            }
+        }
+
+        private void SeleccionarEstadoPorNombre(string estadoNombre)
+        {
+            if (string.IsNullOrWhiteSpace(estadoNombre))
+                return;
+
+            for (int i = 0; i < cmbEstado.Items.Count; i++)
+            {
+                if (cmbEstado.Items[i] is DataRowView item)
+                {
+                    string nombre = item["nombre"]?.ToString() ?? "";
+
+                    if (string.Equals(nombre, estadoNombre, StringComparison.OrdinalIgnoreCase))
+                    {
+                        cmbEstado.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void cmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_cargandoCombos)
+                return;
+
+            FiltrarMunicipiosPorDepartamento();
         }
 
         private void btnCrearEditar_Click(object sender, EventArgs e)
@@ -163,7 +270,17 @@ namespace LotificadoraApp.Proyecto
                         new SqlParameter("@fechaFinEstimada", dtpFechaFinEstimada.Value.Date),
                         new SqlParameter("@areaTotalV2", areaTotal),
                         new SqlParameter("@maxAniosFinanciamiento", aniosFinanciamiento),
-                        new SqlParameter("@estado", Convert.ToInt32(cmbEstado.SelectedValue))
+                        new SqlParameter("@estado", Convert.ToInt32(cmbEstado.SelectedValue)),
+                        new SqlParameter("@departamentoId", Convert.ToInt32(cmbDepartamento.SelectedValue)),
+                        new SqlParameter("@municipioId", Convert.ToInt32(cmbMunicipio.SelectedValue)),
+                        new SqlParameter("@aldeaColonia",
+                            string.IsNullOrWhiteSpace(txtColonia.Text) ? DBNull.Value : txtColonia.Text.Trim()),
+                        new SqlParameter("@direccionDetalle",
+                            string.IsNullOrWhiteSpace(txtDireccionDetalle.Text) ? DBNull.Value : txtDireccionDetalle.Text.Trim()),
+                        new SqlParameter("@claveCatastral",
+                            string.IsNullOrWhiteSpace(txtClaveCatastral.Text) ? DBNull.Value : txtClaveCatastral.Text.Trim()),
+                        new SqlParameter("@observacionLegal",
+                            string.IsNullOrWhiteSpace(txtObsLegal.Text) ? DBNull.Value : txtObsLegal.Text.Trim())
                     );
                 }
                 else
@@ -177,7 +294,17 @@ namespace LotificadoraApp.Proyecto
                         new SqlParameter("@fechaFinEstimada", dtpFechaFinEstimada.Value.Date),
                         new SqlParameter("@areaTotalV2", areaTotal),
                         new SqlParameter("@maxAniosFinanciamiento", aniosFinanciamiento),
-                        new SqlParameter("@estado", Convert.ToInt32(cmbEstado.SelectedValue))
+                        new SqlParameter("@estado", Convert.ToInt32(cmbEstado.SelectedValue)),
+                        new SqlParameter("@departamentoId", Convert.ToInt32(cmbDepartamento.SelectedValue)),
+                        new SqlParameter("@municipioId", Convert.ToInt32(cmbMunicipio.SelectedValue)),
+                        new SqlParameter("@aldeaColonia",
+                            string.IsNullOrWhiteSpace(txtColonia.Text) ? DBNull.Value : txtColonia.Text.Trim()),
+                        new SqlParameter("@direccionDetalle",
+                            string.IsNullOrWhiteSpace(txtDireccionDetalle.Text) ? DBNull.Value : txtDireccionDetalle.Text.Trim()),
+                        new SqlParameter("@claveCatastral",
+                            string.IsNullOrWhiteSpace(txtClaveCatastral.Text) ? DBNull.Value : txtClaveCatastral.Text.Trim()),
+                        new SqlParameter("@observacionLegal",
+                            string.IsNullOrWhiteSpace(txtObsLegal.Text) ? DBNull.Value : txtObsLegal.Text.Trim())
                     );
                 }
 
@@ -199,9 +326,9 @@ namespace LotificadoraApp.Proyecto
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch
+            catch (Exception ex)
             {
-                MostrarMensajeError("Ocurrió un error al guardar");
+                MostrarMensajeError("Ocurrió un error al guardar: " + ex.Message);
             }
         }
 
@@ -214,6 +341,31 @@ namespace LotificadoraApp.Proyecto
             {
                 MostrarWarning("El nombre del proyecto es requerido");
                 txtNombreProyecto.Focus();
+                return false;
+            }
+
+            if (cmbDepartamento.SelectedValue == null ||
+                !int.TryParse(cmbDepartamento.SelectedValue.ToString(), out int departamentoId) ||
+                departamentoId <= 0)
+            {
+                MostrarWarning("El departamento es requerido");
+                cmbDepartamento.Focus();
+                return false;
+            }
+
+            if (cmbMunicipio.SelectedValue == null ||
+                !int.TryParse(cmbMunicipio.SelectedValue.ToString(), out int municipioId) ||
+                municipioId <= 0)
+            {
+                MostrarWarning("El municipio es requerido");
+                cmbMunicipio.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtColonia.Text))
+            {
+                MostrarWarning("La colonia es requerida");
+                txtColonia.Focus();
                 return false;
             }
 
@@ -233,25 +385,27 @@ namespace LotificadoraApp.Proyecto
 
             if (dtpFechaInicio.Value.Date > dtpFechaFinEstimada.Value.Date)
             {
-                MostrarWarning("La fechaInicio no puede ser mayor que fechaFinEstimada");
+                MostrarWarning("La fecha inicio no puede ser mayor que la fecha fin estimada");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtAnioFinanciamiento.Text))
             {
-                MostrarWarning("maxAniosFinanciamiento es requerido");
+                MostrarWarning("El máximo de años de financiamiento es requerido");
                 txtAnioFinanciamiento.Focus();
                 return false;
             }
 
             if (!int.TryParse(txtAnioFinanciamiento.Text.Trim(), out aniosFinanciamiento) || aniosFinanciamiento <= 0)
             {
-                MostrarWarning("maxAniosFinanciamiento debe ser mayor que 0");
+                MostrarWarning("El máximo de años de financiamiento debe ser mayor que 0");
                 txtAnioFinanciamiento.Focus();
                 return false;
             }
 
-            if (cmbEstado.SelectedValue == null || cmbEstado.SelectedIndex < 0 || Convert.ToInt32(cmbEstado.SelectedValue) <= 0)
+            if (cmbEstado.SelectedValue == null ||
+                cmbEstado.SelectedIndex < 0 ||
+                Convert.ToInt32(cmbEstado.SelectedValue) <= 0)
             {
                 MostrarWarning("El estado es requerido");
                 cmbEstado.Focus();
@@ -301,44 +455,13 @@ namespace LotificadoraApp.Proyecto
             );
         }
 
-        private void btnCancelar_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtAreaTotal_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnCrearEditar_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2HtmlLabel10_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2HtmlLabel8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2HtmlLabel9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void guna2HtmlLabel12_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void btnCancelar_Click_1(object sender, EventArgs e) { }
+        private void txtAreaTotal_TextChanged(object sender, EventArgs e) { }
+        private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void btnCrearEditar_Click_1(object sender, EventArgs e) { }
+        private void guna2HtmlLabel10_Click(object sender, EventArgs e) { }
+        private void guna2HtmlLabel8_Click(object sender, EventArgs e) { }
+        private void guna2HtmlLabel9_Click(object sender, EventArgs e) { }
+        private void guna2HtmlLabel12_Click(object sender, EventArgs e) { }
     }
 }

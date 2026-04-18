@@ -15,6 +15,13 @@ namespace LotificadoraApp.Proyecto
         private int _maxAniosFinanciamientoSeleccionado = 0;
         private string _estadoSeleccionado = string.Empty;
 
+        private int _departamentoIdSeleccionado = 0;
+        private int _municipioIdSeleccionado = 0;
+        private string _coloniaSeleccionada = string.Empty;
+        private string _direccionDetalleSeleccionada = string.Empty;
+        private string _claveCatastralSeleccionada = string.Empty;
+        private string _observacionLegalSeleccionada = string.Empty;
+
         public frmProyecto()
         {
             InitializeComponent();
@@ -39,15 +46,12 @@ namespace LotificadoraApp.Proyecto
 
         private void frmProyecto_Load(object sender, EventArgs e)
         {
-            ConfigurarGrid();
             CargarEstados();
             ObtenerProyectos();
         }
 
         private void ConfigurarGrid()
         {
-           
-
             dgvProyecto.AutoGenerateColumns = true;
             dgvProyecto.ReadOnly = true;
             dgvProyecto.MultiSelect = false;
@@ -102,38 +106,6 @@ namespace LotificadoraApp.Proyecto
             dgvProyecto.ThemeStyle.AlternatingRowsStyle.BackColor = Color.FromArgb(245, 248, 239);
             dgvProyecto.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = Color.FromArgb(196, 210, 155);
             dgvProyecto.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = Color.Black;
-
-            if (dgvProyecto.Columns.Contains("idProyecto"))
-            {
-                //dgvCliente.Columns["idCliente"].HeaderText = "ID";
-                dgvProyecto.Columns["idProyecto"].FillWeight = 6;
-                dgvProyecto.Columns["idProyecto"].MinimumWidth = 60;
-                dgvProyecto.Columns["idProyecto"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-            if (dgvProyecto.Columns.Contains("estado"))
-            {
-                //dgvCliente.Columns["idCliente"].HeaderText = "ID";
-                dgvProyecto.Columns["estado"].FillWeight = 6;
-                dgvProyecto.Columns["estado"].MinimumWidth = 80;
-                dgvProyecto.Columns["estado"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-            if (dgvProyecto.Columns.Contains("nombreProyecto"))
-            {
-                //dgvCliente.Columns["idCliente"].HeaderText = "ID";
-                dgvProyecto.Columns["nombreProyecto"].FillWeight = 20;
-                dgvProyecto.Columns["nombreProyecto"].MinimumWidth = 200;
-                dgvProyecto.Columns["nombreProyecto"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            }
-
-            if (dgvProyecto.Columns.Contains("descripcion"))
-            {
-                //dgvCliente.Columns["idCliente"].HeaderText = "ID";
-                dgvProyecto.Columns["descripcion"].FillWeight = 30;
-                dgvProyecto.Columns["descripcion"].MinimumWidth = 300;
-                dgvProyecto.Columns["descripcion"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            }
         }
 
         private void CargarEstados()
@@ -167,6 +139,7 @@ namespace LotificadoraApp.Proyecto
             {
                 DataTable dataTable = Db.ExecuteStoredProcedure("sp_proyecto_listar");
                 dgvProyecto.DataSource = dataTable;
+                ConfigurarGrid();
                 LimpiarSeleccion();
             }
             catch (Exception)
@@ -203,6 +176,7 @@ namespace LotificadoraApp.Proyecto
 
                 view.RowFilter = string.Join(" AND ", filtros);
                 dgvProyecto.DataSource = view.ToTable();
+                ConfigurarGrid();
                 LimpiarSeleccion();
             }
             catch (Exception)
@@ -252,7 +226,13 @@ namespace LotificadoraApp.Proyecto
                 _fechaFinEstimadaSeleccionada,
                 _areaTotalSeleccionada,
                 _maxAniosFinanciamientoSeleccionado,
-                _estadoSeleccionado
+                _estadoSeleccionado,
+                _departamentoIdSeleccionado,
+                _municipioIdSeleccionado,
+                _coloniaSeleccionada,
+                _direccionDetalleSeleccionada,
+                _claveCatastralSeleccionada,
+                _observacionLegalSeleccionada
             );
 
             if (frm.ShowDialog() == DialogResult.OK)
@@ -333,6 +313,7 @@ namespace LotificadoraApp.Proyecto
             _idProyectoSeleccionado = Convert.ToInt32(fila.Cells["idProyecto"].Value);
             _nombreProyectoSeleccionado = fila.Cells["nombreProyecto"].Value?.ToString() ?? "";
             _descripcionSeleccionada = fila.Cells["descripcion"].Value?.ToString() ?? "";
+
             _fechaInicioSeleccionada = fila.Cells["fechaInicio"].Value == DBNull.Value
                 ? DateTime.Today
                 : Convert.ToDateTime(fila.Cells["fechaInicio"].Value);
@@ -350,6 +331,19 @@ namespace LotificadoraApp.Proyecto
                 : Convert.ToInt32(fila.Cells["maxAniosFinanciamiento"].Value);
 
             _estadoSeleccionado = fila.Cells["estado"].Value?.ToString() ?? "";
+
+            _departamentoIdSeleccionado = fila.Cells["departamentoId"].Value == DBNull.Value
+                ? 0
+                : Convert.ToInt32(fila.Cells["departamentoId"].Value);
+
+            _municipioIdSeleccionado = fila.Cells["municipioId"].Value == DBNull.Value
+                ? 0
+                : Convert.ToInt32(fila.Cells["municipioId"].Value);
+
+            _coloniaSeleccionada = fila.Cells["aldeaColonia"].Value?.ToString() ?? "";
+            _direccionDetalleSeleccionada = fila.Cells["direccionDetalle"].Value?.ToString() ?? "";
+            _claveCatastralSeleccionada = fila.Cells["claveCatastral"].Value?.ToString() ?? "";
+            _observacionLegalSeleccionada = fila.Cells["observacionLegal"].Value?.ToString() ?? "";
         }
 
         private void LimpiarSeleccion()
@@ -362,6 +356,13 @@ namespace LotificadoraApp.Proyecto
             _areaTotalSeleccionada = 0;
             _maxAniosFinanciamientoSeleccionado = 0;
             _estadoSeleccionado = string.Empty;
+
+            _departamentoIdSeleccionado = 0;
+            _municipioIdSeleccionado = 0;
+            _coloniaSeleccionada = string.Empty;
+            _direccionDetalleSeleccionada = string.Empty;
+            _claveCatastralSeleccionada = string.Empty;
+            _observacionLegalSeleccionada = string.Empty;
         }
 
         private static void MostrarMensajeError(string mensaje)
