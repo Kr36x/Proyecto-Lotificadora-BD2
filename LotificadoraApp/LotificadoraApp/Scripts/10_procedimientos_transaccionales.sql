@@ -13,13 +13,22 @@ CREATE OR ALTER PROCEDURE dbo.sp_registrar_venta_contado_transaccional
     @descuento DECIMAL(18,2) = 0,
     @recargo DECIMAL(18,2) = 0,
     @fechaPago DATE = NULL,
+    @formaPago VARCHAR(20),
+    @idCuentaBancaria INT = NULL,
+    @numeroReferencia VARCHAR(100) = NULL,
+    @idEmpleado INT = NULL,
     @observacion VARCHAR(255) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @idVenta INT;
+    DECLARE @idPago INT;
+    DECLARE @idFactura INT;
     DECLARE @totalVenta DECIMAL(18,2);
+    DECLARE @nombreCliente VARCHAR(200);
+    DECLARE @rtnCliente VARCHAR(20);
+    DECLARE @numeroFactura VARCHAR(50);
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -41,9 +50,31 @@ BEGIN
         END
 
         SET @totalVenta = @precioLote - @descuento + @recargo;
+
         IF @totalVenta <= 0
         BEGIN
             RAISERROR('El total de la venta debe ser mayor que cero.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @formaPago NOT IN ('efectivo', 'deposito')
+        BEGIN
+            RAISERROR('La forma de pago no es válida.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @formaPago = 'deposito' AND @idCuentaBancaria IS NULL
+        BEGIN
+            RAISERROR('Debe indicar la cuenta bancaria cuando el pago es por depósito.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @formaPago = 'deposito' AND (ISNULL(LTRIM(RTRIM(@numeroReferencia)), '') = '')
+        BEGIN
+            RAISERROR('Debe indicar el número de referencia cuando el pago es por depósito.', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -69,7 +100,9 @@ BEGIN
             @precioLote,
             @descuento,
             @recargo,
-            @totalVenta, 4);
+            @totalVenta,
+            4
+        );
 
         SET @idVenta = SCOPE_IDENTITY();
 
@@ -88,10 +121,107 @@ BEGIN
             @observacion
         );
 
+        INSERT INTO Pago
+        (
+            idVenta,
+            fechaPago,
+            formaPago,
+            montoTotal,
+            idCuentaBancaria,
+            numeroReferencia,
+            depositadoCaja,
+            observacion
+        )
+        VALUES
+        (
+            @idVenta,
+            @fechaPago,
+            @formaPago,
+            @totalVenta,
+            @idCuentaBancaria,
+            @numeroReferencia,
+            CASE WHEN @formaPago = 'efectivo' THEN 0 ELSE 1 END,
+            @observacion
+        );
+
+        SET @idPago = SCOPE_IDENTITY();
+
+        SELECT
+            @nombreCliente = c.nombres + ' ' + c.apellidos,
+            @rtnCliente = c.rtn
+        FROM Cliente c
+        WHERE c.idCliente = @idCliente;
+
+        SET @numeroFactura = 'FAC-' + CAST(@idPago AS VARCHAR(20));
+
+        INSERT INTO Factura
+        (
+            idPago,
+            numeroFactura,
+            fechaFactura,
+            nombreCliente,
+            rtnCliente,
+            totalFactura
+        )
+        VALUES
+        (
+            @idPago,
+            @numeroFactura,
+            GETDATE(),
+            @nombreCliente,
+            @rtnCliente,
+            @totalVenta
+        );
+
+        SET @idFactura = SCOPE_IDENTITY();
+
+        INSERT INTO DetalleFactura
+        (
+            idFactura,
+            descripcion,
+            capital,
+            interes,
+            subtotal
+        )
+        VALUES
+        (
+            @idFactura,
+            'venta al contado',
+            @totalVenta,
+            0,
+            @totalVenta
+        );
+
+        IF @formaPago = 'efectivo'
+        BEGIN
+            INSERT INTO ControlCaja
+            (
+                idPago,
+                idDepositoCaja,
+                idEmpleado,
+                fechaMovimiento,
+                tipoMovimiento,
+                monto,
+                observacion
+            )
+            VALUES
+            (
+                @idPago,
+                NULL,
+                @idEmpleado,
+                GETDATE(),
+                'recepcion_efectivo',
+                @totalVenta,
+                @observacion
+            );
+        END
+
         COMMIT TRANSACTION;
 
         SELECT
             @idVenta AS idVenta,
+            @idPago AS idPago,
+            @idFactura AS idFactura,
             @totalVenta AS totalVenta;
     END TRY
     BEGIN CATCH
@@ -103,7 +233,6 @@ BEGIN
     END CATCH
 END;
 GO
-
 -- -------------------------
 -- 2
 -- -------------------------
