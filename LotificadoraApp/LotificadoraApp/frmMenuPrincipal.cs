@@ -12,6 +12,8 @@ using Guna.UI2.WinForms;
 using LotificadoraApp.Aval;
 using LotificadoraApp.Beneficiario;
 using LotificadoraApp.RegistrarVentas;
+using LotificadoraApp.Departamento;
+using LotificadoraApp.Municipio;
 
 namespace LotificadoraApp
 {
@@ -212,7 +214,19 @@ namespace LotificadoraApp
             {
                 MarcarBotonActivo(btnBeneficiario);
                 AbrirEnContenedor(new frmBeneficiario());
-            };  
+            };
+
+            btnDepartamento.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnDepartamento);
+                AbrirEnContenedor(new frmDepartamento());
+            };
+
+            btnMunicipio.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnMunicipio);
+                AbrirEnContenedor(new frmMunicipio());
+            };
         }
 
         private void AbrirEnContenedor(Form formularioHijo)

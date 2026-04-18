@@ -34,8 +34,8 @@ create table Proyecto (
 go
 
 -- ubicación legal y tributaria del proyecto
-create table Departamento (
-    id int primary key,
+create table  Departamento (
+    id int IDENTITY(1,1) primary key,
     codigo char(2) not null,
     nombre varchar(100) not null,
     constraint uq_Departamento_Codigo unique (codigo)
@@ -43,13 +43,17 @@ create table Departamento (
 go
 
 create table Municipio (
-    id int primary key,
+    id int IDENTITY(1,1) primary key,
     codigo char(2) not null,
     departamentoId int not null,
     nombre varchar(100) not null,
     constraint fk_Municipio_Departamento
         foreign key (departamentoId) references Departamento(id)
 );
+go
+
+alter table Municipio
+add constraint uq_Municipio_Codigo unique (codigo);
 go
 
 create table UbicacionProyecto (
