@@ -1265,7 +1265,6 @@ GO
 -- PROCEDIMIENTOS PARA MUNICIPIO
 -- =======================================================
 CREATE OR ALTER PROCEDURE dbo.sp_municipio_insertar
-    @id INT,
     @codigo CHAR(2),
     @departamentoId INT,
     @nombre VARCHAR(100)
@@ -1274,10 +1273,10 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        INSERT INTO dbo.Municipio (id, codigo, departamentoId, nombre)
-        VALUES (@id, @codigo, @departamentoId, @nombre);
+        INSERT INTO dbo.Municipio (codigo, departamentoId, nombre)
+        VALUES (@codigo, @departamentoId, @nombre);
 
-        SELECT @id AS idMunicipioGenerado;
+        SELECT SCOPE_IDENTITY() AS idMunicipioGenerado;
     END TRY
     BEGIN CATCH
         SELECT ERROR_MESSAGE() AS MensajeError;

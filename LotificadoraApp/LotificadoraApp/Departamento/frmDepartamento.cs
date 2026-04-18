@@ -115,7 +115,9 @@ namespace LotificadoraApp.Departamento
 
         private void btnCrear_Click(object sender, EventArgs e)
         {
-            frmRegistrarDepartamento frmRegistrarDepartamento = new();
+            using frmRegistrarDepartamento frmRegistrarDepartamento = new();
+
+            frmRegistrarDepartamento.FormClosed += (_, _) => ObtenerDepartamentos();
             frmRegistrarDepartamento.ShowDialog();
         }
 
@@ -140,8 +142,8 @@ namespace LotificadoraApp.Departamento
             using frmRegistrarDepartamento frmRegistrarDepartamento =
                 new(_departamentoIdSeleccionado);
 
-            if (frmRegistrarDepartamento.ShowDialog() == DialogResult.OK)
-                ObtenerDepartamentos();
+            frmRegistrarDepartamento.FormClosed += (_, _) => ObtenerDepartamentos();
+            frmRegistrarDepartamento.ShowDialog();
         }
     }
 }

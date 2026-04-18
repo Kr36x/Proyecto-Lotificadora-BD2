@@ -374,6 +374,7 @@
             btnEditar.Size = new Size(140, 50);
             btnEditar.TabIndex = 4;
             btnEditar.Text = "EDITAR";
+            btnEditar.Click += btnEditar_Click;
             // 
             // btnCrear
             // 
@@ -394,6 +395,7 @@
             btnCrear.Size = new Size(140, 50);
             btnCrear.TabIndex = 3;
             btnCrear.Text = "CREAR";
+            btnCrear.Click += btnCrear_Click;
             // 
             // guna2Panel2
             // 

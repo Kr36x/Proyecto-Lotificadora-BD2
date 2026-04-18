@@ -18,6 +18,7 @@ namespace LotificadoraApp.Departamento
         {
             InitializeComponent();
             _esEditar = true;
+            _departamentoId = departamentoId;
             ObtenerDepartamento(departamentoId);
         }
 
@@ -26,14 +27,16 @@ namespace LotificadoraApp.Departamento
             try
             {
                 DataTable dataTable = Db.ExecuteStoredProcedure(
-                    DepartamentoQueries.QR001);
+                    DepartamentoQueries.QR005,
+                    new SqlParameter("@id", departamentoId)
+                    );
 
-                txtCodigo.Text = Convert.ToString(dataTable.Rows[0]["id"]);
+                txtCodigo.Text = Convert.ToString(dataTable.Rows[0]["codigo"]);
                 txtNombre.Text = Convert.ToString(dataTable.Rows[0]["nombre"]);
             }
             catch
             {
-                MostrarMensajeError("Error al obtener los departamentos");
+                MostrarMensajeError("Error al obtener el departamento seleccionado");
             }
         }
 
@@ -95,6 +98,7 @@ namespace LotificadoraApp.Departamento
                 MostrarMensajeError("Ocurrió un error al guardar.");
             }
         }
+
         private static void MostrarWarning(string mensaje)
         {
             MessageBox.Show(
@@ -107,17 +111,17 @@ namespace LotificadoraApp.Departamento
 
         private bool ValidarDepartamento()
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text.Trim()))
-            {
-                MostrarWarning("El nombre del departamento es requerido.");
-                txtNombre.Focus();
-                return false;
-            }
-
             if (string.IsNullOrWhiteSpace(txtCodigo.Text.Trim()))
             {
                 MostrarWarning("El código del departamento es requerido.");
                 txtCodigo.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNombre.Text.Trim()))
+            {
+                MostrarWarning("El nombre del departamento es requerido.");
+                txtNombre.Focus();
                 return false;
             }
 
