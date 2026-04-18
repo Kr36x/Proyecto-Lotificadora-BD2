@@ -28,7 +28,16 @@ namespace LotificadoraApp.Proyecto
             DateTime? fechaFinEstimada,
             decimal areaTotalV2,
             int maxAniosFinanciamiento,
-            string estadoNombre)
+            string estadoNombre,
+            int departamentoId,
+            //Nuevos Campos
+            int municipioId,
+            string aldeaColonia,
+            string direccionDetalle,
+            string claveCatastral,
+            string observacionLegal
+            )
+
         {
             InitializeComponent();
 
@@ -49,6 +58,12 @@ namespace LotificadoraApp.Proyecto
             txtAnioFinanciamiento.Text = maxAniosFinanciamiento.ToString();
 
             _estadoInicialNombre = estadoNombre ?? string.Empty;
+
+            /*
+             txtDireccionDetalle.Text = direccionDetalle;
+             txtClaveCatastral.Text = claveCatastral;
+             txtObsLegal.Text = observacionLegal;
+             */
         }
 
         private string _estadoInicialNombre = string.Empty;
@@ -284,6 +299,46 @@ namespace LotificadoraApp.Proyecto
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning
             );
+        }
+
+        private void btnCancelar_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtAreaTotal_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCrearEditar_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel12_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
