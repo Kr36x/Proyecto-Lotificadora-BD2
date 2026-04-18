@@ -344,7 +344,7 @@
             btnRegistrarPago.ShadowDecoration.CustomizableEdges = customizableEdges22;
             btnRegistrarPago.Size = new Size(193, 37);
             btnRegistrarPago.TabIndex = 4;
-            btnRegistrarPago.Text = "Gestión de pago";
+            btnRegistrarPago.Text = "Registrar pago";
             // 
             // btnRegistrarVentaCredito
             // 

@@ -9,6 +9,8 @@ namespace LotificadoraApp
     public partial class frmRegistrarPago : Form
     {
         private int? _idEtapaActual = null;
+        private int? _idVentaActual = null;
+        private int? _idCuotaActual = null;
 
         public frmRegistrarPago()
         {
@@ -19,26 +21,10 @@ namespace LotificadoraApp
 
         private void ConfigurarFormulario()
         {
-            txtIdVenta.ReadOnly = true;
-            txtCliente.ReadOnly = true;
-            txtLote.ReadOnly = true;
-            txtEtapa.ReadOnly = true;
+            LimpiarCamposVenta();
+            LimpiarCamposCuota();
 
-            txtIDcuota.ReadOnly = true;
-            txtMontoCuota.ReadOnly = true;
-            txtSaldoPendiente.ReadOnly = true;
-            txtEstadoCuota.ReadOnly = true;
-
-            txtIdVenta.TabStop = false;
-            txtCliente.TabStop = false;
-            txtLote.TabStop = false;
-            txtEtapa.TabStop = false;
-            txtIDcuota.TabStop = false;
-            txtMontoCuota.TabStop = false;
-            txtSaldoPendiente.TabStop = false;
-            txtEstadoCuota.TabStop = false;
-
-            rbEfectivo.Checked = true;
+            CargarFormaPago();
             ActualizarControlesFormaPago();
         }
 
@@ -46,15 +32,12 @@ namespace LotificadoraApp
         {
             Load += frmRegistrarPago_Load;
 
-            cmbVentaCredito.SelectedIndexChanged += cmbVentaCredito_SelectedIndexChanged;
-            cbCuotaPendiente.SelectedIndexChanged += cbCuotaPendiente_SelectedIndexChanged;
-
-            rbEfectivo.CheckedChanged += rbFormaPago_CheckedChanged;
-            rbDeposito.CheckedChanged += rbFormaPago_CheckedChanged;
+            cmbLotesDisponibles.SelectedIndexChanged += cmbLotesDisponibles_SelectedIndexChanged;
+            cbmCuotaPendiente.SelectedIndexChanged += cbmCuotaPendiente_SelectedIndexChanged;
+            cbmFormaPago.SelectedIndexChanged += cbmFormaPago_SelectedIndexChanged;
 
             btnRegistrarPago.Click += btnRegistrarPago_Click;
             btnLimpiar.Click += btnLimpiar_Click;
-            btnCerrar.Click += btnCerrar_Click;
         }
 
         private void frmRegistrarPago_Load(object? sender, EventArgs e)
@@ -62,7 +45,7 @@ namespace LotificadoraApp
             try
             {
                 CargarVentasCredito();
-                CargarEmpleados(); 
+                CargarEmpleados();
                 LimpiarFormulario();
             }
             catch (Exception ex)
@@ -86,11 +69,27 @@ namespace LotificadoraApp
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            cmbVentaCredito.DataSource = dt;
-            cmbVentaCredito.DisplayMember = "descripcion";
-            cmbVentaCredito.ValueMember = "idVenta";
-            cmbVentaCredito.SelectedIndex = -1;
+            cmbLotesDisponibles.DataSource = dt;
+            cmbLotesDisponibles.DisplayMember = "descripcion";
+            cmbLotesDisponibles.ValueMember = "idVenta";
+            cmbLotesDisponibles.SelectedIndex = -1;
         }
+
+        private void CargarFormaPago()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("valor");
+            dt.Columns.Add("texto");
+
+            dt.Rows.Add("efectivo", "efectivo");
+            dt.Rows.Add("deposito", "deposito");
+
+            cbmFormaPago.DataSource = dt;
+            cbmFormaPago.DisplayMember = "texto";
+            cbmFormaPago.ValueMember = "valor";
+            cbmFormaPago.SelectedIndex = -1;
+        }
+
         private void CargarEmpleados()
         {
             try
@@ -101,8 +100,11 @@ namespace LotificadoraApp
                 view.RowFilter = "estadoId = 1";
 
                 DataTable dtFiltrado = view.ToTable();
-
-                dtFiltrado.Columns.Add("descripcion", typeof(string), "Convert(id, 'System.String') + ' - ' + nombres + ' ' + apellidos");
+                dtFiltrado.Columns.Add(
+                    "descripcion",
+                    typeof(string),
+                    "Convert(id, 'System.String') + ' - ' + nombres + ' ' + apellidos"
+                );
 
                 cmbEmpleado.DataSource = dtFiltrado;
                 cmbEmpleado.DisplayMember = "descripcion";
@@ -119,21 +121,25 @@ namespace LotificadoraApp
                 );
             }
         }
-        private void cmbVentaCredito_SelectedIndexChanged(object? sender, EventArgs e)
+
+        private void cmbLotesDisponibles_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbVentaCredito.SelectedIndex < 0)
+            if (cmbLotesDisponibles.SelectedIndex < 0 || cmbLotesDisponibles.SelectedValue == null)
             {
                 LimpiarCamposVenta();
                 LimpiarCamposCuota();
-                cbCuotaPendiente.DataSource = null;
-                cbCuentaBancaria.DataSource = null;
+                cbmCuotaPendiente.DataSource = null;
+                cmbCuentaBancaria.DataSource = null;
                 _idEtapaActual = null;
+                _idVentaActual = null;
                 return;
             }
 
             try
             {
-                int idVenta = Convert.ToInt32(cmbVentaCredito.SelectedValue);
+                int idVenta = Convert.ToInt32(cmbLotesDisponibles.SelectedValue);
+                _idVentaActual = idVenta;
+
                 CargarDetalleVenta(idVenta);
                 CargarCuotasPendientes(idVenta);
 
@@ -158,10 +164,10 @@ namespace LotificadoraApp
             if (!dr.Read())
                 throw new Exception("No se encontró la venta seleccionada.");
 
-            txtIdVenta.Text = dr["idVenta"].ToString();
-            txtCliente.Text = dr["cliente"].ToString();
-            txtLote.Text = dr["lote"].ToString();
-            txtEtapa.Text = dr["nombreEtapa"].ToString();
+            lblIDVenta.Text = "ID venta: " + dr["idVenta"].ToString();
+            lblCliente.Text = "Cliente: " + dr["cliente"].ToString();
+            lblLote.Text = "Lote: " + dr["lote"].ToString();
+            lblEtapa.Text = "Etapa: " + dr["nombreEtapa"].ToString();
 
             _idEtapaActual = Convert.ToInt32(dr["idEtapa"]);
         }
@@ -177,31 +183,35 @@ namespace LotificadoraApp
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            cbCuotaPendiente.DataSource = dt;
-            cbCuotaPendiente.DisplayMember = "descripcion";
-            cbCuotaPendiente.ValueMember = "idCuota";
-            cbCuotaPendiente.SelectedIndex = -1;
+            cbmCuotaPendiente.DataSource = dt;
+            cbmCuotaPendiente.DisplayMember = "descripcion";
+            cbmCuotaPendiente.ValueMember = "idCuota";
+            cbmCuotaPendiente.SelectedIndex = -1;
 
             LimpiarCamposCuota();
         }
 
-        private void cbCuotaPendiente_SelectedIndexChanged(object? sender, EventArgs e)
+        private void cbmCuotaPendiente_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cbCuotaPendiente.SelectedIndex < 0)
+            if (cbmCuotaPendiente.SelectedIndex < 0 || cbmCuotaPendiente.SelectedItem == null)
             {
                 LimpiarCamposCuota();
+                _idCuotaActual = null;
                 return;
             }
 
             try
             {
-                DataRowView row = (DataRowView)cbCuotaPendiente.SelectedItem;
+                DataRowView row = (DataRowView)cbmCuotaPendiente.SelectedItem;
 
-                txtIDcuota.Text = row["idCuota"].ToString();
-                txtMontoCuota.Text = Convert.ToDecimal(row["montoCuota"]).ToString("N2");
-                txtSaldoPendiente.Text = Convert.ToDecimal(row["saldoPendiente"]).ToString("N2");
-                txtEstadoCuota.Text = row["estadoCuota"].ToString();
-                txtMontoAPagar.Text = Convert.ToDecimal(row["saldoPendiente"]).ToString("N2");
+                _idCuotaActual = Convert.ToInt32(row["idCuota"]);
+
+                lblIDCuota.Text = "ID cuota: " + row["idCuota"].ToString();
+                lblMontoCuota.Text = "Monto cuota: " + Convert.ToDecimal(row["montoCuota"]).ToString("N2");
+                lblSaldoPendiente.Text = "Saldo pendiente: " + Convert.ToDecimal(row["saldoPendiente"]).ToString("N2");
+                lblEstadoCuota.Text = "Estado cuota: " + row["estadoCuota"].ToString();
+
+                txtMontoPagar.Text = Convert.ToDecimal(row["saldoPendiente"]).ToString("N2");
             }
             catch
             {
@@ -219,28 +229,36 @@ namespace LotificadoraApp
             DataTable dt = new DataTable();
             da.Fill(dt);
 
-            cbCuentaBancaria.DataSource = dt;
-            cbCuentaBancaria.DisplayMember = "descripcion";
-            cbCuentaBancaria.ValueMember = "idCuentaBancaria";
-            cbCuentaBancaria.SelectedIndex = -1;
+            cmbCuentaBancaria.DataSource = dt;
+            cmbCuentaBancaria.DisplayMember = "descripcion";
+            cmbCuentaBancaria.ValueMember = "idCuentaBancaria";
+            cmbCuentaBancaria.SelectedIndex = -1;
         }
 
-        private void rbFormaPago_CheckedChanged(object? sender, EventArgs e)
+        private void cbmFormaPago_SelectedIndexChanged(object? sender, EventArgs e)
         {
             ActualizarControlesFormaPago();
         }
 
         private void ActualizarControlesFormaPago()
         {
-            bool esDeposito = rbDeposito.Checked;
+            string formaPago = cbmFormaPago.SelectedValue?.ToString() ?? string.Empty;
 
-            cbCuentaBancaria.Enabled = esDeposito;
-            txtNoReferencia.Enabled = esDeposito;
+            bool esEfectivo = formaPago == "efectivo";
+            bool esDeposito = formaPago == "deposito";
+
+            cmbEmpleado.Enabled = esEfectivo;
+
+            cmbCuentaBancaria.Enabled = esDeposito;
+            txtReferencia.Enabled = esDeposito;
+
+            if (!esEfectivo)
+                cmbEmpleado.SelectedIndex = -1;
 
             if (!esDeposito)
             {
-                cbCuentaBancaria.SelectedIndex = -1;
-                txtNoReferencia.Clear();
+                cmbCuentaBancaria.SelectedIndex = -1;
+                txtReferencia.Clear();
             }
         }
 
@@ -250,25 +268,31 @@ namespace LotificadoraApp
             {
                 ValidarFormulario();
 
-                int idVenta = int.Parse(txtIdVenta.Text.Trim());
-                int idCuota = int.Parse(txtIDcuota.Text.Trim());
-                string formaPago = rbEfectivo.Checked ? "efectivo" : "deposito";
-                decimal montoTotal = ParseDecimalOrZero(txtMontoAPagar.Text);
+                int idVenta = _idVentaActual!.Value;
+                int idCuota = _idCuotaActual!.Value;
+                string formaPago = cbmFormaPago.SelectedValue!.ToString()!;
+                decimal montoTotal = ParseDecimalOrZero(txtMontoPagar.Text);
 
                 object idCuentaBancaria = DBNull.Value;
                 object numeroReferencia = DBNull.Value;
+                object idEmpleado = DBNull.Value;
 
                 if (formaPago == "deposito")
                 {
-                    idCuentaBancaria = Convert.ToInt32(cbCuentaBancaria.SelectedValue);
-                    numeroReferencia = string.IsNullOrWhiteSpace(txtNoReferencia.Text)
+                    idCuentaBancaria = Convert.ToInt32(cmbCuentaBancaria.SelectedValue);
+                    numeroReferencia = string.IsNullOrWhiteSpace(txtReferencia.Text)
                         ? DBNull.Value
-                        : txtNoReferencia.Text.Trim();
+                        : txtReferencia.Text.Trim();
                 }
 
-                object observacion = string.IsNullOrWhiteSpace(textBox1.Text)
+                if (formaPago == "efectivo")
+                {
+                    idEmpleado = Convert.ToInt32(cmbEmpleado.SelectedValue);
+                }
+
+                object observacion = string.IsNullOrWhiteSpace(txtObservacion.Text)
                     ? DBNull.Value
-                    : textBox1.Text.Trim();
+                    : txtObservacion.Text.Trim();
 
                 using SqlConnection cn = new SqlConnection(Db.ConnectionString);
                 using SqlCommand cmd = new SqlCommand("dbo.sp_registrar_pago", cn);
@@ -281,11 +305,17 @@ namespace LotificadoraApp
                 cmd.Parameters.AddWithValue("@idCuentaBancaria", idCuentaBancaria);
                 cmd.Parameters.AddWithValue("@numeroReferencia", numeroReferencia);
                 cmd.Parameters.AddWithValue("@observacion", observacion);
-                cmd.Parameters.AddWithValue("@idEmpleado", cmbEmpleado.SelectedIndex < 0 ? DBNull.Value: Convert.ToInt32(cmbEmpleado.SelectedValue));
+                cmd.Parameters.AddWithValue("@idEmpleado", idEmpleado);
 
                 DataTable dt = new DataTable();
                 using SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
+
+                if (dt.Rows.Count > 0 && dt.Columns.Contains("MensajeError"))
+                {
+                    string mensajeError = dt.Rows[0]["MensajeError"]?.ToString() ?? "Error al registrar el pago.";
+                    throw new Exception(mensajeError);
+                }
 
                 if (dt.Rows.Count > 0)
                 {
@@ -317,15 +347,18 @@ namespace LotificadoraApp
                     );
                 }
 
-                int idVentaActual = int.Parse(txtIdVenta.Text);
+                int idVentaActual = _idVentaActual.Value;
                 CargarCuotasPendientes(idVentaActual);
 
-                txtMontoAPagar.Clear();
-                txtNoReferencia.Clear();
-                textBox1.Clear();
+                txtMontoPagar.Clear();
+                txtReferencia.Clear();
+                txtObservacion.Clear();
 
-                if (rbDeposito.Checked)
-                    cbCuentaBancaria.SelectedIndex = -1;
+                if (cbmFormaPago.SelectedValue?.ToString() == "deposito")
+                    cmbCuentaBancaria.SelectedIndex = -1;
+
+                if (cbmFormaPago.SelectedValue?.ToString() == "efectivo")
+                    cmbEmpleado.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -340,34 +373,48 @@ namespace LotificadoraApp
 
         private void ValidarFormulario()
         {
-            if (cmbVentaCredito.SelectedIndex < 0)
+            if (cmbLotesDisponibles.SelectedIndex < 0 || _idVentaActual == null)
                 throw new Exception("Seleccione una venta a crédito.");
 
-            if (cbCuotaPendiente.SelectedIndex < 0)
+            if (cbmCuotaPendiente.SelectedIndex < 0 || _idCuotaActual == null)
                 throw new Exception("Seleccione una cuota pendiente.");
 
-            if (!rbEfectivo.Checked && !rbDeposito.Checked)
+            if (cbmFormaPago.SelectedIndex < 0 || cbmFormaPago.SelectedValue == null)
                 throw new Exception("Seleccione la forma de pago.");
 
-            if (string.IsNullOrWhiteSpace(txtMontoAPagar.Text))
+            if (string.IsNullOrWhiteSpace(txtMontoPagar.Text))
                 throw new Exception("Ingrese el monto a pagar.");
 
-            decimal montoAPagar = ParseDecimalOrZero(txtMontoAPagar.Text);
+            decimal montoAPagar = ParseDecimalOrZero(txtMontoPagar.Text);
             if (montoAPagar <= 0)
                 throw new Exception("El monto a pagar debe ser mayor que cero.");
 
-            decimal saldoPendiente = ParseDecimalOrZero(txtSaldoPendiente.Text);
+            decimal saldoPendiente = ObtenerSaldoPendienteDesdeLabel();
             if (montoAPagar > saldoPendiente)
                 throw new Exception("El monto a pagar no puede ser mayor al saldo pendiente.");
 
-            if (rbDeposito.Checked)
+            string formaPago = cbmFormaPago.SelectedValue.ToString()!;
+
+            if (formaPago == "deposito")
             {
-                if (cbCuentaBancaria.SelectedIndex < 0)
+                if (cmbCuentaBancaria.SelectedIndex < 0 || cmbCuentaBancaria.SelectedValue == null)
                     throw new Exception("Seleccione una cuenta bancaria.");
 
-                if (string.IsNullOrWhiteSpace(txtNoReferencia.Text))
+                if (string.IsNullOrWhiteSpace(txtReferencia.Text))
                     throw new Exception("Ingrese el número de referencia.");
             }
+
+            if (formaPago == "efectivo")
+            {
+                if (cmbEmpleado.SelectedIndex < 0 || cmbEmpleado.SelectedValue == null)
+                    throw new Exception("Seleccione el empleado que recibe el efectivo.");
+            }
+        }
+
+        private decimal ObtenerSaldoPendienteDesdeLabel()
+        {
+            string texto = lblSaldoPendiente.Text.Replace("Saldo pendiente:", "").Trim();
+            return ParseDecimalOrZero(texto);
         }
 
         private void btnLimpiar_Click(object? sender, EventArgs e)
@@ -377,39 +424,42 @@ namespace LotificadoraApp
 
         private void LimpiarFormulario()
         {
-            cmbVentaCredito.SelectedIndex = -1;
-            cbCuotaPendiente.DataSource = null;
-            cbCuentaBancaria.DataSource = null;
+            cmbLotesDisponibles.SelectedIndex = -1;
+            cbmCuotaPendiente.DataSource = null;
+            cmbCuentaBancaria.DataSource = null;
 
-            rbEfectivo.Checked = true;
-            rbDeposito.Checked = false;
+            cbmFormaPago.SelectedIndex = -1;
+            cmbEmpleado.SelectedIndex = -1;
 
-            txtMontoAPagar.Clear();
-            txtNoReferencia.Clear();
-            textBox1.Clear();
+            txtMontoPagar.Clear();
+            txtReferencia.Clear();
+            txtObservacion.Clear();
 
             LimpiarCamposVenta();
             LimpiarCamposCuota();
 
             _idEtapaActual = null;
+            _idVentaActual = null;
+            _idCuotaActual = null;
+
             ActualizarControlesFormaPago();
         }
 
         private void LimpiarCamposVenta()
         {
-            txtIdVenta.Clear();
-            txtCliente.Clear();
-            txtLote.Clear();
-            txtEtapa.Clear();
+            lblIDVenta.Text = "ID venta:";
+            lblCliente.Text = "Cliente:";
+            lblEtapa.Text = "Etapa:";
+            lblLote.Text = "Lote:";
         }
 
         private void LimpiarCamposCuota()
         {
-            txtIDcuota.Clear();
-            txtMontoCuota.Clear();
-            txtSaldoPendiente.Clear();
-            txtEstadoCuota.Clear();
-            txtMontoAPagar.Clear();
+            lblIDCuota.Text = "ID cuota:";
+            lblMontoCuota.Text = "Monto cuota:";
+            lblSaldoPendiente.Text = "Saldo pendiente:";
+            lblEstadoCuota.Text = "Estado cuota:";
+            txtMontoPagar.Clear();
         }
 
         private decimal ParseDecimalOrZero(string valor)
@@ -426,15 +476,6 @@ namespace LotificadoraApp
                 return r;
 
             throw new Exception($"El valor '{valor}' no es un número válido.");
-        }
-
-        private void btnCerrar_Click(object? sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
         }
     }
 }
