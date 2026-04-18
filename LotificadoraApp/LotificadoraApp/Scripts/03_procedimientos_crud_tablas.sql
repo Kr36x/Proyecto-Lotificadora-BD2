@@ -265,9 +265,17 @@ BEGIN
         fechaFinEstimada, 
         areaTotalV2, 
         maxAniosFinanciamiento, 
-        T1.nombre AS estado
+        T1.nombre AS estado,
+        U.idUbicacion,
+        U.departamentoId,
+        U.municipioId,
+        U.aldeaColonia,
+        U.direccionDetalle,
+        U.claveCatastral,
+        U.observacionLegal
     FROM Proyecto AS T0
     INNER JOIN [dbo].[Estado] AS T1 ON T0.estadoId = T1.id
+    LEFT JOIN [dbo].[UbicacionProyecto] AS U ON T0.idProyecto = U.idProyecto
     ORDER BY idProyecto DESC;
 END;
 GO
