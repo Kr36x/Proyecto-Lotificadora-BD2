@@ -93,3 +93,52 @@ BEGIN
     ORDER BY l.idLote DESC;
 END;
 GO
+
+--Listar cuenta bacncaria segun el lote seleccionado para rellanar combobox
+CREATE OR ALTER PROCEDURE dbo.sp_cuenta_bancaria_listar_por_lote
+    @idLote INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        cb.idCuentaBancaria,
+        cb.numeroCuenta,
+        cb.tipoCuenta,
+        cb.saldoActual,
+        cb.estadoId,
+        b.nombreBanco,
+        e.nombreEtapa,
+        CONCAT(b.nombreBanco, ' - ', cb.numeroCuenta, ' - ', e.nombreEtapa) AS descripcion
+    FROM CuentaBancaria cb
+    INNER JOIN Banco b
+        ON cb.idBanco = b.idBanco
+    INNER JOIN Etapa e
+        ON cb.idEtapa = e.idEtapa
+    INNER JOIN Bloque bl
+        ON bl.idEtapa = e.idEtapa
+    INNER JOIN Lote l
+        ON l.idBloque = bl.idBloque
+    WHERE l.idLote = @idLote
+    ORDER BY b.nombreBanco, cb.numeroCuenta;
+END;
+GO
+--Listar lotes disponibles para los comobobox
+CREATE OR ALTER PROCEDURE dbo.sp_listar_lotes_disponibles_combo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idLote,
+        numeroLote,
+        idEtapa,
+        nombreEtapa,
+        idBloque,
+        nombreBloque,
+        nombreProyecto,
+        CONCAT(numeroLote, ' - ', nombreEtapa, ' - ', nombreBloque) AS descripcion
+    FROM dbo.vw_lotes_disponibles
+    ORDER BY nombreProyecto, nombreEtapa, nombreBloque, numeroLote;
+END;
+GO

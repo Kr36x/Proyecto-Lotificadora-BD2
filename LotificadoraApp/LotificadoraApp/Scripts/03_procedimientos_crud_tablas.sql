@@ -1176,3 +1176,185 @@ BEGIN
 END;
 GO
 
+-- =======================================================
+-- PROCEDIMIENTOS PARA DEPARTAMENTO
+-- =======================================================
+CREATE OR ALTER PROCEDURE dbo.sp_departamento_insertar
+    @codigo CHAR(2),
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Departamento (codigo, nombre)
+        VALUES (@codigo, @nombre);
+
+        SELECT SCOPE_IDENTITY() AS idDepartamentoGenerado;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_departamento_actualizar
+    @id INT,
+    @codigo CHAR(2),
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE dbo.Departamento
+        SET codigo = @codigo,
+            nombre = @nombre
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_departamento_eliminar
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        DELETE FROM dbo.Departamento
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_departamento_obtener
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT d.id,
+           d.codigo,
+           d.nombre
+    FROM dbo.Departamento d
+    WHERE d.id = @id;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_departamento_listar
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT d.id,
+           d.codigo,
+           d.nombre
+    FROM dbo.Departamento d
+    ORDER BY d.id ASC;
+END;
+GO
+
+-- =======================================================
+-- PROCEDIMIENTOS PARA MUNICIPIO
+-- =======================================================
+CREATE OR ALTER PROCEDURE dbo.sp_municipio_insertar
+    @id INT,
+    @codigo CHAR(2),
+    @departamentoId INT,
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO dbo.Municipio (id, codigo, departamentoId, nombre)
+        VALUES (@id, @codigo, @departamentoId, @nombre);
+
+        SELECT @id AS idMunicipioGenerado;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_municipio_actualizar
+    @id INT,
+    @codigo CHAR(2),
+    @departamentoId INT,
+    @nombre VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE dbo.Municipio
+        SET codigo = @codigo,
+            departamentoId = @departamentoId,
+            nombre = @nombre
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_municipio_eliminar
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        DELETE FROM dbo.Municipio
+        WHERE id = @id;
+    END TRY
+    BEGIN CATCH
+        SELECT ERROR_MESSAGE() AS MensajeError;
+    END CATCH
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_municipio_obtener
+    @id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT m.id,
+           m.codigo,
+           m.departamentoId,
+           d.nombre AS departamento,
+           m.nombre
+    FROM dbo.Municipio m
+    INNER JOIN dbo.Departamento d
+        ON m.departamentoId = d.id
+    WHERE m.id = @id;
+END;
+GO
+
+
+CREATE OR ALTER PROCEDURE dbo.sp_municipio_listar
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT m.id,
+           m.codigo,
+           m.nombre,
+           d.nombre AS departamento
+    FROM dbo.Municipio m
+    INNER JOIN dbo.Departamento d
+        ON m.departamentoId = d.id
+    ORDER BY m.id ASC;
+END;
+GO
+

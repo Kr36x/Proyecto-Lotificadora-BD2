@@ -420,128 +420,167 @@ go
 -- ==================================================================
 -- 7. registra un pago y genera su factura
 -- ==================================================================
-create or alter procedure sp_registrar_pago
-    @idVenta int,
-    @idCuota int,
-    @formaPago varchar(20),
-    @montoTotal decimal(18,2),
-    @idCuentaBancaria int = null,
-    @numeroReferencia varchar(100) = null,
-    @observacion varchar(255) = null,
+CREATE OR ALTER PROCEDURE dbo.sp_registrar_pago
+    @idVenta INT,
+    @idCuota INT,
+    @formaPago VARCHAR(20),
+    @montoTotal DECIMAL(18,2),
+    @idCuentaBancaria INT = NULL,
+    @numeroReferencia VARCHAR(100) = NULL,
+    @observacion VARCHAR(255) = NULL,
     @idEmpleado INT = NULL
-as
-begin
-    set nocount on
+AS
+BEGIN
+    SET NOCOUNT ON;
 
-    declare @idPago int
-    declare @idFactura int
+    DECLARE @idPago INT;
+    DECLARE @idFactura INT;
 
-    declare @montoCuota decimal(18,2)
-    declare @estadoCuota int
-    declare @capitalProgramado decimal(18,2)
-    declare @interesProgramado decimal(18,2)
+    DECLARE @montoCuota DECIMAL(18,2);
+    DECLARE @estadoCuota INT;
+    DECLARE @capitalProgramado DECIMAL(18,2);
+    DECLARE @interesProgramado DECIMAL(18,2);
 
-    declare @totalPagadoAntes decimal(18,2)
-    declare @saldoPendiente decimal(18,2)
+    DECLARE @totalPagadoAntes DECIMAL(18,2);
+    DECLARE @saldoPendiente DECIMAL(18,2);
 
-    declare @montoCapital decimal(18,2)
-    declare @montoInteres decimal(18,2)
+    DECLARE @montoCapital DECIMAL(18,2);
+    DECLARE @montoInteres DECIMAL(18,2);
 
-    declare @nombreCliente varchar(200)
-    declare @rtnCliente varchar(20)
-    declare @numeroFactura varchar(50)
+    DECLARE @nombreCliente VARCHAR(200);
+    DECLARE @rtnCliente VARCHAR(20);
+    DECLARE @numeroFactura VARCHAR(50);
 
-    begin try
-        begin transaction
+    BEGIN TRY
+        BEGIN TRANSACTION;
 
-        if not exists (
-            select 1
-            from Venta
-            where idVenta = @idVenta
-              and estadoId = 4
+        IF NOT EXISTS
+        (
+            SELECT 1
+            FROM Venta
+            WHERE idVenta = @idVenta
+              AND estadoId = 4
         )
-        begin
-            raiserror('la venta no existe o no está activa', 16, 1)
-            rollback transaction
-            return
-        end
+        BEGIN
+            RAISERROR('la venta no existe o no está activa', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        select
+        SELECT
             @montoCuota = montoCuota,
             @estadoCuota = estadoId,
             @capitalProgramado = capitalProgramado,
             @interesProgramado = interesProgramado
-        from Cuota
-        where idCuota = @idCuota
+        FROM Cuota
+        WHERE idCuota = @idCuota;
 
-        if @montoCuota is null
-        begin
-            raiserror('la cuota no existe', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @montoCuota IS NULL
+        BEGIN
+            RAISERROR('la cuota no existe', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        if @estadoCuota = 15
-        begin
-            raiserror('la cuota ya está pagada', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @estadoCuota = 15
+        BEGIN
+            RAISERROR('la cuota ya está pagada', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        select
-            @totalPagadoAntes = isnull(sum(montoAplicado), 0)
-        from DetallePagoCuota
-        where idCuota = @idCuota
+        SELECT
+            @totalPagadoAntes = ISNULL(SUM(montoAplicado), 0)
+        FROM DetallePagoCuota
+        WHERE idCuota = @idCuota;
 
-        set @saldoPendiente = @montoCuota - @totalPagadoAntes
+        SET @saldoPendiente = @montoCuota - @totalPagadoAntes;
 
-        if @montoTotal <= 0
-        begin
-            raiserror('el monto del pago debe ser mayor que cero', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @montoTotal <= 0
+        BEGIN
+            RAISERROR('el monto del pago debe ser mayor que cero', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        if @montoTotal > @saldoPendiente
-        begin
-            raiserror('el monto excede el saldo pendiente de la cuota', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @montoTotal > @saldoPendiente
+        BEGIN
+            RAISERROR('el monto excede el saldo pendiente de la cuota', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        if @formaPago not in ('efectivo', 'deposito')
-        begin
-            raiserror('la forma de pago no es válida', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @formaPago NOT IN ('efectivo', 'deposito')
+        BEGIN
+            RAISERROR('la forma de pago no es válida', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        if @formaPago = 'deposito' and @idCuentaBancaria is null
-        begin
-            raiserror('debe indicar la cuenta bancaria cuando el pago es por depósito', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @formaPago = 'efectivo' AND @idEmpleado IS NULL
+        BEGIN
+            RAISERROR('debe indicar el empleado cuando el pago es en efectivo', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        if @formaPago = 'deposito' and (isnull(ltrim(rtrim(@numeroReferencia)), '') = '')
-        begin
-            raiserror('debe indicar el número de referencia cuando el pago es por depósito', 16, 1)
-            rollback transaction
-            return
-        end
+        IF @formaPago = 'efectivo'
+        BEGIN
+            IF NOT EXISTS
+            (
+                SELECT 1
+                FROM Empleado
+                WHERE id = @idEmpleado
+            )
+            BEGIN
+                RAISERROR('el empleado no existe', 16, 1);
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
+        END
 
-        if @montoTotal <= @interesProgramado
-        begin
-            set @montoInteres = @montoTotal
-            set @montoCapital = 0
-        end
-        else
-        begin
-            set @montoInteres = @interesProgramado
-            set @montoCapital = @montoTotal - @montoInteres
-        end
+        IF @formaPago = 'deposito' AND @idCuentaBancaria IS NULL
+        BEGIN
+            RAISERROR('debe indicar la cuenta bancaria cuando el pago es por depósito', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
 
-        insert into Pago (
+        IF @formaPago = 'deposito'
+        BEGIN
+            IF NOT EXISTS
+            (
+                SELECT 1
+                FROM CuentaBancaria
+                WHERE idCuentaBancaria = @idCuentaBancaria
+            )
+            BEGIN
+                RAISERROR('la cuenta bancaria no existe', 16, 1);
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
+        END
+
+        IF @formaPago = 'deposito' AND (ISNULL(LTRIM(RTRIM(@numeroReferencia)), '') = '')
+        BEGIN
+            RAISERROR('debe indicar el número de referencia cuando el pago es por depósito', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        IF @montoTotal <= @interesProgramado
+        BEGIN
+            SET @montoInteres = @montoTotal;
+            SET @montoCapital = 0;
+        END
+        ELSE
+        BEGIN
+            SET @montoInteres = @interesProgramado;
+            SET @montoCapital = @montoTotal - @montoInteres;
+        END
+
+        INSERT INTO Pago
+        (
             idVenta,
             fechaPago,
             formaPago,
@@ -551,44 +590,48 @@ begin
             depositadoCaja,
             observacion
         )
-        values (
+        VALUES
+        (
             @idVenta,
-            getdate(),
+            GETDATE(),
             @formaPago,
             @montoTotal,
             @idCuentaBancaria,
             @numeroReferencia,
-            case when @formaPago = 'efectivo' then 0 else 1 end,
+            CASE WHEN @formaPago = 'efectivo' THEN 0 ELSE 1 END,
             @observacion
-        )
+        );
 
-        set @idPago = scope_identity()
+        SET @idPago = SCOPE_IDENTITY();
 
-        insert into DetallePagoCuota (
+        INSERT INTO DetallePagoCuota
+        (
             idPago,
             idCuota,
             montoCapital,
             montoInteres,
             montoAplicado
         )
-        values (
+        VALUES
+        (
             @idPago,
             @idCuota,
             @montoCapital,
             @montoInteres,
             @montoTotal
-        )
+        );
 
-        select
+        SELECT
             @nombreCliente = c.nombres + ' ' + c.apellidos,
             @rtnCliente = c.rtn
-        from Venta v
-        inner join Cliente c on v.idCliente = c.idCliente
-        where v.idVenta = @idVenta
+        FROM Venta v
+        INNER JOIN Cliente c ON v.idCliente = c.idCliente
+        WHERE v.idVenta = @idVenta;
 
-        set @numeroFactura = 'FAC-' + cast(@idPago as varchar(20))
+        SET @numeroFactura = 'FAC-' + CAST(@idPago AS VARCHAR(20));
 
-        insert into Factura (
+        INSERT INTO Factura
+        (
             idPago,
             numeroFactura,
             fechaFactura,
@@ -596,35 +639,52 @@ begin
             rtnCliente,
             totalFactura
         )
-        values (
+        VALUES
+        (
             @idPago,
             @numeroFactura,
-            getdate(),
+            GETDATE(),
             @nombreCliente,
             @rtnCliente,
             @montoTotal
-        )
+        );
 
-        set @idFactura = scope_identity()
+        SET @idFactura = SCOPE_IDENTITY();
 
-        insert into DetalleFactura (
+        INSERT INTO DetalleFactura
+        (
             idFactura,
             descripcion,
             capital,
             interes,
             subtotal
         )
-        values (
+        VALUES
+        (
             @idFactura,
             'pago de cuota',
             @montoCapital,
             @montoInteres,
             @montoTotal
-        )
+        );
 
-        if @formaPago = 'efectivo'
-        begin
-            insert into ControlCaja (
+        IF @formaPago = 'efectivo'
+        BEGIN
+            IF EXISTS
+            (
+                SELECT 1
+                FROM ControlCaja
+                WHERE idPago = @idPago
+                  AND tipoMovimiento = 'recepcion_efectivo'
+            )
+            BEGIN
+                RAISERROR('el pago ya fue registrado en control de caja', 16, 1);
+                ROLLBACK TRANSACTION;
+                RETURN;
+            END
+
+            INSERT INTO ControlCaja
+            (
                 idPago,
                 idDepositoCaja,
                 idEmpleado,
@@ -633,38 +693,39 @@ begin
                 monto,
                 observacion
             )
-            values (
+            VALUES
+            (
                 @idPago,
-                null,
+                NULL,
                 @idEmpleado,
-                getdate(),
+                GETDATE(),
                 'recepcion_efectivo',
                 @montoTotal,
                 @observacion
-            )
-        end
+            );
+        END
 
-        commit transaction
+        COMMIT TRANSACTION;
 
-        select
-            @idPago as idPago,
-            @idFactura as idFactura,
-            @montoTotal as montoPagado,
-            @montoCapital as montoCapital,
-            @montoInteres as montoInteres,
-            @numeroFactura as numeroFactura
-    end try
-    begin catch
-        if @@trancount > 0
-            rollback transaction
+        SELECT
+            @idPago AS idPago,
+            @idFactura AS idFactura,
+            @montoTotal AS montoPagado,
+            @montoCapital AS montoCapital,
+            @montoInteres AS montoInteres,
+            @numeroFactura AS numeroFactura;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
 
-        declare @mensajeError varchar(4000)
-        set @mensajeError = error_message()
+        DECLARE @mensajeError VARCHAR(4000);
+        SET @mensajeError = ERROR_MESSAGE();
 
-        raiserror(@mensajeError, 16, 1)
-    end catch
-end
-go
+        RAISERROR(@mensajeError, 16, 1);
+    END CATCH
+END
+GO
 
 -- ==================================================================
 -- 8. funcion para validar los lotes disponibles por cliente
