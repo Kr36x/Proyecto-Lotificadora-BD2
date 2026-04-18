@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
 
@@ -7,16 +8,25 @@ namespace LotificadoraApp
 {
     public partial class frmConsultaVistaLotes : Form
     {
+
+        private bool _modoDetalle = true;
         public frmConsultaVistaLotes()
         {
             InitializeComponent();
+            ConectarEventos();
+        }
 
-            btnConsultar.Click += btnConsultar_Click;
-            btnLimpiar.Click += btnLimpiar_Click;
+        private void ConectarEventos()
+        {
+            Load += frmConsultaVistaLotes_Load;
+            btnRecargar.Click += btnConsultar_Click;
+            btnDetalle.Click += btnDetalle_Click;
+            btnResumen.Click += btnResumen_Click;
         }
 
         private void frmConsultaVistaLotes_Load(object sender, EventArgs e)
         {
+            ConfigurarGrid();
             ConsultarLotes();
         }
 
@@ -25,45 +35,103 @@ namespace LotificadoraApp
             ConsultarLotes();
         }
 
-        private void btnLimpiar_Click(object sender, EventArgs e)
+        private void btnDetalle_Click(object? sender, EventArgs e)
         {
-            txtIdProyecto.Clear();
-            txtIdEtapa.Clear();
+            _modoDetalle = true;
             ConsultarLotes();
+        }
+
+        private void btnResumen_Click(object? sender, EventArgs e)
+        {
+            _modoDetalle = false;
+            ConsultarLotes();
+        }
+
+        private void ConfigurarGrid()
+        {
+            dgvVistaLotes.AutoGenerateColumns = true;
+            dgvVistaLotes.ReadOnly = true;
+            dgvVistaLotes.MultiSelect = false;
+            dgvVistaLotes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvVistaLotes.AllowUserToAddRows = false;
+            dgvVistaLotes.AllowUserToDeleteRows = false;
+            dgvVistaLotes.AllowUserToResizeRows = false;
+            dgvVistaLotes.RowHeadersVisible = false;
+            dgvVistaLotes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvVistaLotes.ColumnHeadersHeight = 52;
+            dgvVistaLotes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dgvVistaLotes.EnableHeadersVisualStyles = false;
+            dgvVistaLotes.BackgroundColor = Color.White;
+            dgvVistaLotes.BorderStyle = BorderStyle.None;
+            dgvVistaLotes.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvVistaLotes.GridColor = Color.FromArgb(210, 210, 210);
+
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.BackColor = Color.Olive;
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.Olive;
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvVistaLotes.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            dgvVistaLotes.DefaultCellStyle.BackColor = Color.White;
+            dgvVistaLotes.DefaultCellStyle.ForeColor = Color.Black;
+            dgvVistaLotes.DefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 210, 155);
+            dgvVistaLotes.DefaultCellStyle.SelectionForeColor = Color.Black;
+            dgvVistaLotes.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+            dgvVistaLotes.DefaultCellStyle.Padding = new Padding(3);
+
+            dgvVistaLotes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 248, 239);
+            dgvVistaLotes.AlternatingRowsDefaultCellStyle.ForeColor = Color.Black;
+            dgvVistaLotes.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(196, 210, 155);
+            dgvVistaLotes.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgvVistaLotes.RowTemplate.Height = 32;
+
+            dgvVistaLotes.ThemeStyle.BackColor = Color.White;
+            dgvVistaLotes.ThemeStyle.GridColor = Color.FromArgb(210, 210, 210);
+            dgvVistaLotes.ThemeStyle.HeaderStyle.BackColor = Color.Olive;
+            dgvVistaLotes.ThemeStyle.HeaderStyle.ForeColor = Color.White;
+            dgvVistaLotes.ThemeStyle.HeaderStyle.BorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgvVistaLotes.ThemeStyle.HeaderStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dgvVistaLotes.ThemeStyle.HeaderStyle.Height = 52;
+            dgvVistaLotes.ThemeStyle.RowsStyle.BackColor = Color.White;
+            dgvVistaLotes.ThemeStyle.RowsStyle.ForeColor = Color.Black;
+            dgvVistaLotes.ThemeStyle.RowsStyle.SelectionBackColor = Color.FromArgb(196, 210, 155);
+            dgvVistaLotes.ThemeStyle.RowsStyle.SelectionForeColor = Color.Black;
+            dgvVistaLotes.ThemeStyle.RowsStyle.Height = 32;
+            dgvVistaLotes.ThemeStyle.AlternatingRowsStyle.BackColor = Color.FromArgb(245, 248, 239);
+            dgvVistaLotes.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = Color.FromArgb(196, 210, 155);
+            dgvVistaLotes.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = Color.Black;
         }
 
         private void ConsultarLotes()
         {
             try
             {
-                int? idProyecto = ParseNullableInt(txtIdProyecto.Text);
-                int? idEtapa = ParseNullableInt(txtIdEtapa.Text);
-
-                string sql = @"
-                    SELECT *
-                    FROM dbo.vw_lotes_disponibles
-                    WHERE (@idProyecto IS NULL OR idProyecto = @idProyecto)
-                      AND (@idEtapa IS NULL OR idEtapa = @idEtapa)
-                    ORDER BY idProyecto, idEtapa, idBloque, numeroLote;";
+                DataTable table = new DataTable();
 
                 using SqlConnection connection = new SqlConnection(Db.ConnectionString);
-                using SqlCommand command = new SqlCommand(sql, connection);
 
-                command.Parameters.AddWithValue("@idProyecto", (object?)idProyecto ?? DBNull.Value);
-                command.Parameters.AddWithValue("@idEtapa", (object?)idEtapa ?? DBNull.Value);
+                if (_modoDetalle)
+                {
+                    string sql = @"SELECT * FROM dbo.vw_lotes_disponibles;";
 
-                using SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable table = new DataTable();
-                adapter.Fill(table);
+                    using SqlCommand command = new SqlCommand(sql, connection);
+                    using SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(table);
+                }
+                else
+                {
+                    using SqlCommand command = new SqlCommand("dbo.sp_listar_lotes_disponibles", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    adapter.Fill(table);
+                }
 
                 dgvVistaLotes.DataSource = table;
-
-                // Opcional: mejora visual automática
-                dgvVistaLotes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgvVistaLotes.ReadOnly = true;
-                dgvVistaLotes.AllowUserToAddRows = false;
-                dgvVistaLotes.AllowUserToDeleteRows = false;
-                dgvVistaLotes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                //ConfigurarColumnasSegunModo();
             }
             catch (Exception ex)
             {
@@ -76,15 +144,6 @@ namespace LotificadoraApp
             }
         }
 
-        private int? ParseNullableInt(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return null;
 
-            if (int.TryParse(value.Trim(), out int result))
-                return result;
-
-            throw new Exception($"El valor '{value}' no es un número entero válido.");
-        }
     }
 }

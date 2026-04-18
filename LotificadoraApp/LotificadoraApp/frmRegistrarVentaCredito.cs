@@ -284,9 +284,6 @@ namespace LotificadoraApp
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 CargarAvales();
-
-                if (frm.IdAvalGenerado.HasValue)
-                    cbAval.SelectedValue = frm.IdAvalGenerado.Value;
             }
         }
         private void btnNuevoBeneficiario_Click(object? sender, EventArgs e)
@@ -297,8 +294,6 @@ namespace LotificadoraApp
             {
                 CargarBeneficiarios();
 
-                if (frm.IdBeneficiarioGenerado.HasValue)
-                    cbBeneficiario.SelectedValue = frm.IdBeneficiarioGenerado.Value;
             }
         }
         private void btnRegistrarVenta_Click(object? sender, EventArgs e)

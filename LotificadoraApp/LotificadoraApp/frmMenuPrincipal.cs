@@ -9,6 +9,8 @@ using LotificadoraApp.Gasto;
 using LotificadoraApp.GestionGastos;
 using LotificadoraApp.Empleado;
 using Guna.UI2.WinForms;
+using LotificadoraApp.Aval;
+using LotificadoraApp.Beneficiario;
 
 namespace LotificadoraApp
 {
@@ -88,7 +90,7 @@ namespace LotificadoraApp
             btnCreditosActivos.Click += (_, _) =>
             {
                // MarcarBotonActivo(btnCreditosActivos);
-                AbrirEnContenedor(new frmConsultaVistaCreditos());
+                AbrirEnContenedor(new frmConsultaVistaCredito());
             };
 
             btnEstadoDeCuenta.Click += (_, _) =>
@@ -198,6 +200,18 @@ namespace LotificadoraApp
                 MarcarBotonActivo(btnEmpleado);
                 AbrirEnContenedor(new FrmEmpleado());
             };
+
+            btnAval.Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnAval);
+                AbrirEnContenedor(new frmAval());
+            };
+            
+            btnBeneficiario .Click += (_, _) =>
+            {
+                MarcarBotonActivo(btnBeneficiario);
+                AbrirEnContenedor(new frmBeneficiario());
+            };  
         }
 
         private void AbrirEnContenedor(Form formularioHijo)
