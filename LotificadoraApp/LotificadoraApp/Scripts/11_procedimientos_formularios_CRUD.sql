@@ -247,3 +247,69 @@ BEGIN
     ORDER BY b.nombreBanco, cb.numeroCuenta;
 END;
 GO
+
+--FACTURAS
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_listar
+    @numeroFactura VARCHAR(50) = NULL,
+    @fechaInicio DATE = NULL,
+    @fechaFin DATE = NULL,
+    @nombreCliente VARCHAR(200) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idFactura,
+        idPago,
+        numeroFactura,
+        fechaFactura,
+        nombreCliente,
+        rtnCliente,
+        totalFactura
+    FROM Factura
+    WHERE (@numeroFactura IS NULL OR numeroFactura LIKE '%' + @numeroFactura + '%')
+      AND (@fechaInicio IS NULL OR CAST(fechaFactura AS DATE) >= @fechaInicio)
+      AND (@fechaFin IS NULL OR CAST(fechaFactura AS DATE) <= @fechaFin)
+      AND (@nombreCliente IS NULL OR nombreCliente LIKE '%' + @nombreCliente + '%')
+    ORDER BY idFactura DESC;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_obtener
+    @idFactura INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idFactura,
+        idPago,
+        numeroFactura,
+        fechaFactura,
+        nombreCliente,
+        rtnCliente,
+        totalFactura
+    FROM Factura
+    WHERE idFactura = @idFactura;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE dbo.sp_factura_detalle_listar
+    @idFactura INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        idDetalleFactura,
+        idFactura,
+        descripcion,
+        capital,
+        interes,
+        subtotal
+    FROM DetalleFactura
+    WHERE idFactura = @idFactura
+    ORDER BY idDetalleFactura ASC;
+END;
+GO
