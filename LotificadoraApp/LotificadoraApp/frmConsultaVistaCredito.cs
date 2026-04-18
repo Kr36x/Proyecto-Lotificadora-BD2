@@ -107,7 +107,7 @@ namespace LotificadoraApp
         {
             try
             {
-  
+
                 DataTable table = new DataTable();
 
                 using SqlConnection connection = new SqlConnection(Db.ConnectionString);
@@ -143,6 +143,9 @@ namespace LotificadoraApp
             }
         }
 
+        private void pnlCRUD_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
     }
 }

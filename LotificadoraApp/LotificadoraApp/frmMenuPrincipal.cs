@@ -11,6 +11,7 @@ using LotificadoraApp.Empleado;
 using Guna.UI2.WinForms;
 using LotificadoraApp.Aval;
 using LotificadoraApp.Beneficiario;
+using LotificadoraApp.RegistrarVentas;
 
 namespace LotificadoraApp
 {
@@ -114,7 +115,7 @@ namespace LotificadoraApp
             btnRegistrarVentaCredito.Click += (_, _) =>
             {
                 MarcarBotonActivo(btnRegistrarVentaCredito);
-                AbrirEnContenedor(new frmRegistrarVentaCredito());
+                AbrirEnContenedor(new frmVenta());
             };
 
             btnRegistrarPago.Click += (_, _) =>

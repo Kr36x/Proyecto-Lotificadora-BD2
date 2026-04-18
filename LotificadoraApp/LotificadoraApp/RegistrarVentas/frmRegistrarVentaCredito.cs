@@ -1,14 +1,16 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
-using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
+using LotificadoraApp.Aval;
+using LotificadoraApp.Beneficiario;
 
 namespace LotificadoraApp
 {
     public partial class frmRegistrarVentaCredito : Form
     {
         private decimal _tasaInteresActual = 0m;
+        private int _idLoteSeleccionado = 0;
+        private decimal _precioLoteActual = 0m;
 
         public frmRegistrarVentaCredito()
         {
@@ -19,46 +21,34 @@ namespace LotificadoraApp
 
         private void ConfigurarFormulario()
         {
-            txtIdLote.ReadOnly = true;
-            txtProyecto.ReadOnly = true;
-            txtEtapa.ReadOnly = true;
-            txtBloque.ReadOnly = true;
-            txtNumeroLote.ReadOnly = true;
-            txtPrecioLote.ReadOnly = true;
-            txtTasaInteres.ReadOnly = true;
+            txtInteres.ReadOnly = true;
             txtTotalVenta.ReadOnly = true;
             txtMontoFinanciado.ReadOnly = true;
             txtCuotaEstimada.ReadOnly = true;
 
-            txtIdLote.TabStop = false;
-            txtProyecto.TabStop = false;
-            txtEtapa.TabStop = false;
-            txtBloque.TabStop = false;
-            txtNumeroLote.TabStop = false;
-            txtPrecioLote.TabStop = false;
-            txtTasaInteres.TabStop = false;
+            txtInteres.TabStop = false;
             txtTotalVenta.TabStop = false;
             txtMontoFinanciado.TabStop = false;
             txtCuotaEstimada.TabStop = false;
 
-            cbFinanciarTotal.Checked = false;
+            chkFinanciarTotal.Checked = false;
             dtpFechaVenta.Value = DateTime.Today;
-            dtpInicioPago.Value = DateTime.Today.AddMonths(1);
+            dtpFechaInicioPago.Value = DateTime.Today.AddMonths(1);
+
+            LimpiarCamposDetalle();
         }
 
         private void ConectarEventos()
         {
             Load += frmRegistrarVentaCredito_Load;
-            cmbLoteDisponible.SelectedIndexChanged += cmbLoteDisponible_SelectedIndexChanged;
-            cbFinanciarTotal.CheckedChanged += cbFinanciarTotal_CheckedChanged;
+
+            cmbLotesDisponibles.SelectedIndexChanged += cmbLotesDisponibles_SelectedIndexChanged;
+            chkFinanciarTotal.CheckedChanged += chkFinanciarTotal_CheckedChanged;
 
             btnCalcular.Click += btnCalcular_Click;
             btnRegistrarVenta.Click += btnRegistrarVenta_Click;
             btnLimpiar.Click += btnLimpiar_Click;
-            btnCerrar.Click += btnCerrar_Click;
-
-            btnNuevoBeneficiario.Click += btnNuevoBeneficiario_Click;
-            btnNuevoAval.Click += btnNuevoAval_Click;
+            guna2Button2.Click += guna2Button2_Click;
         }
 
         private void frmRegistrarVentaCredito_Load(object? sender, EventArgs e)
@@ -84,75 +74,47 @@ namespace LotificadoraApp
 
         private void CargarLotesDisponibles()
         {
-            const string sql = @"exec dbo.sp_listar_lotes_disponibles;";
+            DataTable dt = Db.ExecuteStoredProcedure("dbo.sp_listar_lotes_disponibles_combo");
 
-            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
-            using SqlCommand cmd = new SqlCommand(sql, cn);
-            using SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            cmbLoteDisponible.DataSource = dt;
-            cmbLoteDisponible.DisplayMember = "numeroLote";
-            cmbLoteDisponible.ValueMember = "idLote";
-            cmbLoteDisponible.SelectedIndex = -1;
+            cmbLotesDisponibles.DataSource = dt;
+            cmbLotesDisponibles.DisplayMember = "descripcion";
+            cmbLotesDisponibles.ValueMember = "idLote";
+            cmbLotesDisponibles.SelectedIndex = -1;
         }
 
         private void CargarClientes()
         {
-            const string sql = @"exec dbo.sp_cliente_listar_activo;";
+            DataTable dt = Db.ExecuteStoredProcedure("dbo.sp_cliente_listar_activo");
 
-            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
-            using SqlCommand cmd = new SqlCommand(sql, cn);
-            using SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            cbClientes.DataSource = dt;
-            cbClientes.DisplayMember = "nombreCompleto";
-            cbClientes.ValueMember = "idCliente";
-            cbClientes.SelectedIndex = -1;
+            cmbCliente.DataSource = dt;
+            cmbCliente.DisplayMember = "nombreCompleto";
+            cmbCliente.ValueMember = "idCliente";
+            cmbCliente.SelectedIndex = -1;
         }
 
         private void CargarAvales()
         {
-            const string sql = @"exec dbo.sp_aval_listar_comboBox;";
+            DataTable dt = Db.ExecuteStoredProcedure("dbo.sp_aval_listar_comboBox");
 
-            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
-            using SqlCommand cmd = new SqlCommand(sql, cn);
-            using SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            cbAval.DataSource = dt;
-            cbAval.DisplayMember = "nombreCompleto";
-            cbAval.ValueMember = "idAval";
-            cbAval.SelectedIndex = -1;
+            cmbAval.DataSource = dt;
+            cmbAval.DisplayMember = "nombreCompleto";
+            cmbAval.ValueMember = "idAval";
+            cmbAval.SelectedIndex = -1;
         }
 
         private void CargarBeneficiarios()
         {
-            const string sql = @"exec dbo.sp_beneficiario_listar_comboBox;";
+            DataTable dt = Db.ExecuteStoredProcedure("dbo.sp_beneficiario_listar_comboBox");
 
-            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
-            using SqlCommand cmd = new SqlCommand(sql, cn);
-            using SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            cbBeneficiario.DataSource = dt;
-            cbBeneficiario.DisplayMember = "nombreCompleto";
-            cbBeneficiario.ValueMember = "idBeneficiario";
-            cbBeneficiario.SelectedIndex = -1;
+            cmbBenificiario.DataSource = dt;
+            cmbBenificiario.DisplayMember = "nombreCompleto";
+            cmbBenificiario.ValueMember = "idBeneficiario";
+            cmbBenificiario.SelectedIndex = -1;
         }
 
-        private void cmbLoteDisponible_SelectedIndexChanged(object? sender, EventArgs e)
+        private void cmbLotesDisponibles_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbLoteDisponible.SelectedIndex < 0)
+            if (cmbLotesDisponibles.SelectedIndex < 0 || cmbLotesDisponibles.SelectedValue == null)
             {
                 LimpiarCamposDetalle();
                 return;
@@ -160,48 +122,46 @@ namespace LotificadoraApp
 
             try
             {
-                int idLote = Convert.ToInt32(cmbLoteDisponible.SelectedValue);
-                CargarDetalleLote(idLote);
+                _idLoteSeleccionado = Convert.ToInt32(cmbLotesDisponibles.SelectedValue);
+                CargarDetalleLote(_idLoteSeleccionado);
                 CalcularResumen();
             }
             catch
             {
-                // Evita errores de binding al iniciar
             }
         }
 
         private void CargarDetalleLote(int idLote)
         {
-            const string sql = @"exec dbo.sp_obtener_detalle_lote_disponible @idLote = @idLote;";
+            DataTable dt = Db.ExecuteStoredProcedure(
+                "dbo.sp_obtener_detalle_lote_disponible",
+                new SqlParameter("@idLote", idLote)
+            );
 
-            using SqlConnection cn = new SqlConnection(Db.ConnectionString);
-            using SqlCommand cmd = new SqlCommand(sql, cn);
-            cmd.Parameters.AddWithValue("@idLote", idLote);
-
-            cn.Open();
-            using SqlDataReader dr = cmd.ExecuteReader();
-
-            if (!dr.Read())
+            if (dt.Rows.Count == 0)
                 throw new Exception("No se encontró información del lote seleccionado.");
 
-            txtIdLote.Text = dr["idLote"].ToString();
-            txtProyecto.Text = dr["nombreProyecto"].ToString();
-            txtEtapa.Text = dr["nombreEtapa"].ToString();
-            txtBloque.Text = dr["nombreBloque"].ToString();
-            txtNumeroLote.Text = dr["numeroLote"].ToString();
+            DataRow row = dt.Rows[0];
 
-            decimal precio = Convert.ToDecimal(dr["precioFinalCalculado"]);
-            txtPrecioLote.Text = precio.ToString("N2");
+            _idLoteSeleccionado = Convert.ToInt32(row["idLote"]);
+            _precioLoteActual = Convert.ToDecimal(row["precioFinalCalculado"]);
+            _tasaInteresActual = Convert.ToDecimal(row["tasaInteresAnual"]);
 
-            _tasaInteresActual = Convert.ToDecimal(dr["tasaInteresAnual"]);
-            txtTasaInteres.Text = _tasaInteresActual.ToString("N2");
+            lblIDLote.Text = "ID Lote: " + row["idLote"].ToString();
+            lblProyecto.Text = "Proyecto: " + row["nombreProyecto"].ToString();
+            lblEtapa.Text = "Etapa: " + row["nombreEtapa"].ToString();
+            lblBloque.Text = "Bloque: " + row["nombreBloque"].ToString();
+            lblNumeroLote.Text = "Numero Lote: " + row["numeroLote"].ToString();
+            lblPrecioLote.Text = "Precio Lote: " + _precioLoteActual.ToString("N2");
+
+            txtInteres.Text = _tasaInteresActual.ToString("N2");
         }
 
-        private void cbFinanciarTotal_CheckedChanged(object? sender, EventArgs e)
+        private void chkFinanciarTotal_CheckedChanged(object? sender, EventArgs e)
         {
-            txtPrima.Enabled = !cbFinanciarTotal.Checked;
+            txtPrima.Enabled = !chkFinanciarTotal.Checked;
 
-            if (cbFinanciarTotal.Checked)
+            if (chkFinanciarTotal.Checked)
                 txtPrima.Text = "0";
 
             CalcularResumen();
@@ -226,19 +186,18 @@ namespace LotificadoraApp
 
         private void CalcularResumen()
         {
-            decimal precioLote = ParseDecimalOrZero(txtPrecioLote.Text);
             decimal descuento = ParseDecimalOrZero(txtDescuento.Text);
             decimal recargo = ParseDecimalOrZero(txtRecargo.Text);
             decimal prima = ParseDecimalOrZero(txtPrima.Text);
             int plazoAnios = ParseIntOrZero(txtPlazoAños.Text);
 
-            decimal totalVenta = precioLote - descuento + recargo;
+            decimal totalVenta = _precioLoteActual - descuento + recargo;
             if (totalVenta < 0)
                 totalVenta = 0;
 
             decimal montoFinanciado;
 
-            if (cbFinanciarTotal.Checked)
+            if (chkFinanciarTotal.Checked)
             {
                 prima = 0;
                 montoFinanciado = totalVenta;
@@ -277,25 +236,7 @@ namespace LotificadoraApp
             txtMontoFinanciado.Text = montoFinanciado.ToString("N2");
             txtCuotaEstimada.Text = cuotaEstimada.ToString("N2");
         }
-        private void btnNuevoAval_Click(object? sender, EventArgs e)
-        {
-            using frmRegistrarAval frm = new frmRegistrarAval();
 
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                CargarAvales();
-            }
-        }
-        private void btnNuevoBeneficiario_Click(object? sender, EventArgs e)
-        {
-            using frmRegistrarBeneficiario frm = new frmRegistrarBeneficiario();
-
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                CargarBeneficiarios();
-
-            }
-        }
         private void btnRegistrarVenta_Click(object? sender, EventArgs e)
         {
             try
@@ -303,31 +244,29 @@ namespace LotificadoraApp
                 ValidarFormulario();
                 CalcularResumen();
 
-                int idLote = Convert.ToInt32(txtIdLote.Text);
-                int idCliente = Convert.ToInt32(cbClientes.SelectedValue);
-                int idAval = Convert.ToInt32(cbAval.SelectedValue);
-                int idBeneficiario = Convert.ToInt32(cbBeneficiario.SelectedValue);
+                int idCliente = Convert.ToInt32(cmbCliente.SelectedValue);
+                int idAval = Convert.ToInt32(cmbAval.SelectedValue);
+                int idBeneficiario = Convert.ToInt32(cmbBenificiario.SelectedValue);
 
                 DateTime fechaVenta = dtpFechaVenta.Value.Date;
-                DateTime fechaInicioPago = dtpInicioPago.Value.Date;
+                DateTime fechaInicioPago = dtpFechaInicioPago.Value.Date;
 
-                decimal precioLote = ParseDecimalOrZero(txtPrecioLote.Text);
                 decimal descuento = ParseDecimalOrZero(txtDescuento.Text);
                 decimal recargo = ParseDecimalOrZero(txtRecargo.Text);
                 decimal prima = ParseDecimalOrZero(txtPrima.Text);
-                int financiaTotal = cbFinanciarTotal.Checked ? 1 : 0;
+                int financiaTotal = chkFinanciarTotal.Checked ? 1 : 0;
                 int plazoAnios = int.Parse(txtPlazoAños.Text.Trim());
 
                 using SqlConnection cn = new SqlConnection(Db.ConnectionString);
                 using SqlCommand cmd = new SqlCommand("dbo.sp_registrar_venta_credito", cn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@idLote", idLote);
+                cmd.Parameters.AddWithValue("@idLote", _idLoteSeleccionado);
                 cmd.Parameters.AddWithValue("@idCliente", idCliente);
                 cmd.Parameters.AddWithValue("@idAval", idAval);
                 cmd.Parameters.AddWithValue("@idBeneficiario", idBeneficiario);
                 cmd.Parameters.AddWithValue("@fechaVenta", fechaVenta);
-                cmd.Parameters.AddWithValue("@precioLote", precioLote);
+                cmd.Parameters.AddWithValue("@precioLote", _precioLoteActual);
                 cmd.Parameters.AddWithValue("@descuento", descuento);
                 cmd.Parameters.AddWithValue("@recargo", recargo);
                 cmd.Parameters.AddWithValue("@prima", prima);
@@ -342,7 +281,6 @@ namespace LotificadoraApp
                 if (dt.Rows.Count > 0)
                 {
                     DataRow row = dt.Rows[0];
-
                     int idVentaCreditoGenerada = Convert.ToInt32(row["idVentaCredito"]);
 
                     string mensaje =
@@ -375,7 +313,7 @@ namespace LotificadoraApp
 
                     if (respuesta == DialogResult.Yes)
                     {
-                        GenerarCuotas(idVentaCreditoGenerada, dtpInicioPago.Value.Date);
+                        GenerarCuotas(idVentaCreditoGenerada, dtpFechaInicioPago.Value.Date);
                     }
                 }
                 else
@@ -396,13 +334,9 @@ namespace LotificadoraApp
                 string mensaje = ex.Message;
 
                 if (mensaje.ToLower().Contains("30% del ingreso mensual"))
-                {
                     mensaje = "No es posible registrar la venta porque la cuota estimada supera la capacidad de pago permitida del cliente.";
-                }
                 else if (mensaje.ToLower().Contains("datos laborales"))
-                {
                     mensaje = "No es posible registrar la venta porque el cliente no tiene datos laborales registrados.";
-                }
 
                 MessageBox.Show(
                     "Error al registrar la venta:\n" + mensaje,
@@ -412,6 +346,7 @@ namespace LotificadoraApp
                 );
             }
         }
+
         private void GenerarCuotas(int idVentaCredito, DateTime fechaPrimerVencimiento)
         {
             using SqlConnection cn = new SqlConnection(Db.ConnectionString);
@@ -431,18 +366,19 @@ namespace LotificadoraApp
                 MessageBoxIcon.Information
             );
         }
+
         private void ValidarFormulario()
         {
-            if (cmbLoteDisponible.SelectedIndex < 0)
+            if (cmbLotesDisponibles.SelectedIndex < 0 || _idLoteSeleccionado <= 0)
                 throw new Exception("Seleccione un lote disponible.");
 
-            if (cbClientes.SelectedIndex < 0)
+            if (cmbCliente.SelectedIndex < 0 || cmbCliente.SelectedValue == null)
                 throw new Exception("Seleccione un cliente.");
 
-            if (cbAval.SelectedIndex < 0)
+            if (cmbAval.SelectedIndex < 0 || cmbAval.SelectedValue == null)
                 throw new Exception("Seleccione un aval.");
 
-            if (cbBeneficiario.SelectedIndex < 0)
+            if (cmbBenificiario.SelectedIndex < 0 || cmbBenificiario.SelectedValue == null)
                 throw new Exception("Seleccione un beneficiario.");
 
             if (string.IsNullOrWhiteSpace(txtPlazoAños.Text))
@@ -451,7 +387,7 @@ namespace LotificadoraApp
             if (!int.TryParse(txtPlazoAños.Text.Trim(), out int plazo) || plazo <= 0)
                 throw new Exception("El plazo en años debe ser un entero mayor que cero.");
 
-            if (!cbFinanciarTotal.Checked)
+            if (!chkFinanciarTotal.Checked)
             {
                 decimal prima = ParseDecimalOrZero(txtPrima.Text);
                 if (prima <= 0)
@@ -464,45 +400,48 @@ namespace LotificadoraApp
             LimpiarFormulario();
         }
 
-        private void btnCerrar_Click(object? sender, EventArgs e)
+        private void guna2Button2_Click(object? sender, EventArgs e)
         {
             Close();
         }
 
         private void LimpiarFormulario()
         {
-            cmbLoteDisponible.SelectedIndex = -1;
-            cbClientes.SelectedIndex = -1;
-            cbAval.SelectedIndex = -1;
-            cbBeneficiario.SelectedIndex = -1;
+            cmbLotesDisponibles.SelectedIndex = -1;
+            cmbCliente.SelectedIndex = -1;
+            cmbAval.SelectedIndex = -1;
+            cmbBenificiario.SelectedIndex = -1;
 
             dtpFechaVenta.Value = DateTime.Today;
-            dtpInicioPago.Value = DateTime.Today.AddMonths(1);
+            dtpFechaInicioPago.Value = DateTime.Today.AddMonths(1);
 
             txtDescuento.Clear();
             txtRecargo.Clear();
             txtPrima.Clear();
             txtPlazoAños.Clear();
 
-            cbFinanciarTotal.Checked = false;
+            chkFinanciarTotal.Checked = false;
 
             LimpiarCamposDetalle();
         }
 
         private void LimpiarCamposDetalle()
         {
-            txtIdLote.Clear();
-            txtProyecto.Clear();
-            txtEtapa.Clear();
-            txtBloque.Clear();
-            txtNumeroLote.Clear();
-            txtPrecioLote.Clear();
-            txtTasaInteres.Clear();
+            _idLoteSeleccionado = 0;
+            _precioLoteActual = 0m;
+            _tasaInteresActual = 0m;
+
+            lblIDLote.Text = "ID Lote:";
+            lblProyecto.Text = "Proyecto:";
+            lblEtapa.Text = "Etapa:";
+            lblBloque.Text = "Bloque:";
+            lblNumeroLote.Text = "Numero Lote:";
+            lblPrecioLote.Text = "Precio Lote:";
+
+            txtInteres.Clear();
             txtTotalVenta.Clear();
             txtMontoFinanciado.Clear();
             txtCuotaEstimada.Clear();
-
-            _tasaInteresActual = 0m;
         }
 
         private decimal ParseDecimalOrZero(string valor)
@@ -534,7 +473,6 @@ namespace LotificadoraApp
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-            // vacío a propósito
         }
     }
 }
