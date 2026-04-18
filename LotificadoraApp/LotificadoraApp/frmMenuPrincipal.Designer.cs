@@ -38,6 +38,8 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
@@ -72,8 +74,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges44 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges45 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges46 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             btnCuentaBancaria = new Guna.UI2.WinForms.Guna2Button();
             btnBeneficiario = new Guna.UI2.WinForms.Guna2Button();
             btnEmpleado = new Guna.UI2.WinForms.Guna2Button();
@@ -81,6 +81,7 @@
             btnLote = new Guna.UI2.WinForms.Guna2Button();
             label8 = new Label();
             panel9 = new Panel();
+            btnFacturas = new Guna.UI2.WinForms.Guna2Button();
             btnControlCaja = new Guna.UI2.WinForms.Guna2Button();
             btnConsultarPlanPago = new Guna.UI2.WinForms.Guna2Button();
             btnEstadoDeCuenta = new Guna.UI2.WinForms.Guna2Button();
@@ -114,7 +115,6 @@
             btnProyecto = new Guna.UI2.WinForms.Guna2Button();
             label7 = new Label();
             panel8 = new Panel();
-            btnFacturas = new Guna.UI2.WinForms.Guna2Button();
             panel9.SuspendLayout();
             panel2.SuspendLayout();
             pnlEsqueleto.SuspendLayout();
@@ -245,6 +245,25 @@
             panel9.Name = "panel9";
             panel9.Size = new Size(193, 343);
             panel9.TabIndex = 9;
+            // 
+            // btnFacturas
+            // 
+            btnFacturas.BorderRadius = 5;
+            btnFacturas.CustomizableEdges = customizableEdges11;
+            btnFacturas.DisabledState.BorderColor = Color.DarkGray;
+            btnFacturas.DisabledState.CustomBorderColor = Color.DarkGray;
+            btnFacturas.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
+            btnFacturas.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
+            btnFacturas.Dock = DockStyle.Top;
+            btnFacturas.FillColor = Color.FromArgb(64, 64, 0);
+            btnFacturas.Font = new Font("Segoe UI", 9F);
+            btnFacturas.ForeColor = Color.White;
+            btnFacturas.Location = new Point(0, 296);
+            btnFacturas.Name = "btnFacturas";
+            btnFacturas.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            btnFacturas.Size = new Size(193, 37);
+            btnFacturas.TabIndex = 11;
+            btnFacturas.Text = "Facturas";
             // 
             // btnControlCaja
             // 
@@ -655,7 +674,7 @@
             label6.Name = "label6";
             label6.Size = new Size(193, 15);
             label6.TabIndex = 4;
-            label6.Text = "ENTIDADES PRINCIPALES";
+            label6.Text = "ESTRUCTURA DEL PROYECTO ";
             // 
             // panel7
             // 
@@ -737,7 +756,7 @@
             label7.Name = "label7";
             label7.Size = new Size(193, 15);
             label7.TabIndex = 6;
-            label7.Text = "ENTIDADES PRINCIPALES";
+            label7.Text = "CLIENTES Y RESPALDOS";
             // 
             // panel8
             // 
@@ -749,25 +768,6 @@
             panel8.Name = "panel8";
             panel8.Size = new Size(193, 116);
             panel8.TabIndex = 7;
-            // 
-            // btnFacturas
-            // 
-            btnFacturas.BorderRadius = 5;
-            btnFacturas.CustomizableEdges = customizableEdges11;
-            btnFacturas.DisabledState.BorderColor = Color.DarkGray;
-            btnFacturas.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnFacturas.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnFacturas.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnFacturas.Dock = DockStyle.Top;
-            btnFacturas.FillColor = Color.FromArgb(64, 64, 0);
-            btnFacturas.Font = new Font("Segoe UI", 9F);
-            btnFacturas.ForeColor = Color.White;
-            btnFacturas.Location = new Point(0, 296);
-            btnFacturas.Name = "btnFacturas";
-            btnFacturas.ShadowDecoration.CustomizableEdges = customizableEdges12;
-            btnFacturas.Size = new Size(193, 37);
-            btnFacturas.TabIndex = 11;
-            btnFacturas.Text = "Facturas";
             // 
             // frmMenuPrincipal
             // 
